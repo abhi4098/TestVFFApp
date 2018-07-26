@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="30sp"
+    tools:context=".ui.fragments.DashboardFragment">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+
+        >
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/active_pending_cardView"
+            android:layout_width="400sp"
+            android:layout_height="170dp"
+            android:layout_margin="5sp"
+            android:orientation="horizontal"
+            app:cardBackgroundColor="@color/colorPrimary"
+            app:cardElevation="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+            <ImageView
+                android:layout_width="60sp"
+                android:layout_height="80sp"
+                android:layout_margin="30sp"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/active_pending_projects"
+                />
+
+                 <LinearLayout
+                       android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                          android:background="#D3D3D3">
+
+                            </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_margin="10sp">
+
+                    <TextView
+                        android:id="@+id/active_pending_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="sans-serif"
+                        android:textSize="20sp"
+                        android:lines="1"
+                        android:layout_margin="10sp"
+                        android:textColor="@color/colorAccent"
+                        android:text="Active/Pending Projects"/>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_margin="10sp"
+                        android:layout_below="@+id/active_pending_text"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/circular_background_black"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/active_pending_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            />
+                    </RelativeLayout>
+
+
+
+
+
+
+                </RelativeLayout>
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:id="@+id/competed_project_cardView"
+            android:layout_width="400sp"
+            android:layout_height="170dp"
+            android:layout_marginEnd=".1dp"
+            android:layout_toEndOf="@+id/active_pending_cardView"
+            android:layout_margin="5sp"
+            android:orientation="vertical"
+            app:cardBackgroundColor="@color/colorPrimary"
+            app:cardElevation="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="60sp"
+                    android:layout_height="80sp"
+                    android:layout_margin="30sp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@mipmap/completed_project"
+                    />
+
+                <LinearLayout
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:background="#D3D3D3">
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_margin="10sp">
+
+                    <TextView
+                        android:id="@+id/completed_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="sans-serif"
+                        android:textSize="20sp"
+                        android:lines="1"
+                        android:layout_margin="10sp"
+                        android:textColor="@color/colorAccent"
+                        android:text="Completed Projects"/>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_margin="10sp"
+                        android:layout_below="@+id/completed_text"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/circular_background_black"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/completed_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:textSize="20sp"
+                            android:textColor="@color/white"
+                            />
+                    </RelativeLayout>
+
+
+
+
+
+
+                </RelativeLayout>
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+
+        >
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/dummy_details_1"
+            android:layout_width="400sp"
+            android:layout_height="170dp"
+            android:layout_margin="5sp"
+            android:orientation="vertical"
+            app:cardBackgroundColor="@color/colorPrimary"
+            app:cardElevation="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="60sp"
+                    android:layout_height="80sp"
+                    android:layout_margin="30sp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@mipmap/active_pending_projects"
+                    />
+
+                <LinearLayout
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:background="#D3D3D3">
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_margin="10sp">
+
+                    <TextView
+                        android:id="@+id/dummy_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="sans-serif"
+                        android:textSize="20sp"
+                        android:lines="1"
+                        android:layout_margin="10sp"
+                        android:textColor="@color/colorAccent"
+                        android:text="To be Added Soon"/>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_margin="10sp"
+                        android:layout_below="@+id/dummy_1"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/circular_background_black"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:textSize="20sp"
+                            android:textColor="@color/white"
+                            android:text="0"/>
+                    </RelativeLayout>
+
+
+
+
+
+
+                </RelativeLayout>
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:id="@+id/dummy_details_2"
+            android:layout_width="400sp"
+            android:layout_height="170dp"
+            android:layout_marginEnd=".1dp"
+            android:layout_toEndOf="@+id/dummy_details_1"
+            android:layout_margin="5sp"
+            android:orientation="vertical"
+            app:cardBackgroundColor="@color/colorPrimary"
+            app:cardElevation="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="60sp"
+                    android:layout_height="80sp"
+                    android:layout_margin="30sp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@mipmap/active_pending_projects"
+                    />
+
+                <LinearLayout
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:background="#D3D3D3">
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_margin="10sp">
+
+
+
+                    <TextView
+                        android:id="@+id/dummy_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="sans-serif"
+                        android:textSize="20sp"
+                        android:lines="1"
+                        android:layout_margin="10sp"
+                        android:textColor="@color/colorAccent"
+                        android:text="To be Added Soon"/>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_margin="10sp"
+                        android:layout_below="@+id/dummy_2"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/circular_background_black"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:textSize="20sp"
+                            android:textColor="@color/white"
+                            android:text="0"/>
+                    </RelativeLayout>
+
+
+
+
+
+
+                </RelativeLayout>
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
+
+
+
+</LinearLayout>
