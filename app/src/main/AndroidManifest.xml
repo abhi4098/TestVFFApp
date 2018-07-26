@@ -38,7 +38,14 @@
             android:label="@string/title_activity_navigation"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ui.activities.ProfileActivity"></activity>
+        <activity android:name=".ui.activities.ProfileActivity" />
+        <activity
+            android:name=".ui.activities.ActivePendingActivity"
+            android:label="@string/title_activity_active_pending"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme">
+
+        </activity>
     </application>
 
 </manifest>

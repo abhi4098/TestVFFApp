@@ -5,6 +5,7 @@ import com.valleyforge.cdi.generated.model.DashboardDataResponse;
 import com.valleyforge.cdi.generated.model.ForgotPasswordResponse;
 import com.valleyforge.cdi.generated.model.Login;
 import com.valleyforge.cdi.generated.model.LoginResponse;
+import com.valleyforge.cdi.generated.model.ProjectListResponse;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -43,6 +44,16 @@ public class RetrofitInterface {
         @POST("forgotpwdApi")
         public Call<ForgotPasswordResponse> userForgotPasswordData(
                 @Field("email") String email
+
+        );
+    }
+
+    public interface UserProjectListClient {
+        @FormUrlEncoded
+        @POST("assignedprojectsApi")
+        public Call<ProjectListResponse> userProjectListData(
+                @Field("userid") String userid,
+                @Field("project_status") String project_status
 
         );
     }

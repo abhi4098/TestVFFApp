@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.valleyforge.cdi.api.ApiAdapter;
 import com.valleyforge.cdi.api.RetrofitInterface;
 import com.valleyforge.cdi.generated.model.DashboardDataResponse;
 import com.valleyforge.cdi.generated.model.LoginResponse;
+import com.valleyforge.cdi.ui.activities.ActivePendingActivity;
 import com.valleyforge.cdi.ui.activities.LoginActivity;
 import com.valleyforge.cdi.ui.activities.NavigationActivity;
 import com.valleyforge.cdi.utils.LoadingDialog;
@@ -54,6 +56,10 @@ public class DashboardFragment extends Fragment {
 
     @BindView(R.id.active_pending_count)
     TextView tvactiveCount;
+
+
+    @BindView(R.id.active_pending_cardView)
+    CardView cvActivePending;
 
     @BindView(R.id.completed_count)
     TextView tvCompletedCount;
@@ -97,6 +103,13 @@ public class DashboardFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
         ButterKnife.bind(this,rootView);
+        cvActivePending.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(), ActivePendingActivity.class);
+                startActivity(i);
+            }
+        });
         setUpRestAdapter();
         getDashboardData();
         return rootView;

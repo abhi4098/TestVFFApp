@@ -22,6 +22,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     Toolbar toolbar;
     @BindView(R.id.tv_app_title)
     TextView tvAppTitle;
+
+
+    @BindView(R.id.logout)
+    ImageView ivLogout;
+
     Context mContext;
 
     @BindView(R.id.username)
@@ -48,6 +53,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         mContext = ProfileActivity.this;
         ivBackIcon.setOnClickListener(this);
         tvAppTitle.setText("Profile");
+        ivLogout.setVisibility(View.GONE);
 
        // etUsername.setEnabled(false);
         etUsername.setFocusable(false);
@@ -59,9 +65,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
        // etUserAdd.setEnabled(false);
         etUserAdd.setFocusable(false);
+        etUserAdd.setText(PrefUtils.getUserAdd(this));
 
        // etuserPhone.setEnabled(false);
         etuserPhone.setFocusable(false);
+        etuserPhone.setText(PrefUtils.getUserPhone(this));
         //etUsername.setText(PrefUtils.getUserName(this));
         //etUsername.setText(PrefUtils.getUserName(this));
 

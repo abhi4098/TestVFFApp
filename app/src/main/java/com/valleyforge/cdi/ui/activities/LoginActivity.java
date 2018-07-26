@@ -397,10 +397,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         if(response.body().getMsg().equals("success")) {
                             for (int i=0; i<response.body().getData().size();i++) {
                                 PrefUtils.storeUserName(response.body().getData().get(i).getName(), LoginActivity.this);
-                                PrefUtils.storeUserId(response.body().getData().get(i).getId(), LoginActivity.this);
+                                PrefUtils.storeUserId(String.valueOf(response.body().getData().get(i).getId()), LoginActivity.this);
                                 PrefUtils.storeUserType(response.body().getData().get(i).getType(), LoginActivity.this);
                                 PrefUtils.storeEmail(response.body().getData().get(i).getEmail(), LoginActivity.this);
-                               // PrefUtils.storeUserType(response.body().getLoginData().get(i).getUsertype(), SolarProjectLoginActivity.this);
+                                PrefUtils.storeUserAdd(response.body().getData().get(i).getAddress(), LoginActivity.this);
+                                PrefUtils.storeUserPhone(response.body().getData().get(i).getPhone(), LoginActivity.this);
                             }
                             Log.e("abhi", "onResponse:user name "+PrefUtils.getUserName(LoginActivity.this) );
                             Log.e("abhi", "onResponse:user id "+PrefUtils.getUserId(LoginActivity.this) );

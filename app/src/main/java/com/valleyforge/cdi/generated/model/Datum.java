@@ -8,13 +8,13 @@ public class Datum {
 
     @SerializedName("id")
     @Expose
-    private String id;
+    private Integer id;
     @SerializedName("name")
     @Expose
     private String name;
     @SerializedName("context_id")
     @Expose
-    private String contextId;
+    private Integer contextId;
     @SerializedName("email")
     @Expose
     private String email;
@@ -38,13 +38,19 @@ public class Datum {
     private String updatedAt;
     @SerializedName("role")
     @Expose
-    private String role;
+    private Integer role;
+    @SerializedName("phone")
+    @Expose
+    private String phone;
+    @SerializedName("address")
+    @Expose
+    private String address;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -56,11 +62,11 @@ public class Datum {
         this.name = name;
     }
 
-    public String getContextId() {
+    public Integer getContextId() {
         return contextId;
     }
 
-    public void setContextId(String contextId) {
+    public void setContextId(Integer contextId) {
         this.contextId = contextId;
     }
 
@@ -120,12 +126,28 @@ public class Datum {
         this.updatedAt = updatedAt;
     }
 
-    public String getRole() {
+    public Integer getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Integer role) {
         this.role = role;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
 }

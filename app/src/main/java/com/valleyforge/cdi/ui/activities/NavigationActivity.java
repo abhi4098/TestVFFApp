@@ -186,12 +186,17 @@ public class NavigationActivity extends AppCompatActivity
         Fragment fragment = null;
         int id = item.getItemId();
 
-        if (id == R.id.nav_active) {
+        if (id == R.id.nav_dashboard) {
             fragment = new DashboardFragment();
             tvAppTitle.setText( "Dashboard");
         } else if (id == R.id.nav_completed) {
 
-        } else if (id == R.id.nav_profile) {
+        }  else if (id == R.id.nav_active) {
+            Intent i = new Intent(NavigationActivity.this, ActivePendingActivity.class);
+            startActivity(i);
+        }
+
+        else if (id == R.id.nav_profile) {
             Intent i = new Intent(NavigationActivity.this, ProfileActivity.class);
             startActivity(i);
 
