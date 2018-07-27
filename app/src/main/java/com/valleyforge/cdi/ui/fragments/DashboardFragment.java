@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +31,7 @@ import com.valleyforge.cdi.utils.SnakBarUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,6 +56,7 @@ public class DashboardFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    Fragment fragment = null;
 
 
     @BindView(R.id.active_pending_count)
@@ -65,6 +70,18 @@ public class DashboardFragment extends Fragment {
     TextView tvCompletedCount;
 
 
+
+   /* @OnClick(R.id.active_pending_cardView)
+    public void openActivePending() {
+        fragment = new ActivePendingFragment();
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        TextView tvAppTitle = (TextView) getActivity().findViewById(R.id.tv_app_title);
+        ImageView ivBackIcon = (ImageView) getActivity().findViewById(R.id.back_icon);
+        tvAppTitle.setText("Active/Pending Projects");
+        ivBackIcon.setVisibility(View.VISIBLE);
+    }*/
 
     public DashboardFragment() {
         // Required empty public constructor

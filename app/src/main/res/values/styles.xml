@@ -23,6 +23,13 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="popupMenuStyle" >
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:itemBackground">#ffffff</item>
+        <item name="android:divider">#000000</item>
+        <item name="android:dividerHeight">2dp</item>
+    </style>
+
     <style name="MyToolBar" parent="AppTheme">
         <item name="android:color">#0ba3ad</item>
         <item name="android:textColorSecondary">#ffffff</item>

@@ -23,7 +23,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.valleyforge.cdi.R;
+import com.valleyforge.cdi.ui.fragments.ActivePendingFragment;
 import com.valleyforge.cdi.ui.fragments.DashboardFragment;
+import com.valleyforge.cdi.ui.fragments.MyProfileFragment;
 import com.valleyforge.cdi.utils.PrefUtils;
 
 import butterknife.BindView;
@@ -188,15 +190,24 @@ public class NavigationActivity extends AppCompatActivity
 
         if (id == R.id.nav_dashboard) {
             fragment = new DashboardFragment();
-            tvAppTitle.setText( "Dashboard");
+            tvAppTitle.setText( item.getTitle());
+            ivBackIcon.setVisibility(View.INVISIBLE);
         } else if (id == R.id.nav_completed) {
 
+
+
         }  else if (id == R.id.nav_active) {
+            /*fragment = new ActivePendingFragment();
+            tvAppTitle.setText( item.getTitle());
+            ivBackIcon.setVisibility(View.INVISIBLE);*/
             Intent i = new Intent(NavigationActivity.this, ActivePendingActivity.class);
             startActivity(i);
         }
 
         else if (id == R.id.nav_profile) {
+            /*fragment = new MyProfileFragment();
+            tvAppTitle.setText( item.getTitle());
+            ivBackIcon.setVisibility(View.INVISIBLE);*/
             Intent i = new Intent(NavigationActivity.this, ProfileActivity.class);
             startActivity(i);
 

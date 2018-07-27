@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/one"
+        android:icon="@mipmap/popup_icon"
+        android:title="Communication Logs"/>
+
+    <item
+        android:id="@+id/two"
+        android:icon="@mipmap/popup_icon"
+        android:title="Project Details"/>
+
+    <item
+        android:id="@+id/three"
+        android:icon="@mipmap/popup_icon"
+        android:title="Contact HQ"/>
+
+</menu>

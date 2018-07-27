@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/screens_background"
+    tools:context=".ui.activities.ProfileActivity">
+    <include
+        android:id="@+id/toolbar_actionbar"
+        layout="@layout/activity_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+
+    <FrameLayout
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp">
+        <requestFocus />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profilePic"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:src="#ffffff"
+            android:layout_gravity="bottom|center_horizontal" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_camera"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/green_camera_icon_36"
+            android:layout_gravity="bottom|right"
+
+            />
+    </FrameLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20sp"
+        android:layout_gravity="center_horizontal">
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="350sp"
+            android:drawableStart="@drawable/username"
+            android:drawablePadding="5sp"
+            android:layout_height="wrap_content"
+            android:hint="Username"
+            android:imeActionId="6"
+            android:imeActionLabel="@string/action_sign_in_short"
+            android:imeOptions="actionUnspecified"
+            android:inputType="textPersonName"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+    </android.support.design.widget.TextInputLayout>
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        >
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="400sp"
+            android:layout_height="wrap_content"
+            android:id="@+id/email_text"
+            >
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="400sp"
+                android:drawableStart="@drawable/email"
+                android:drawablePadding="5sp"
+                android:layout_height="wrap_content"
+                android:hint=" Enter Email"
+                android:imeActionId="6"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="400sp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/email_text"
+            android:layout_marginStart="20sp"
+            android:id="@+id/phone_text"
+            >
+            <EditText
+
+                android:id="@+id/phone"
+                android:layout_width="400sp"
+                android:drawableStart="@drawable/phone"
+                android:drawablePadding="5sp"
+                android:layout_height="wrap_content"
+                android:hint="Enter Phone Number"
+                android:imeActionId="6"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionUnspecified"
+                android:inputType="phone"
+                android:maxLines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+    </RelativeLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        >
+        <EditText
+
+            android:id="@+id/user_address"
+            android:layout_width="820sp"
+            android:drawableStart="@drawable/location"
+            android:drawablePadding="5sp"
+            android:layout_height="wrap_content"
+            android:hint="Enter Address"
+            android:imeActionId="6"
+            android:imeActionLabel="@string/action_sign_in_short"
+            android:imeOptions="actionUnspecified"
+            android:inputType="phone"
+            android:maxLines="1"
+            android:singleLine="true" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/email_sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="38sp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/login_button_color"
+        android:textColor="#ffffff"
+        android:paddingStart="50sp"
+        android:layout_marginTop="30sp"
+        android:fontFamily="sans-serif"
+        android:paddingEnd="50sp"
+        android:textSize="16sp"
+        android:textAllCaps="false"
+        android:text="Save"
+        />
+
+</LinearLayout>

@@ -6,6 +6,8 @@
     <color name="login_button_color">#048700</color>
     <color name="forgot_password_color">#af0404</color>
     <color name="white">#ffffff</color>
+
+    <color name="dark_grey">#A9A9A9</color>
     <color name="project_background_color">#fff7f1</color>
     <color name="project_background_color_left">#fbebdc</color>
 </resources>
