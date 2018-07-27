@@ -43,9 +43,8 @@
             android:name=".ui.activities.ActivePendingActivity"
             android:label="@string/title_activity_active_pending"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme">
-
-        </activity>
+            android:theme="@style/AppTheme"></activity>
+        <activity android:name=".ui.activities.ProjectDetailActivity"></activity>
     </application>
 
 </manifest>
