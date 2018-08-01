@@ -62,6 +62,17 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:background="@mipmap/logout"/>
+            <TextView
+                android:id="@+id/status"
+                android:text="status"
+                android:visibility="gone"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+               />
         </RelativeLayout>
 
 

@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:orientation="vertical"
+android:layout_height="match_parent"
+android:background="@drawable/screens_background"
+tools:context=".ui.activities.ProjectDetailActivity">
+
+<include
+    android:id="@+id/toolbar_actionbar"
+    layout="@layout/activity_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="30sp"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary"
+
+
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="15sp"
+
+        android:weightSum=".9">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight=".3"
+
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:fontFamily="sans-serif"
+                android:text="Wall/WallWidth"/>
+
+            <EditText
+                android:id="@+id/wall_width"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:layout_marginTop="5sp"
+                android:paddingTop="5sp"
+                android:focusable="false"
+                android:paddingBottom="5sp"
+                android:fontFamily="sans-serif"
+                android:paddingStart="10sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:background="@drawable/rectangular_background"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight=".3"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:fontFamily="sans-serif"
+                android:text="Width Left of Window"/>
+
+            <EditText
+                android:id="@+id/width_left_of_window"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:layout_marginTop="5sp"
+                android:paddingTop="5sp"
+                android:paddingBottom="5sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:fontFamily="sans-serif"
+                android:paddingStart="10sp"
+                android:background="@drawable/rectangular_background"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight=".3"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:fontFamily="sans-serif"
+                android:text="IB Width of Window"/>
+
+            <EditText
+                android:id="@+id/ib_width_of_window"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:focusable="false"
+
+                android:layout_marginTop="5sp"
+                android:paddingTop="5sp"
+                android:paddingBottom="5sp"
+                android:fontFamily="sans-serif"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:paddingStart="10sp"
+                android:background="@drawable/rectangular_background"
+                />
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10sp"
+
+        android:weightSum=".9">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight=".3"
+
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:fontFamily="sans-serif"
+                android:text="IB Length of Window"/>
+
+            <EditText
+                android:id="@+id/ib_length_of_window"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:focusable="false"
+
+                android:layout_marginTop="5sp"
+                android:paddingTop="5sp"
+                android:paddingBottom="5sp"
+                android:fontFamily="sans-serif"
+                android:paddingStart="10sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:background="@drawable/rectangular_background"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight=".3"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:fontFamily="sans-serif"
+                android:text="Width Right of Window"/>
+
+            <EditText
+                android:id="@+id/width_right_of_window"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:layout_marginTop="5sp"
+                android:focusable="false"
+
+                android:paddingTop="5sp"
+                android:paddingBottom="5sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:fontFamily="sans-serif"
+                android:paddingStart="10sp"
+                android:background="@drawable/rectangular_background"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight=".3"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:fontFamily="sans-serif"
+                android:text="Length CEIL/FLR"/>
+
+            <EditText
+                android:id="@+id/length_of_ceil_floor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:focusable="false"
+
+                android:layout_marginTop="5sp"
+                android:paddingTop="5sp"
+                android:paddingBottom="5sp"
+                android:fontFamily="sans-serif"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:paddingStart="10sp"
+                android:background="@drawable/rectangular_background"
+                />
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10sp"
+
+        android:weightSum=".9">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight=".3"
+
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:fontFamily="sans-serif"
+                android:text="Pocket Depth"/>
+
+            <EditText
+                android:id="@+id/pocket_depth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:layout_marginTop="5sp"
+                android:paddingTop="5sp"
+                android:focusable="false"
+
+                android:paddingBottom="5sp"
+                android:fontFamily="sans-serif"
+                android:paddingStart="10sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:background="@drawable/rectangular_background"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight=".3"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:fontFamily="sans-serif"
+                android:text="Carpet INST"/>
+
+            <TextView
+                android:id="@+id/carpet_inst"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:layout_marginTop="5sp"
+                android:paddingTop="5sp"
+                android:paddingBottom="5sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:fontFamily="sans-serif"
+                android:paddingStart="10sp"
+                android:background="@drawable/rectangular_background"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight=".3"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:fontFamily="sans-serif"
+                android:text="Additional Measurement"/>
+
+            <TextView
+                android:id="@+id/additional_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:layout_marginTop="5sp"
+                android:paddingTop="5sp"
+                android:paddingBottom="5sp"
+                android:fontFamily="sans-serif"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:paddingStart="10sp"
+                android:background="@drawable/rectangular_background"
+                />
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/save_btn"
+        android:layout_height="40sp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:textColor="@color/white"
+        android:layout_marginStart="5sp"
+        android:layout_marginEnd="5sp"
+        android:textSize="15sp"
+        android:textAllCaps="false"
+        android:layout_marginTop="15sp"
+        android:backgroundTint="@color/login_button_color"
+        android:text="Begin Project Measurement"/>
+</LinearLayout>
+
+</LinearLayout>

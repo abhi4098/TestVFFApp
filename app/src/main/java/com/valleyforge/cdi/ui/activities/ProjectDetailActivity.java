@@ -1,11 +1,13 @@
 package com.valleyforge.cdi.ui.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +64,9 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
     @BindView(R.id.other_details)
     TextView tvOtherDetails;
 
+    @BindView(R.id.begin_project_button)
+    Button btnbeginProject;
+
 
 
 
@@ -78,7 +83,13 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
         ivBackIcon.setOnClickListener(this);
         ivLogout.setVisibility(View.GONE);
         tvAppTitle.setText("Project Detail");
-
+        btnbeginProject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ProjectDetailActivity.this, SearchDevicesActivity.class);
+                startActivity(i);
+            }
+        });
         projectId =getIntent().getStringExtra("PROJECT_ID");
         setUpRestAdapter();
         getProjectDetail();

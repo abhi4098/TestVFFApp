@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.valleyforge.cdi">
 
+    <uses-feature android:name="android.hardware.location.gps" />
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -53,6 +58,14 @@
             android:screenOrientation="landscape">
 
         </activity>
+        <activity android:name=".ui.activities.SearchDevicesActivity"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".ui.activities.WifiInformationActivity"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".ui.activities.BLEInformationActivity"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".ui.activities.YetiInformationActivity"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>
