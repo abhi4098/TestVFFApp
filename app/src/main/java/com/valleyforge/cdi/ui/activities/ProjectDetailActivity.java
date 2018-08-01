@@ -45,6 +45,26 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
     @BindView(R.id.logout)
     ImageView ivLogout;
 
+    @BindView(R.id.property_name)
+    TextView tvPropertyName;
+    @BindView(R.id.date_of_appointment)
+    TextView tvDateOfAppointment;
+    @BindView(R.id.project_pm)
+    TextView tvProjectPm;
+    @BindView(R.id.on_site_poc)
+    TextView tvOnSitePOC;
+    @BindView(R.id.start_date)
+    TextView tvStartDate;
+    @BindView(R.id.end_date)
+    TextView tvEndDate;
+    @BindView(R.id.location_address)
+    TextView tvLocationAddress;
+    @BindView(R.id.other_details)
+    TextView tvOtherDetails;
+
+
+
+
     String projectId ;
 
     ArrayList<Pdetail> projectDetail = null;
@@ -134,11 +154,31 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
            /* pDetail.setA(response.body().getPdetail().get(i).getProjectManagerName());
             pDetail.setProjectAssignedPm(response.body().getPdetail().get(i).getProjectAssignedPm());*/
 
+            tvPropertyName.setText(response.body().getPdetail().get(i).getPropertiesName());
+
+           // tvDateOfAppointment.setText(response.body().getPdetail().get(i).getPropertiesName());
+
+            tvProjectPm.setText(response.body().getPdetail().get(i).getProjectAssignedPm());
+
+            tvOnSitePOC.setText(response.body().getPdetail().get(i).getPropertiesContactPersonName());
+
+            tvStartDate.setText(response.body().getPdetail().get(i).getProjectStartDate());
+
+            tvEndDate.setText(response.body().getPdetail().get(i).getProjectEndDate());
+
+            tvLocationAddress.setText(response.body().getPdetail().get(i).getPropertiesAddress());
+
+            tvOtherDetails.setText(response.body().getPdetail().get(i).getPropertiesDescription());
+
+
             projectDetail.add(pDetail);
+
         }
 
 
     }
+
+
 
     @Override
     public void onClick(View v) {

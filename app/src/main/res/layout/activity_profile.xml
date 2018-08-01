@@ -14,7 +14,14 @@
         android:layout_height="wrap_content"/>
 
 
-
+    <ScrollView
+        android:id="@+id/login_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
     <FrameLayout
         android:layout_width="110dp"
         android:layout_height="110dp"
@@ -51,6 +58,7 @@
             <EditText
                 android:id="@+id/username"
                 android:layout_width="350sp"
+                android:focusable="false"
                 android:drawableStart="@drawable/username"
                 android:drawablePadding="5sp"
                 android:layout_height="wrap_content"
@@ -83,6 +91,7 @@
             android:drawablePadding="5sp"
             android:layout_height="wrap_content"
             android:hint=" Enter Email"
+            android:focusable="false"
             android:imeActionId="6"
             android:imeActionLabel="@string/action_sign_in_short"
             android:imeOptions="actionUnspecified"
@@ -105,6 +114,7 @@
             android:drawablePadding="5sp"
             android:layout_height="wrap_content"
             android:hint="Enter Phone Number"
+            android:focusable="false"
             android:imeActionId="6"
             android:imeActionLabel="@string/action_sign_in_short"
             android:imeOptions="actionUnspecified"
@@ -126,6 +136,7 @@
         android:drawableStart="@drawable/location"
         android:drawablePadding="5sp"
         android:layout_height="wrap_content"
+        android:focusable="false"
         android:hint="Enter Address"
         android:imeActionId="6"
         android:imeActionLabel="@string/action_sign_in_short"
@@ -136,7 +147,7 @@
     </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:id="@+id/email_sign_in_button"
+        android:id="@+id/profile_edit_button"
         android:layout_width="wrap_content"
         android:layout_height="38sp"
         android:layout_gravity="center_horizontal"
@@ -148,7 +159,25 @@
         android:paddingEnd="50sp"
         android:textSize="16sp"
         android:textAllCaps="false"
-        android:text="Save"
+        android:text="Edit Profile"
         />
 
+    <Button
+        android:id="@+id/submit_button"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="38sp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/login_button_color"
+        android:textColor="#ffffff"
+        android:paddingStart="50sp"
+        android:layout_marginTop="30sp"
+        android:fontFamily="sans-serif"
+        android:paddingEnd="50sp"
+        android:textSize="16sp"
+        android:textAllCaps="false"
+        android:text="Submit"
+        />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

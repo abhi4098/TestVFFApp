@@ -48,9 +48,10 @@
                     android:layout_marginStart="20sp"
                     android:layout_marginEnd="20sp"
                     android:fontFamily="sans-serif"
-                    android:text="Company"/>
+                    android:text="Property"/>
 
                 <TextView
+                    android:id="@+id/property_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorAccent"
@@ -63,7 +64,7 @@
                     android:layout_marginStart="20sp"
                     android:layout_marginEnd="20sp"
                     android:background="@drawable/rectangular_background"
-                    android:text="ABC Company"/>
+                    />
 
 
             </LinearLayout>
@@ -83,9 +84,10 @@
                     android:layout_marginStart="20sp"
                     android:layout_marginEnd="20sp"
                     android:fontFamily="sans-serif"
-                    android:text="Company"/>
+                    android:text="Date Of Appointment"/>
 
                 <TextView
+                    android:id="@+id/date_of_appointment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorAccent"
@@ -98,7 +100,7 @@
                     android:fontFamily="sans-serif"
                     android:paddingStart="10sp"
                     android:background="@drawable/rectangular_background"
-                    android:text="ABC Company"/>
+                    />
             </LinearLayout>
 
             <LinearLayout
@@ -116,9 +118,10 @@
                     android:layout_marginStart="20sp"
                     android:layout_marginEnd="20sp"
                     android:fontFamily="sans-serif"
-                    android:text="Company"/>
+                    android:text="Project PM"/>
 
                 <TextView
+                    android:id="@+id/project_pm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorAccent"
@@ -131,7 +134,7 @@
                     android:layout_marginEnd="20sp"
                     android:paddingStart="10sp"
                     android:background="@drawable/rectangular_background"
-                    android:text="ABC Company"/>
+                    />
             </LinearLayout>
 
 
@@ -162,9 +165,10 @@
                     android:layout_marginStart="20sp"
                     android:layout_marginEnd="20sp"
                     android:fontFamily="sans-serif"
-                    android:text="Company"/>
+                    android:text="On Site POC"/>
 
                 <TextView
+                    android:id="@+id/on_site_poc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorAccent"
@@ -177,7 +181,7 @@
                     android:layout_marginStart="20sp"
                     android:layout_marginEnd="20sp"
                     android:background="@drawable/rectangular_background"
-                    android:text="ABC Company"/>
+                    />
 
 
             </LinearLayout>
@@ -197,9 +201,10 @@
                     android:layout_marginStart="20sp"
                     android:layout_marginEnd="20sp"
                     android:fontFamily="sans-serif"
-                    android:text="Company"/>
+                    android:text="Start Date"/>
 
                 <TextView
+                    android:id="@+id/start_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorAccent"
@@ -212,7 +217,7 @@
                     android:fontFamily="sans-serif"
                     android:paddingStart="10sp"
                     android:background="@drawable/rectangular_background"
-                    android:text="ABC Company"/>
+                   />
             </LinearLayout>
 
             <LinearLayout
@@ -230,9 +235,10 @@
                     android:layout_marginStart="20sp"
                     android:layout_marginEnd="20sp"
                     android:fontFamily="sans-serif"
-                    android:text="Company"/>
+                    android:text="End Date"/>
 
                 <TextView
+                    android:id="@+id/end_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorAccent"
@@ -245,7 +251,7 @@
                     android:layout_marginEnd="20sp"
                     android:paddingStart="10sp"
                     android:background="@drawable/rectangular_background"
-                    android:text="ABC Company"/>
+                    />
             </LinearLayout>
 
 
@@ -268,9 +274,10 @@
                 android:layout_marginStart="20sp"
                 android:layout_marginEnd="20sp"
                 android:fontFamily="sans-serif"
-                android:text="Company"/>
+                android:text="Location Address"/>
 
             <TextView
+                android:id="@+id/location_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorAccent"
@@ -284,7 +291,7 @@
                 android:layout_marginStart="20sp"
                 android:layout_marginEnd="20sp"
                 android:background="@drawable/rectangular_background"
-                android:text="ABC Company"/>
+                />
 
 
         </LinearLayout>
@@ -305,9 +312,10 @@
                 android:layout_marginStart="20sp"
                 android:layout_marginEnd="20sp"
                 android:fontFamily="sans-serif"
-                android:text="Company"/>
+                android:text="Details"/>
 
             <TextView
+                android:id="@+id/other_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorAccent"
@@ -321,7 +329,7 @@
                 android:layout_marginStart="20sp"
                 android:layout_marginEnd="20sp"
                 android:background="@drawable/rectangular_background"
-                android:text="U R U' L' U R' U' L"/>
+                />
 
 
         </LinearLayout>

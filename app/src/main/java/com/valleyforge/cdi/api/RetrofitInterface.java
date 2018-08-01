@@ -69,6 +69,31 @@ public class RetrofitInterface {
 
         );
     }
+
+    public interface UserProfileDetailsClient {
+        @FormUrlEncoded
+        @POST("profileApi")
+        public Call<LoginResponse> userProfileDetailData(
+                @Field("userid") String userid
+
+        );
+    }
+
+
+    public interface UpdateProfileDetailsClient {
+        @FormUrlEncoded
+        @POST("updateprofileApi")
+        public Call<LoginResponse> updateProfileDetailData(
+                @Field("userid") String userid,
+                @Field("context_id") String context_id,
+                @Field("name") String name,
+                @Field("email") String email,
+                @Field("phone") String phone,
+                @Field("address") String address
+
+
+        );
+    }
   /*  public interface UserLoginClient {
         @FormUrlEncoded
         @POST("query.php")

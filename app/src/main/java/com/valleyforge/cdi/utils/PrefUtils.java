@@ -28,6 +28,8 @@ public class PrefUtils {
     public static String PHONE= "PHONE";
     public static String LOGGED_IN_USER_ADD = "address";
     public static String LOGGED_IN_USER_EMAIL = "user_email";
+    public static String CONTEXT_ID = "context_id";
+
   /*  public static String LOGGED_IN_USER_EMAIL = "user_email";
     public static String LOGGED_IN_USER_ADD = "user_add";
     public static String LOGGED_IN_USER_ROLE_ID = "user_role_id";
@@ -218,6 +220,21 @@ public class PrefUtils {
         SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);
         return sharedPreferences.getString(PHONE, "");
     }
+
+    public static String getContextId(Context context) {
+        SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);
+        return sharedPreferences.getString(CONTEXT_ID, "");
+    }
+
+    public static void storeContextId(String con, Context context) {
+        SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);
+        sharedPreferences.edit()
+                .putString(CONTEXT_ID, con)
+                .apply();
+
+    }
+
+
 
 
     public static void storeUserPassword(String password, Context context) {

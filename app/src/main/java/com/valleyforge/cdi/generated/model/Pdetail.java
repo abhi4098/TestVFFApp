@@ -8,10 +8,10 @@ public class Pdetail {
 
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private String id;
     @SerializedName("projectdeleted_at")
     @Expose
-    private Object projectdeletedAt;
+    private String projectdeletedAt;
     @SerializedName("projectcreated_at")
     @Expose
     private String projectcreatedAt;
@@ -23,10 +23,10 @@ public class Pdetail {
     private String projectname;
     @SerializedName("project_property_id")
     @Expose
-    private Integer projectPropertyId;
+    private String projectPropertyId;
     @SerializedName("project_assigned_pm")
     @Expose
-    private Integer projectAssignedPm;
+    private String projectAssignedPm;
     @SerializedName("project_start_date")
     @Expose
     private String projectStartDate;
@@ -41,16 +41,16 @@ public class Pdetail {
     private String projectId;
     @SerializedName("project_assign_mt")
     @Expose
-    private Integer projectAssignMt;
+    private String projectAssignMt;
     @SerializedName("project_percentage")
     @Expose
-    private Integer projectPercentage;
+    private String projectPercentage;
     @SerializedName("properties_id")
     @Expose
-    private Integer propertiesId;
+    private String propertiesId;
     @SerializedName("properties_deleted_at")
     @Expose
-    private Object propertiesDeletedAt;
+    private String propertiesDeletedAt;
     @SerializedName("properties_created_at")
     @Expose
     private String propertiesCreatedAt;
@@ -71,16 +71,20 @@ public class Pdetail {
     private String propertiesWebsite;
     @SerializedName("properties_assigned_to")
     @Expose
-    private Integer propertiesAssignedTo;
+    private String propertiesAssignedTo;
     @SerializedName("properties_contact_person_name")
     @Expose
     private String propertiesContactPersonName;
+
+
     @SerializedName("properties_contact_person_phone")
     @Expose
     private String propertiesContactPersonPhone;
+
     @SerializedName("properties_address")
     @Expose
     private String propertiesAddress;
+
     @SerializedName("properties_city")
     @Expose
     private String propertiesCity;
@@ -89,24 +93,24 @@ public class Pdetail {
     private String propertiesDescription;
     @SerializedName("properties_display_picture")
     @Expose
-    private Integer propertiesDisplayPicture;
+    private String propertiesDisplayPicture;
     @SerializedName("project_manager_name")
     @Expose
     private String projectManagerName;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Object getProjectdeletedAt() {
+    public String getProjectdeletedAt() {
         return projectdeletedAt;
     }
 
-    public void setProjectdeletedAt(Object projectdeletedAt) {
+    public void setProjectdeletedAt(String projectdeletedAt) {
         this.projectdeletedAt = projectdeletedAt;
     }
 
@@ -134,19 +138,19 @@ public class Pdetail {
         this.projectname = projectname;
     }
 
-    public Integer getProjectPropertyId() {
+    public String getProjectPropertyId() {
         return projectPropertyId;
     }
 
-    public void setProjectPropertyId(Integer projectPropertyId) {
+    public void setProjectPropertyId(String projectPropertyId) {
         this.projectPropertyId = projectPropertyId;
     }
 
-    public Integer getProjectAssignedPm() {
+    public String getProjectAssignedPm() {
         return projectAssignedPm;
     }
 
-    public void setProjectAssignedPm(Integer projectAssignedPm) {
+    public void setProjectAssignedPm(String projectAssignedPm) {
         this.projectAssignedPm = projectAssignedPm;
     }
 
@@ -182,35 +186,35 @@ public class Pdetail {
         this.projectId = projectId;
     }
 
-    public Integer getProjectAssignMt() {
+    public String getProjectAssignMt() {
         return projectAssignMt;
     }
 
-    public void setProjectAssignMt(Integer projectAssignMt) {
+    public void setProjectAssignMt(String projectAssignMt) {
         this.projectAssignMt = projectAssignMt;
     }
 
-    public Integer getProjectPercentage() {
+    public String getProjectPercentage() {
         return projectPercentage;
     }
 
-    public void setProjectPercentage(Integer projectPercentage) {
+    public void setProjectPercentage(String projectPercentage) {
         this.projectPercentage = projectPercentage;
     }
 
-    public Integer getPropertiesId() {
+    public String getPropertiesId() {
         return propertiesId;
     }
 
-    public void setPropertiesId(Integer propertiesId) {
+    public void setPropertiesId(String propertiesId) {
         this.propertiesId = propertiesId;
     }
 
-    public Object getPropertiesDeletedAt() {
+    public String getPropertiesDeletedAt() {
         return propertiesDeletedAt;
     }
 
-    public void setPropertiesDeletedAt(Object propertiesDeletedAt) {
+    public void setPropertiesDeletedAt(String propertiesDeletedAt) {
         this.propertiesDeletedAt = propertiesDeletedAt;
     }
 
@@ -262,11 +266,11 @@ public class Pdetail {
         this.propertiesWebsite = propertiesWebsite;
     }
 
-    public Integer getPropertiesAssignedTo() {
+    public String getPropertiesAssignedTo() {
         return propertiesAssignedTo;
     }
 
-    public void setPropertiesAssignedTo(Integer propertiesAssignedTo) {
+    public void setPropertiesAssignedTo(String propertiesAssignedTo) {
         this.propertiesAssignedTo = propertiesAssignedTo;
     }
 
@@ -310,11 +314,11 @@ public class Pdetail {
         this.propertiesDescription = propertiesDescription;
     }
 
-    public Integer getPropertiesDisplayPicture() {
+    public String getPropertiesDisplayPicture() {
         return propertiesDisplayPicture;
     }
 
-    public void setPropertiesDisplayPicture(Integer propertiesDisplayPicture) {
+    public void setPropertiesDisplayPicture(String propertiesDisplayPicture) {
         this.propertiesDisplayPicture = propertiesDisplayPicture;
     }
 
