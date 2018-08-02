@@ -162,6 +162,7 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
         //listview.setDivider(new ColorDrawable(getResources().getColor(R.color.colorAccent)));
         listview.setDividerHeight(1);
         listview.setTextFilterEnabled(true);
+
     }
 
 

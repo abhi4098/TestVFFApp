@@ -14,15 +14,119 @@ tools:context=".ui.activities.ProjectDetailActivity">
     android:layout_width="match_parent"
     android:layout_height="wrap_content"/>
 
-<LinearLayout
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+
+        android:layout_marginTop="30sp">
+
+        <LinearLayout
+            android:id="@+id/details"
+            android:layout_width="200sp"
+            android:background="@color/login_button_color"
+            android:layout_height="35sp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/details_header"
+                android:text="Details"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/measurements"
+            android:layout_width="200sp"
+            android:background="@color/white"
+            android:layout_height="35sp"
+            android:layout_marginStart="5sp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/measurements_header"
+                android:textColor="@color/colorAccent"
+                android:text="Measurements"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pictures"
+            android:layout_width="200sp"
+            android:background="@color/white"
+            android:layout_height="35sp"
+            android:layout_marginStart="5sp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/pictures_header"
+                android:textColor="@color/colorAccent"
+                android:text="Pictures"
+                android:gravity="center"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_on_details_click"
+            android:layout_width="match_parent"
+            android:layout_height="350sp"
+            android:layout_margin="30sp"
+            android:orientation="vertical"
+            android:background="@color/colorPrimary"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+
+           />
+
+
+
+
+
+            <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="30sp"
+                android:id="@+id/ll_on_measurement_click"
+    android:visibility="gone"
     android:orientation="vertical"
     android:background="@color/colorPrimary"
-
+    android:focusable="true"
+    android:focusableInTouchMode="true"
 
     >
+    <requestFocus/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,9 +160,9 @@ tools:context=".ui.activities.ProjectDetailActivity">
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp"
+                android:inputType="numberDecimal"
                 android:layout_marginTop="5sp"
                 android:paddingTop="5sp"
-                android:focusable="false"
                 android:paddingBottom="5sp"
                 android:fontFamily="sans-serif"
                 android:paddingStart="10sp"
@@ -91,8 +195,7 @@ tools:context=".ui.activities.ProjectDetailActivity">
                 android:id="@+id/width_left_of_window"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="false"
-
+                android:inputType="numberDecimal"
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp"
                 android:layout_marginTop="5sp"
@@ -129,7 +232,7 @@ tools:context=".ui.activities.ProjectDetailActivity">
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp"
-                android:focusable="false"
+                android:inputType="numberDecimal"
 
                 android:layout_marginTop="5sp"
                 android:paddingTop="5sp"
@@ -178,7 +281,7 @@ tools:context=".ui.activities.ProjectDetailActivity">
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp"
-                android:focusable="false"
+                android:inputType="numberDecimal"
 
                 android:layout_marginTop="5sp"
                 android:paddingTop="5sp"
@@ -217,7 +320,7 @@ tools:context=".ui.activities.ProjectDetailActivity">
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp"
                 android:layout_marginTop="5sp"
-                android:focusable="false"
+                android:inputType="numberDecimal"
 
                 android:paddingTop="5sp"
                 android:paddingBottom="5sp"
@@ -252,7 +355,7 @@ tools:context=".ui.activities.ProjectDetailActivity">
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp"
-                android:focusable="false"
+                android:inputType="numberDecimal"
 
                 android:layout_marginTop="5sp"
                 android:paddingTop="5sp"
@@ -304,7 +407,7 @@ tools:context=".ui.activities.ProjectDetailActivity">
                 android:textSize="16sp"
                 android:layout_marginTop="5sp"
                 android:paddingTop="5sp"
-                android:focusable="false"
+                android:inputType="numberDecimal"
 
                 android:paddingBottom="5sp"
                 android:fontFamily="sans-serif"
@@ -368,7 +471,7 @@ tools:context=".ui.activities.ProjectDetailActivity">
                 android:fontFamily="sans-serif"
                 android:text="Additional Measurement"/>
 
-            <TextView
+            <EditText
                 android:id="@+id/additional_data"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -389,10 +492,18 @@ tools:context=".ui.activities.ProjectDetailActivity">
 
     </LinearLayout>
 
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="30sp"
+    android:layout_marginBottom="20sp"
+    android:gravity="center">
+
 
     <Button
         android:id="@+id/save_btn"
-        android:layout_height="40sp"
+        android:layout_height="45sp"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:textColor="@color/white"
@@ -400,9 +511,40 @@ tools:context=".ui.activities.ProjectDetailActivity">
         android:layout_marginEnd="5sp"
         android:textSize="15sp"
         android:textAllCaps="false"
-        android:layout_marginTop="15sp"
         android:backgroundTint="@color/login_button_color"
-        android:text="Begin Project Measurement"/>
+        android:text="Save"/>
+
+    <Button
+        android:id="@+id/preview_in_excel"
+        android:layout_height="45sp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:textColor="@color/white"
+        android:layout_marginStart="5sp"
+        android:layout_marginEnd="5sp"
+        android:textSize="15sp"
+        android:textAllCaps="false"
+        android:backgroundTint="@color/forgot_password_color"
+        android:text="Preview Data in Excel"/>
+
 </LinearLayout>
+</LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_on_pictures_click"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:layout_margin="30sp"
+                android:orientation="vertical"
+                android:background="@color/colorPrimary"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+
+                />
+
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

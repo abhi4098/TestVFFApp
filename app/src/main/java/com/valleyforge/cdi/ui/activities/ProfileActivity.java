@@ -89,7 +89,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         btnEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                etUsername.setFocusableInTouchMode(true);
+                //etUsername.setFocusableInTouchMode(true);
                 etuserEmail.setFocusableInTouchMode(true);
                 etUserAdd.setFocusableInTouchMode(true);
                 etuserPhone.setFocusableInTouchMode(true);

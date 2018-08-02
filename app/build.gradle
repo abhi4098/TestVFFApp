@@ -59,5 +59,6 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:11.8.0'
     compile 'com.google.android.gms:play-services-gcm:11.8.0'
     compile 'com.google.android.gms:play-services-places:11.8.0'
+    compile 'com.android.support:recyclerview-v7:27.1.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }

@@ -34,38 +34,39 @@
         </activity>
         <activity
             android:name=".ui.activities.LoginActivity"
-            android:screenOrientation="landscape"
-             />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".ui.activities.ForgotPasswordActivity"
-            android:screenOrientation="landscape"
-            />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".ui.activities.NavigationActivity"
             android:label="@string/title_activity_navigation"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ui.activities.ProfileActivity"
-            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".ui.activities.ProfileActivity"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".ui.activities.ActivePendingActivity"
             android:label="@string/title_activity_active_pending"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme">
-
-        </activity>
-        <activity android:name=".ui.activities.ProjectDetailActivity"
-            android:screenOrientation="landscape">
-
-        </activity>
-        <activity android:name=".ui.activities.SearchDevicesActivity"
-            android:screenOrientation="landscape"/>
-        <activity android:name=".ui.activities.WifiInformationActivity"
-            android:screenOrientation="landscape"/>
-        <activity android:name=".ui.activities.BLEInformationActivity"
-            android:screenOrientation="landscape"/>
-        <activity android:name=".ui.activities.YetiInformationActivity"
-            android:screenOrientation="landscape"/>
+            android:theme="@style/AppTheme"></activity>
+        <activity
+            android:name=".ui.activities.ProjectDetailActivity"
+            android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".ui.activities.SearchDevicesActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".ui.activities.WifiInformationActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".ui.activities.BLEInformationActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".ui.activities.YetiInformationActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".ui.activities.MeasurementGridActivity"></activity>
     </application>
 
 </manifest>

@@ -86,7 +86,7 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
         btnbeginProject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(ProjectDetailActivity.this, SearchDevicesActivity.class);
+                Intent i = new Intent(ProjectDetailActivity.this, MeasurementGridActivity.class);
                 startActivity(i);
             }
         });

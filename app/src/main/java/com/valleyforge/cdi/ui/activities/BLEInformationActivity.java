@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,9 +15,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.valleyforge.cdi.R;
@@ -106,25 +109,54 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     String wallWidth, widthLeftOfWindow ,ibWidthOfWindow,ibLengthOfWindow,widthRightOfWindow,lengthCielFlr,pocketDepth,carpetInst,additionalData;
 
     @BindView(R.id.wall_width)
-    EditText tvWallWidth;
+    EditText etWallWidth;
 
     @BindView(R.id.width_left_of_window)
-    EditText tvWidthLeftOfWindow;
+    EditText etWidthLeftOfWindow;
 
     @BindView(R.id.ib_width_of_window)
-    EditText tvIbWidthOfWindow;
+    EditText etIbWidthOfWindow;
     @BindView(R.id.ib_length_of_window)
-    EditText tvIbLengthOfWindow;
+    EditText etIbLengthOfWindow;
     @BindView(R.id.width_right_of_window)
-    EditText tvWidthRightOfWindow;
+    EditText etWidthRightOfWindow;
     @BindView(R.id.length_of_ceil_floor)
-    EditText tvLengthCielFlr;
+    EditText etLengthCielFlr;
     @BindView(R.id.pocket_depth)
-    EditText tvPocketDepth;
+    EditText etPocketDepth;
     /*@BindView(R.id.carpet_inst)
     EditText tvCarpetInst;*/
   /*  @BindView(R.id.additional_data)
     EditText tvAdditionalData;*/
+
+
+    @BindView(R.id.details)
+    LinearLayout llDetails;
+
+    @BindView(R.id.measurements)
+    LinearLayout llMeasurement;
+
+    @BindView(R.id.pictures)
+    LinearLayout llPictures;
+
+    @BindView(R.id.details_header)
+    TextView tvDetails;
+
+    @BindView(R.id.measurements_header)
+    TextView tvMeasurement;
+
+    @BindView(R.id.pictures_header)
+    TextView tvPictures;
+
+    @BindView(R.id.ll_on_details_click)
+    LinearLayout llOnDetailsClick;
+
+    @BindView(R.id.ll_on_pictures_click)
+    LinearLayout llOnPicturesClick;
+
+
+    @BindView(R.id.ll_on_measurement_click)
+    LinearLayout llOnMeasurementClick;
 
 
 
@@ -143,6 +175,9 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     @BindView(R.id.status)
     TextView status;
 
+    @BindView(R.id.additional_data)
+    EditText etAdditionalData;
+
 
 
 
@@ -156,10 +191,72 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         }
     };
 
+    @OnClick(R.id.details)
+    public void detailsScreen(View view) {
+
+        tvDetails.setTextColor(Color.parseColor("#ffffff")); // custom color
+        llDetails.setBackgroundColor(Color.parseColor("#048700"));
+        tvMeasurement.setTextColor(Color.parseColor("#252525")); // custom color
+        llMeasurement.setBackgroundColor(Color.parseColor("#ffffff"));
+        tvPictures.setTextColor(Color.parseColor("#252525")); // custom color
+        llPictures.setBackgroundColor(Color.parseColor("#ffffff"));
+
+        llOnDetailsClick.setVisibility(View.VISIBLE);
+        llOnMeasurementClick.setVisibility(View.GONE);
+        llOnPicturesClick.setVisibility(View.GONE);
+
+
+
+    }
+
+
+    @OnClick(R.id.measurements)
+    public void measurementScreen(View view) {
+
+        tvMeasurement.setTextColor(Color.parseColor("#ffffff")); // custom color
+        llMeasurement.setBackgroundColor(Color.parseColor("#048700"));
+        tvDetails.setTextColor(Color.parseColor("#252525")); // custom color
+        llDetails.setBackgroundColor(Color.parseColor("#ffffff"));
+        tvPictures.setTextColor(Color.parseColor("#252525")); // custom color
+        llPictures.setBackgroundColor(Color.parseColor("#ffffff"));
+
+        llOnDetailsClick.setVisibility(View.GONE);
+        llOnMeasurementClick.setVisibility(View.VISIBLE);
+        llOnPicturesClick.setVisibility(View.GONE);
+
+
+
+    }
+
+    @OnClick(R.id.pictures)
+    public void picturesScreen(View view) {
+
+        tvPictures.setTextColor(Color.parseColor("#ffffff")); // custom color
+        llPictures.setBackgroundColor(Color.parseColor("#048700"));
+        tvDetails.setTextColor(Color.parseColor("#252525")); // custom color
+        llDetails.setBackgroundColor(Color.parseColor("#ffffff"));
+        tvMeasurement.setTextColor(Color.parseColor("#252525")); // custom color
+        llMeasurement.setBackgroundColor(Color.parseColor("#ffffff"));
+
+        llOnDetailsClick.setVisibility(View.GONE);
+        llOnMeasurementClick.setVisibility(View.GONE);
+        llOnPicturesClick.setVisibility(View.VISIBLE);
+
+    }
+
+
+
     @OnClick(R.id.width_left_of_window)
     public void setWidthLeftOfWindow(View view) {
+         etWallWidth.setFocusableInTouchMode(false);
+         etWidthLeftOfWindow.setFocusableInTouchMode(true);
+         etIbWidthOfWindow.setFocusableInTouchMode(false);
+         etIbLengthOfWindow.setFocusableInTouchMode(false);
+         etWidthRightOfWindow.setFocusableInTouchMode(false);
+         etLengthCielFlr.setFocusableInTouchMode(false);
+         etPocketDepth.setFocusableInTouchMode(false);
 
-        Log.e("abhi", "onClick:............ setWidthLeftOfWindow" );
+
          isWallWidthSelected = false;
          isWidthLeftOfwindowSelected = true;
          isIBWidthOfWindow = false;
@@ -172,9 +269,13 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @OnClick(R.id.wall_width)
     public void wallwidth(View view) {
-        Log.e("abhi", "onClick:............ wallwidth" );
-        tvWallWidth.setFocusable(true);
-        tvWidthLeftOfWindow.setFocusable(false);
+        etWallWidth.setFocusableInTouchMode(true);
+        etWidthLeftOfWindow.setFocusableInTouchMode(false);
+        etIbWidthOfWindow.setFocusableInTouchMode(false);
+        etIbLengthOfWindow.setFocusableInTouchMode(false);
+        etWidthRightOfWindow.setFocusableInTouchMode(false);
+        etLengthCielFlr.setFocusableInTouchMode(false);
+        etPocketDepth.setFocusableInTouchMode(false);
 
          isWallWidthSelected = true;
         isWidthLeftOfwindowSelected = false;
@@ -184,14 +285,24 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
          isLengthCeilFlr = false;
          PocketDepth = false;
 
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+
 
     }
 
     @OnClick(R.id.ib_width_of_window)
     public void setIBWidthOfWindow(View view) {
-        tvWallWidth.setFocusable(false);
-        tvWidthLeftOfWindow.setFocusable(true);
-        Log.e("abhi", "onClick:............ setIBWidthOfWindow" );
+        etWallWidth.setFocusableInTouchMode(false);
+        etWidthLeftOfWindow.setFocusableInTouchMode(false);
+        etIbWidthOfWindow.setFocusableInTouchMode(true);
+        etIbLengthOfWindow.setFocusableInTouchMode(false);
+        etWidthRightOfWindow.setFocusableInTouchMode(false);
+        etLengthCielFlr.setFocusableInTouchMode(false);
+        etPocketDepth.setFocusableInTouchMode(false);
+
+
          isWallWidthSelected = false;
          isWidthLeftOfwindowSelected = false;
          isIBWidthOfWindow = true;
@@ -205,7 +316,15 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @OnClick(R.id.ib_length_of_window)
     public void setIBLenghtOfWindow(View view) {
-        Log.e("abhi", "onClick:............ setIBLenghtOfWindow" );
+
+        etWallWidth.setFocusableInTouchMode(false);
+        etWidthLeftOfWindow.setFocusableInTouchMode(false);
+        etIbWidthOfWindow.setFocusableInTouchMode(false);
+        etIbLengthOfWindow.setFocusableInTouchMode(true);
+        etWidthRightOfWindow.setFocusableInTouchMode(false);
+        etLengthCielFlr.setFocusableInTouchMode(false);
+        etPocketDepth.setFocusableInTouchMode(false);
+
          isWallWidthSelected = false;
          isWidthLeftOfwindowSelected = false;
          isIBWidthOfWindow = false;
@@ -219,7 +338,17 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @OnClick(R.id.width_right_of_window)
     public void setWidthRightOfWindow(View view) {
-        Log.e("abhi", "onClick:............ setWidthRightOfWindow" );
+
+
+        etWallWidth.setFocusableInTouchMode(false);
+        etWidthLeftOfWindow.setFocusableInTouchMode(false);
+        etIbWidthOfWindow.setFocusableInTouchMode(false);
+        etIbLengthOfWindow.setFocusableInTouchMode(false);
+        etWidthRightOfWindow.setFocusableInTouchMode(true);
+        etLengthCielFlr.setFocusableInTouchMode(false);
+        etPocketDepth.setFocusableInTouchMode(false);
+
+
          isWallWidthSelected = false;
          isWidthLeftOfwindowSelected = false;
          isIBWidthOfWindow = false;
@@ -233,7 +362,15 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @OnClick(R.id.length_of_ceil_floor)
     public void setLengthCielFlr(View view) {
-        Log.e("abhi", "onClick:............ setLengthCielFlr" );
+
+        etWallWidth.setFocusableInTouchMode(false);
+        etWidthLeftOfWindow.setFocusableInTouchMode(false);
+        etIbWidthOfWindow.setFocusableInTouchMode(false);
+        etIbLengthOfWindow.setFocusableInTouchMode(false);
+        etWidthRightOfWindow.setFocusableInTouchMode(false);
+        etLengthCielFlr.setFocusableInTouchMode(true);
+        etPocketDepth.setFocusableInTouchMode(false);
+
          isWallWidthSelected = false;
          isWidthLeftOfwindowSelected = false;
          isIBWidthOfWindow = false;
@@ -247,7 +384,15 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @OnClick(R.id.pocket_depth)
     public void setPocketDepth(View view) {
-        Log.e("abhi", "onClick:............ setPocketDepth" );
+
+        etWallWidth.setFocusableInTouchMode(false);
+        etWidthLeftOfWindow.setFocusableInTouchMode(false);
+        etIbWidthOfWindow.setFocusableInTouchMode(false);
+        etIbLengthOfWindow.setFocusableInTouchMode(false);
+        etWidthRightOfWindow.setFocusableInTouchMode(false);
+        etLengthCielFlr.setFocusableInTouchMode(false);
+        etPocketDepth.setFocusableInTouchMode(true);
+
          isWallWidthSelected = false;
          isWidthLeftOfwindowSelected = false;
          isIBWidthOfWindow = false;
@@ -262,8 +407,8 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @OnClick(R.id.save_btn)
     public void saveMeasurement(View view) {
-        wallWidth = tvWallWidth.getText().toString();
-        widthLeftOfWindow = tvWidthLeftOfWindow.getText().toString();
+        wallWidth = etWallWidth.getText().toString();
+        widthLeftOfWindow = etWidthLeftOfWindow.getText().toString();
         Log.e("abhi", "widthLeftOfWindow:  ............" +wallWidth  );
         Log.e("abhi", "widthLeftOfWindow:  ............" +widthLeftOfWindow  );
     }
@@ -331,6 +476,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             currentDevice.setErrorListener(this);
 
             status.setText(currentDevice.getConnectionState().toString());
+            status.setTextColor(Color.parseColor("#048700"));
 
             if(currentDevice.getConnectionState().equals(Device.ConnectionState.connected)){
 
@@ -601,8 +747,8 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                tvWallWidth.setText(R.string.default_value);
-                tvWidthLeftOfWindow.setText(R.string.default_value);
+                etWallWidth.setText(R.string.default_value);
+                etWidthLeftOfWindow.setText(R.string.default_value);
                 //  distanceUnit.setText(R.string.default_value);
 
             }
@@ -735,8 +881,8 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                                     case Defines.ID_DS_DISTANCE: {
                                         if (deviceIsInTrackingMode == false) {
                                             //clears only UI
-                                            // tvWallWidth.setText(R.string.blank_value);
-                                            // tvWidthLeftOfWindow.setText(R.string.default_value);
+                                            // etWallWidth.setText(R.string.blank_value);
+                                            // etWidthLeftOfWindow.setText(R.string.default_value);
                                             // distanceUnit.setText(R.string.blank_value);
 
                                         }
@@ -754,36 +900,136 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                                             distanceValue.setUnit(data);
                                             distanceValue.convertDistance();
                                             if (isWallWidthSelected) {
-                                                tvWallWidth.setText(distanceValue.getConvertedValueStrNoUnit());
-                                                Log.e("abhi", "run:     wall width lenght"  +distanceValue.getConvertedValueStrNoUnit() );
-                                            } else if(isWidthLeftOfwindowSelected) {
-                                                tvWidthLeftOfWindow.setText(distanceValue.getConvertedValueStrNoUnit());
-                                                Log.e("abhi", "run:     width left of window lenght"  +distanceValue.getConvertedValueStrNoUnit() );
+                                                etWallWidth.setText(distanceValue.getConvertedValueStrNoUnit());
 
+                                                etWallWidth.setFocusableInTouchMode(true);
+                                                etWidthLeftOfWindow.setFocusableInTouchMode(false);
+                                                etIbWidthOfWindow.setFocusableInTouchMode(false);
+                                                etIbLengthOfWindow.setFocusableInTouchMode(false);
+                                                etWidthRightOfWindow.setFocusableInTouchMode(false);
+                                                etLengthCielFlr.setFocusableInTouchMode(false);
+                                                etPocketDepth.setFocusableInTouchMode(false);
+
+
+                                                isWallWidthSelected = false;
+                                                isWidthLeftOfwindowSelected = true;
+                                                isIBWidthOfWindow = false;
+                                                isIBLenghtOfWindow = false;
+                                                isWidthRightOfwindowSelected = false;
+                                                isLengthCeilFlr = false;
+                                                PocketDepth = false;
+                                            } else if(isWidthLeftOfwindowSelected) {
+                                                etWidthLeftOfWindow.setText(distanceValue.getConvertedValueStrNoUnit());
+
+                                                etWallWidth.setFocusableInTouchMode(false);
+                                                etWidthLeftOfWindow.setFocusableInTouchMode(true);
+                                                etIbWidthOfWindow.setFocusableInTouchMode(false);
+                                                etIbLengthOfWindow.setFocusableInTouchMode(false);
+                                                etWidthRightOfWindow.setFocusableInTouchMode(false);
+                                                etLengthCielFlr.setFocusableInTouchMode(false);
+                                                etPocketDepth.setFocusableInTouchMode(false);
+
+
+                                                isWallWidthSelected = false;
+                                                isWidthLeftOfwindowSelected = false;
+                                                isIBWidthOfWindow = true;
+                                                isIBLenghtOfWindow = false;
+                                                isWidthRightOfwindowSelected = false;
+                                                isLengthCeilFlr = false;
+                                                PocketDepth = false;
                                             }
                                             else if(isIBWidthOfWindow) {
-                                                tvIbWidthOfWindow.setText(distanceValue.getConvertedValueStrNoUnit());
-                                                Log.e("abhi", "run:     tvIbWidthOfWindow lenght"  +distanceValue.getConvertedValueStrNoUnit() );
+                                                etIbWidthOfWindow.setText(distanceValue.getConvertedValueStrNoUnit());
 
+                                                etWallWidth.setFocusableInTouchMode(false);
+                                                etWidthLeftOfWindow.setFocusableInTouchMode(false);
+                                                etIbWidthOfWindow.setFocusableInTouchMode(true);
+                                                etIbLengthOfWindow.setFocusableInTouchMode(false);
+                                                etWidthRightOfWindow.setFocusableInTouchMode(false);
+                                                etLengthCielFlr.setFocusableInTouchMode(false);
+                                                etPocketDepth.setFocusableInTouchMode(false);
+
+
+                                                isWallWidthSelected = false;
+                                                isWidthLeftOfwindowSelected = false;
+                                                isIBWidthOfWindow = false;
+                                                isIBLenghtOfWindow = true;
+                                                isWidthRightOfwindowSelected = false;
+                                                isLengthCeilFlr = false;
+                                                PocketDepth = false;
                                             }
                                             else if(isIBLenghtOfWindow) {
-                                                tvIbLengthOfWindow.setText(distanceValue.getConvertedValueStrNoUnit());
-                                                Log.e("abhi", "run:     tvIbLengthOfWindow lenght"  +distanceValue.getConvertedValueStrNoUnit() );
 
+                                                etWallWidth.setFocusableInTouchMode(false);
+                                                etWidthLeftOfWindow.setFocusableInTouchMode(false);
+                                                etIbWidthOfWindow.setFocusableInTouchMode(false);
+                                                etIbLengthOfWindow.setFocusableInTouchMode(true);
+                                                etWidthRightOfWindow.setFocusableInTouchMode(false);
+                                                etLengthCielFlr.setFocusableInTouchMode(false);
+                                                etPocketDepth.setFocusableInTouchMode(false);
+
+
+                                                etIbLengthOfWindow.setText(distanceValue.getConvertedValueStrNoUnit());
+                                                isWallWidthSelected = false;
+                                                isWidthLeftOfwindowSelected = false;
+                                                isIBWidthOfWindow = false;
+                                                isIBLenghtOfWindow = false;
+                                                isWidthRightOfwindowSelected = true;
+                                                isLengthCeilFlr = false;
+                                                PocketDepth = false;
                                             }
                                             else if(isWidthRightOfwindowSelected) {
-                                                tvWidthRightOfWindow.setText(distanceValue.getConvertedValueStrNoUnit());
-                                                Log.e("abhi", "run:     tvWidthRightOfWindow  lenght"  +distanceValue.getConvertedValueStrNoUnit() );
 
+                                                etWidthRightOfWindow.setText(distanceValue.getConvertedValueStrNoUnit());
+
+
+                                                etWallWidth.setFocusableInTouchMode(false);
+                                                etWidthLeftOfWindow.setFocusableInTouchMode(false);
+                                                etIbWidthOfWindow.setFocusableInTouchMode(false);
+                                                etIbLengthOfWindow.setFocusableInTouchMode(false);
+                                                etWidthRightOfWindow.setFocusableInTouchMode(true);
+                                                etLengthCielFlr.setFocusableInTouchMode(false);
+                                                etPocketDepth.setFocusableInTouchMode(false);
+
+
+                                                isWallWidthSelected = false;
+                                                isWidthLeftOfwindowSelected = false;
+                                                isIBWidthOfWindow = false;
+                                                isIBLenghtOfWindow = false;
+                                                isWidthRightOfwindowSelected = false;
+                                                isLengthCeilFlr = true;
+                                                PocketDepth = false;
                                             }
                                             else if(isLengthCeilFlr) {
-                                                tvLengthCielFlr.setText(distanceValue.getConvertedValueStrNoUnit());
-                                                Log.e("abhi", "run:     tvWidthLeftOfWindow lenght"  +distanceValue.getConvertedValueStrNoUnit() );
+                                                etLengthCielFlr.setText(distanceValue.getConvertedValueStrNoUnit());
 
+                                                etWallWidth.setFocusableInTouchMode(false);
+                                                etWidthLeftOfWindow.setFocusableInTouchMode(false);
+                                                etIbWidthOfWindow.setFocusableInTouchMode(false);
+                                                etIbLengthOfWindow.setFocusableInTouchMode(false);
+                                                etWidthRightOfWindow.setFocusableInTouchMode(false);
+                                                etLengthCielFlr.setFocusableInTouchMode(true);
+                                                etPocketDepth.setFocusableInTouchMode(false);
+
+
+                                                isWallWidthSelected = false;
+                                                isWidthLeftOfwindowSelected = false;
+                                                isIBWidthOfWindow = false;
+                                                isIBLenghtOfWindow = false;
+                                                isWidthRightOfwindowSelected = false;
+                                                isLengthCeilFlr = false;
+                                                PocketDepth = true;
                                             }
                                             else {
-                                                tvPocketDepth.setText(distanceValue.getConvertedValueStrNoUnit());
-                                                Log.e("abhi", "run:     tvPocketDepth lenght"  +distanceValue.getConvertedValueStrNoUnit() );
+                                                etPocketDepth.setText(distanceValue.getConvertedValueStrNoUnit());
+
+                                                etWallWidth.setFocusableInTouchMode(false);
+                                                etWidthLeftOfWindow.setFocusableInTouchMode(false);
+                                                etIbWidthOfWindow.setFocusableInTouchMode(false);
+                                                etIbLengthOfWindow.setFocusableInTouchMode(false);
+                                                etWidthRightOfWindow.setFocusableInTouchMode(false);
+                                                etLengthCielFlr.setFocusableInTouchMode(false);
+                                                etPocketDepth.setFocusableInTouchMode(true);
 
                                             }
 
@@ -820,8 +1066,8 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                                         }
 
                                         if(hasDistanceMeasurement == false) {
-                                            //  tvWallWidth.setText(R.string.blank_value);
-                                            //  tvWidthLeftOfWindow.setText(R.string.blank_value);
+                                            //  etWallWidth.setText(R.string.blank_value);
+                                            //  etWidthLeftOfWindow.setText(R.string.blank_value);
                                             //distanceUnit.setText(R.string.blank_value);
                                         }
                                         hasDistanceMeasurement = false;
@@ -863,8 +1109,8 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                                         }
 
                                         if(hasDistanceMeasurement == false) {
-                                            //  tvWallWidth.setText(R.string.blank_value);
-                                            // tvWidthLeftOfWindow.setText(R.string.blank_value);
+                                            //  etWallWidth.setText(R.string.blank_value);
+                                            // etWidthLeftOfWindow.setText(R.string.blank_value);
                                             // distanceUnit.setText(R.string.blank_value);
                                         }
                                         hasDistanceMeasurement = false;
@@ -1078,8 +1324,8 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
                 //Distance Measurement
                 if(data != null && data.getConvertedValue() != Defines.defaultFloatValue && !data.getUnitStr().equals(Defines.defaultStringValue)){
-                    tvWallWidth.setText(data.getConvertedValueStrNoUnit());
-                    tvWidthLeftOfWindow.setText(data.getConvertedValueStrNoUnit());
+                    etWallWidth.setText(data.getConvertedValueStrNoUnit());
+                    etWidthLeftOfWindow.setText(data.getConvertedValueStrNoUnit());
                     //  distanceUnit.setText(data.getUnitStr());
                 }
 
@@ -1101,16 +1347,4 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     }
 
 
-
-    /**
-     * stop getModel timeout timer
-     */
-   /* void stopGetModelTimeOutTimer(){
-        if(getModelTimeoutTask == null){
-            return;
-        }
-        this.getModelTimeoutTask.cancel();
-        this.getModelTimeoutTimer.purge();
-    }
-*/
 }
