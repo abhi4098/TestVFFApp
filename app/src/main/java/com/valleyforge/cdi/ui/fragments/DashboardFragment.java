@@ -22,6 +22,7 @@ import com.valleyforge.cdi.api.RetrofitInterface;
 import com.valleyforge.cdi.generated.model.DashboardDataResponse;
 import com.valleyforge.cdi.generated.model.LoginResponse;
 import com.valleyforge.cdi.ui.activities.ActivePendingActivity;
+import com.valleyforge.cdi.ui.activities.CompletedProjectsActivity;
 import com.valleyforge.cdi.ui.activities.LoginActivity;
 import com.valleyforge.cdi.ui.activities.NavigationActivity;
 import com.valleyforge.cdi.utils.LoadingDialog;
@@ -65,6 +66,11 @@ public class DashboardFragment extends Fragment {
 
     @BindView(R.id.active_pending_cardView)
     CardView cvActivePending;
+
+
+    @BindView(R.id.competed_project_cardView)
+    CardView cvCompletedProjects;
+
 
     @BindView(R.id.completed_count)
     TextView tvCompletedCount;
@@ -127,6 +133,15 @@ public class DashboardFragment extends Fragment {
                 startActivity(i);
             }
         });
+
+        cvCompletedProjects.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(), CompletedProjectsActivity.class);
+                startActivity(i);
+            }
+        });
+
         setUpRestAdapter();
         getDashboardData();
         return rootView;

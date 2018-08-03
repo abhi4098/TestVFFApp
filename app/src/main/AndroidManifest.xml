@@ -50,10 +50,10 @@
             android:name=".ui.activities.ActivePendingActivity"
             android:label="@string/title_activity_active_pending"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.activities.ProjectDetailActivity"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape" />
         <activity
             android:name=".ui.activities.SearchDevicesActivity"
             android:screenOrientation="landscape" />
@@ -66,7 +66,8 @@
         <activity
             android:name=".ui.activities.YetiInformationActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".ui.activities.MeasurementGridActivity"></activity>
+        <activity android:name=".ui.activities.MeasurementGridActivity" />
+        <activity android:name=".ui.activities.CompletedProjectsActivity"></activity>
     </application>
 
 </manifest>

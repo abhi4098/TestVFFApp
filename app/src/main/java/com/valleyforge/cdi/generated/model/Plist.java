@@ -8,10 +8,10 @@ public class Plist {
 
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private String id;
     @SerializedName("deleted_at")
     @Expose
-    private Object deletedAt;
+    private String deletedAt;
     @SerializedName("created_at")
     @Expose
     private String createdAt;
@@ -23,10 +23,10 @@ public class Plist {
     private String pname;
     @SerializedName("property_id")
     @Expose
-    private Integer propertyId;
+    private String propertyId;
     @SerializedName("assign_pm")
     @Expose
-    private Integer assignPm;
+    private String assignPm;
     @SerializedName("start_date")
     @Expose
     private String startDate;
@@ -41,24 +41,24 @@ public class Plist {
     private String projectId;
     @SerializedName("assign_mt")
     @Expose
-    private Integer assignMt;
+    private String assignMt;
     @SerializedName("project_percentage")
     @Expose
-    private Integer projectPercentage;
+    private String projectPercentage;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Object getDeletedAt() {
+    public String getDeletedAt() {
         return deletedAt;
     }
 
-    public void setDeletedAt(Object deletedAt) {
+    public void setDeletedAt(String deletedAt) {
         this.deletedAt = deletedAt;
     }
 
@@ -86,19 +86,19 @@ public class Plist {
         this.pname = pname;
     }
 
-    public Integer getPropertyId() {
+    public String getPropertyId() {
         return propertyId;
     }
 
-    public void setPropertyId(Integer propertyId) {
+    public void setPropertyId(String propertyId) {
         this.propertyId = propertyId;
     }
 
-    public Integer getAssignPm() {
+    public String getAssignPm() {
         return assignPm;
     }
 
-    public void setAssignPm(Integer assignPm) {
+    public void setAssignPm(String assignPm) {
         this.assignPm = assignPm;
     }
 
@@ -134,19 +134,19 @@ public class Plist {
         this.projectId = projectId;
     }
 
-    public Integer getAssignMt() {
+    public String getAssignMt() {
         return assignMt;
     }
 
-    public void setAssignMt(Integer assignMt) {
+    public void setAssignMt(String assignMt) {
         this.assignMt = assignMt;
     }
 
-    public Integer getProjectPercentage() {
+    public String getProjectPercentage() {
         return projectPercentage;
     }
 
-    public void setProjectPercentage(Integer projectPercentage) {
+    public void setProjectPercentage(String projectPercentage) {
         this.projectPercentage = projectPercentage;
     }
 

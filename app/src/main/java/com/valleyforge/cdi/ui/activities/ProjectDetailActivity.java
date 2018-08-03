@@ -181,6 +181,11 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
 
             tvOtherDetails.setText(response.body().getPdetail().get(i).getPropertiesDescription());
 
+            if (!response.body().getPdetail().get(i).getProjectStatus().equals("Completed"))
+            {
+                btnbeginProject.setVisibility(View.VISIBLE);
+            }
+
 
             projectDetail.add(pDetail);
 

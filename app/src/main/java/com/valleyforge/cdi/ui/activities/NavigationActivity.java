@@ -193,7 +193,8 @@ public class NavigationActivity extends AppCompatActivity
             tvAppTitle.setText( item.getTitle());
             ivBackIcon.setVisibility(View.INVISIBLE);
         } else if (id == R.id.nav_completed) {
-
+            Intent i = new Intent(NavigationActivity.this, CompletedProjectsActivity.class);
+            startActivity(i);
 
 
         }  else if (id == R.id.nav_active) {

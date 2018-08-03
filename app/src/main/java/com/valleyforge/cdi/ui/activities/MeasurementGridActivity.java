@@ -59,6 +59,7 @@ public class MeasurementGridActivity extends AppCompatActivity implements View.O
 
             View dynamicChildLayout = getLayoutInflater().inflate(R.layout.layout_dyanmically_generated, llChildLayout, false);
             llParentLayout.addView(dynamicChildLayout);
+
             mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
             mRecyclerView.setHasFixedSize(true);
             mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
