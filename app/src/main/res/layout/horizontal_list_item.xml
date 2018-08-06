@@ -8,6 +8,7 @@
     android:orientation="vertical"
     android:layout_marginTop="10sp"
     android:layout_marginBottom="10sp"
+    android:id="@+id/room_cardview"
     android:layout_marginStart="15sp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 

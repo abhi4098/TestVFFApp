@@ -46,6 +46,18 @@ public class Plist {
     @Expose
     private String projectPercentage;
 
+    @SerializedName("pm_name")
+    @Expose
+    private String pmName;
+
+    public String getPmName() {
+        return pmName;
+    }
+
+    public void setPmName(String pmName) {
+        this.pmName = pmName;
+    }
+
     public String getId() {
         return id;
     }

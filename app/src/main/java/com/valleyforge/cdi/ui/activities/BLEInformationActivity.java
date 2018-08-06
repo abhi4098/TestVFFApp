@@ -193,7 +193,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @OnClick(R.id.details)
     public void detailsScreen(View view) {
-
+        tvAppTitle.setText("Room Details");
         tvDetails.setTextColor(Color.parseColor("#ffffff")); // custom color
         llDetails.setBackgroundColor(Color.parseColor("#048700"));
         tvMeasurement.setTextColor(Color.parseColor("#252525")); // custom color
@@ -212,7 +212,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @OnClick(R.id.measurements)
     public void measurementScreen(View view) {
-
+        tvAppTitle.setText("Room Measurement");
         tvMeasurement.setTextColor(Color.parseColor("#ffffff")); // custom color
         llMeasurement.setBackgroundColor(Color.parseColor("#048700"));
         tvDetails.setTextColor(Color.parseColor("#252525")); // custom color
@@ -230,7 +230,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @OnClick(R.id.pictures)
     public void picturesScreen(View view) {
-
+        tvAppTitle.setText("Room Pictures");
         tvPictures.setTextColor(Color.parseColor("#ffffff")); // custom color
         llPictures.setBackgroundColor(Color.parseColor("#048700"));
         tvDetails.setTextColor(Color.parseColor("#252525")); // custom color
@@ -427,7 +427,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         });
         ivLogout.setVisibility(View.GONE);
         status.setVisibility(View.VISIBLE);
-        tvAppTitle.setText("Measurement");
+        tvAppTitle.setText("Room Details");
         //Initialize all UI Fields
 
         //inclinationLabel = (TextView) findViewById(R.id.inclinationLabel);
@@ -567,109 +567,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
      * Different Leica models support different BTLE functionality.
      * @param deviceModel Device Model
      */
-    /*private void setUI( final String deviceModel ){
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                final String METHODTAG = ".setUI";
-                Log.d(CLASSTAG, METHODTAG+"ALL deviceModel: "+deviceModel);
-                if(deviceModel != null) {
-
-                    modelName.setText(deviceModel);
-
-                    try {
-                        if (currentDevice != null) {
-                            for (BleConnectionManager.BLECharacteristic bGC : currentDevice.getAllCharacteristics()) {
-                                Log.d(CLASSTAG, METHODTAG + "ALL Characteristics UI:strValue:" + bGC.getStrValue());
-                            }
-                        }
-                    } catch (DeviceException e) {
-                        Log.d(CLASSTAG, METHODTAG+" Error getting the list of characteristics");
-                    }
-                    //Show only the available elements for the models D110, LDM, D1, D2
-                    if (deviceModel.equals("D110") || deviceModel.startsWith("D1") || deviceModel.startsWith("D2") || deviceModel.equals("D210")) {
-                        if (inclinationLabel != null) {
-                            inclinationLabel.setVisibility(View.INVISIBLE);
-                        }
-                        if (inclination != null) {
-                            inclination.setVisibility(View.INVISIBLE);
-                        }
-                        if (inclinationUnitLabel != null) {
-                            inclinationUnitLabel.setVisibility(View.INVISIBLE);
-                        }
-                        if (inclinationUnit != null) {
-                            inclinationUnit.setVisibility(View.INVISIBLE);
-                        }
-                        if (directionLabel != null) {
-                            directionLabel.setVisibility(View.INVISIBLE);
-                        }
-                        if (direction != null) {
-                            direction.setVisibility(View.INVISIBLE);
-                        }
-                        if (directionUnitLabel != null) {
-                            directionUnitLabel.setVisibility(View.INVISIBLE);
-                        }
-                        if (directionUnit != null) {
-                            directionUnit.setVisibility(View.INVISIBLE);
-                        }
-
-                    }
-                    //Show only the available elements for the models D810
-                    else if (deviceModel.equals("D810")) {
-                        modelName.setText(deviceModel);
-                    }
-
-                    //Show only the available elements for the models D510, LD520
-                    else if (deviceModel.equals("D510") || deviceModel.equals("0")) {
-
-                        if (dist != null) {
-                            dist.setVisibility(View.INVISIBLE);
-                        }
-                        if (dist != null) {
-                            dist.setVisibility(View.INVISIBLE);
-                        }
-                        if (sendCommand != null) {
-                            sendCommand.setVisibility(View.INVISIBLE);
-                        }
-                        if (startTracking != null) {
-                            startTracking.setVisibility(View.INVISIBLE);
-                        }
-                        if (stopTracking != null) {
-                            stopTracking.setVisibility(View.INVISIBLE);
-                        }
-                        if (read != null) {
-                            read.setVisibility(View.INVISIBLE);
-                        }
-                        if (clear != null) {
-                            clear.setVisibility(View.INVISIBLE);
-                        }
-                        if (deviceModel.equals("D510") || (deviceModel.equals("0")&&currentDevice.getDeviceName().startsWith("DISTO")) ) {
-                            modelName.setText(R.string.D510);
-
-                        }
-
-                        // D510 model does not send orientatio data
-                        if (directionLabel != null) {
-                            directionLabel.setVisibility(View.INVISIBLE);
-                        }
-                        if (direction != null) {
-                            direction.setVisibility(View.INVISIBLE);
-                        }
-                        if (directionUnitLabel != null) {
-                            directionUnitLabel.setVisibility(View.INVISIBLE);
-                        }
-                        if (directionUnit != null) {
-                            directionUnit.setVisibility(View.INVISIBLE);
-                        }
-                    }
-                }else{
-                    Log.d(CLASSTAG, METHODTAG +": parameter deviceModel is null");
-                }
-            }
-        });
-
-    }*/
 
     /**
      * Verify if the current device need to be reconnected.
@@ -1151,28 +1049,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     /**
      * Defines the behavior of the buttons in the Activity
      */
- /*   private class ButtonListener implements View.OnClickListener {
-        @Override
-        public void onClick(final View v) {
-            final String METHODTAG = ".ButtonListener.onClick";
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        switch (v.getId()) {
 
-                            default:
-                                Log.e(CLASSTAG, METHODTAG+": Error in ButtonListener.onClick");
-                                break;
-                        }
-                    } catch (DeviceException e) {
-                        Log.e(CLASSTAG, METHODTAG+": Error sending the command", e);
-                        showAlert("Error Sending Command. "+ e.getMessage());
-                    }
-                }
-            }).start();
-        }
-    }*/
 
 
     synchronized void showConnectedDisconnectedDialog(final boolean connected) {

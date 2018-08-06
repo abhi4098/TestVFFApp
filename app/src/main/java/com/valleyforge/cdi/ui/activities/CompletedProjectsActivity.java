@@ -118,7 +118,7 @@ public class CompletedProjectsActivity extends AppCompatActivity  implements Vie
             plist.setProjectId(response.body().getPlist().get(i).getProjectId());
             plist.setProjectPercentage(response.body().getPlist().get(i).getProjectPercentage());
             plist.setId(response.body().getPlist().get(i).getId());
-            plist.setAssignPm(response.body().getPlist().get(i).getAssignPm());
+            plist.setPmName(response.body().getPlist().get(i).getPmName());
             projectList.add(plist);
         }
 

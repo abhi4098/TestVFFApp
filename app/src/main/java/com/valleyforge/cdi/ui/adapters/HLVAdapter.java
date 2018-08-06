@@ -2,7 +2,9 @@ package com.valleyforge.cdi.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +13,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.valleyforge.cdi.R;
+import com.valleyforge.cdi.ui.activities.BLEInformationActivity;
+import com.valleyforge.cdi.ui.activities.CompletedProjectsActivity;
+import com.valleyforge.cdi.ui.activities.NavigationActivity;
+import com.valleyforge.cdi.ui.activities.SearchDevicesActivity;
 
 import java.util.ArrayList;
 
-public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder> {
+public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
 
     ArrayList<String> alName;
     Context context;
@@ -28,6 +34,7 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        Log.e("abhi", "onCreateViewHolder:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>. "  );
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.horizontal_list_item, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(v);
@@ -36,10 +43,17 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
+        Log.e("abhi", "onBindViewHolder:............................................. " );
         viewHolder.test.setText(alName.get(i));
+        viewHolder.cvHorizontalRoom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context, BLEInformationActivity.class);
+               context.startActivity(i);
+            }
+        });
 
-
-       /* viewHolder.setClickListener(new ItemClickListener() {
+        /*viewHolder.setClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position, boolean isLongClick) {
                 if (isLongClick) {
@@ -61,11 +75,14 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder> {
 
 
         public TextView test;
+        public CardView cvHorizontalRoom;
        // private ItemClickListener clickListener;
 
         public ViewHolder(View itemView) {
             super(itemView);
             test = (TextView) itemView.findViewById(R.id.test);
+            cvHorizontalRoom = (CardView) itemView.findViewById(R.id.room_cardview);
+
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }

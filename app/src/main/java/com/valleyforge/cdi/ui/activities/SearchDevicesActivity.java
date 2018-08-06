@@ -121,7 +121,7 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 
 		final String METHODTAG = ".onBackPressed";
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("You are about to close the app. That results in disconnecting from all devices. Do you want to close the app?");
+		builder.setMessage(" Go back to previous screen?");
 		builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
@@ -781,7 +781,7 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 				BLEInformationActivity.setCurrentDevice(device, getApplicationContext());
 
 				//Launch the BLEInformationActivity
-				Intent informationIntent = new Intent(SearchDevicesActivity.this, BLEInformationActivity.class);
+				Intent informationIntent = new Intent(SearchDevicesActivity.this, MeasurementGridActivity.class);
 				startActivity(informationIntent);
 			}
 		}

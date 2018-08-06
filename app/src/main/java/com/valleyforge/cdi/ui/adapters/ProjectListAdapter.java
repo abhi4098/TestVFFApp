@@ -23,9 +23,12 @@ import android.widget.Toast;
 import com.valleyforge.cdi.R;
 import com.valleyforge.cdi.generated.model.Plist;
 import com.valleyforge.cdi.ui.activities.ActivePendingActivity;
+import com.valleyforge.cdi.ui.activities.BLEInformationActivity;
+import com.valleyforge.cdi.ui.activities.CompletedProjectsActivity;
 import com.valleyforge.cdi.ui.activities.NavigationActivity;
 import com.valleyforge.cdi.ui.activities.ProfileActivity;
 import com.valleyforge.cdi.ui.activities.ProjectDetailActivity;
+import com.valleyforge.cdi.ui.activities.SearchDevicesActivity;
 import com.valleyforge.cdi.ui.fragments.ActivePendingFragment;
 
 import java.lang.reflect.Field;
@@ -91,6 +94,13 @@ public class ProjectListAdapter extends ArrayAdapter<Plist> {
         if (plist !=null) {
             holder.projectName.setText(plist.getPname());
             holder.projectId.setText(plist.getProjectId());
+            holder.btnContinueMeasurement.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(context, SearchDevicesActivity.class);
+                    context.startActivity(i);
+                }
+            });
             holder.ivPopUpMenu.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override

@@ -87,7 +87,7 @@ public class CompletedProjectListAdapter extends ArrayAdapter<Plist> {
         if (plist !=null) {
             holder.projectName.setText(plist.getPname());
             holder.projectId.setText(plist.getProjectId());
-            holder.projectManager.setText(plist.getAssignPm());
+            holder.projectManager.setText(plist.getPmName());
 
 
             holder.btnViewDetails.setOnClickListener(new View.OnClickListener() {

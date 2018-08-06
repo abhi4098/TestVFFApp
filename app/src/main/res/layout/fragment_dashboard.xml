@@ -28,6 +28,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:cardBackgroundColor="@color/colorPrimary"
+                    app:cardElevation="10dp">
             <ImageView
                 android:layout_width="60sp"
                 android:layout_height="80sp"
@@ -36,12 +42,7 @@
                 android:src="@mipmap/active_pending_projects"
                 />
 
-                 <LinearLayout
-                       android:layout_width="2dp"
-                        android:layout_height="match_parent"
-                          android:background="#D3D3D3">
-
-                            </LinearLayout>
+                </android.support.v7.widget.CardView>
 
                 <RelativeLayout
                     android:layout_height="match_parent"
@@ -102,6 +103,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
+                <android.support.v7.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:cardBackgroundColor="@color/colorPrimary"
+                    app:cardElevation="3dp">
                 <ImageView
                     android:layout_width="60sp"
                     android:layout_height="80sp"
@@ -109,13 +115,9 @@
                     android:layout_gravity="center_vertical"
                     android:src="@mipmap/completed_project"
                     />
+                </android.support.v7.widget.CardView>
 
-                <LinearLayout
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="#D3D3D3">
 
-                </LinearLayout>
 
                 <RelativeLayout
                     android:layout_height="match_parent"
@@ -182,6 +184,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:cardBackgroundColor="@color/colorPrimary"
+                    app:cardElevation="10dp">
                 <ImageView
                     android:layout_width="60sp"
                     android:layout_height="80sp"
@@ -190,12 +198,7 @@
                     android:src="@mipmap/active_pending_projects"
                     />
 
-                <LinearLayout
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="#D3D3D3">
-
-                </LinearLayout>
+                </android.support.v7.widget.CardView>
 
                 <RelativeLayout
                     android:layout_height="match_parent"
@@ -255,6 +258,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
+                <android.support.v7.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:cardBackgroundColor="@color/colorPrimary"
+                    app:cardElevation="3dp">
 
                 <ImageView
                     android:layout_width="60sp"
@@ -264,13 +272,7 @@
                     android:src="@mipmap/active_pending_projects"
                     />
 
-                <LinearLayout
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="#D3D3D3">
-
-                </LinearLayout>
-
+                </android.support.v7.widget.CardView>
                 <RelativeLayout
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"

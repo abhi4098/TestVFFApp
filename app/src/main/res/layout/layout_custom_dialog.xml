@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="15dp"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+    <requestFocus/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Room"
+        android:textColor="@color/colorAccent"
+        android:textSize="20sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="15sp"
+
+        android:weightSum=".9">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight=".3"
+
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:fontFamily="sans-serif"
+                android:text="Floor"/>
+
+            <EditText
+                android:id="@+id/floor_num"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:inputType="numberDecimal"
+                android:layout_marginTop="5sp"
+                android:paddingTop="5sp"
+                android:paddingBottom="5sp"
+                android:fontFamily="sans-serif"
+                android:paddingStart="10sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:background="@drawable/rectangular_background"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight=".3"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:fontFamily="sans-serif"
+                android:text="Room No."/>
+
+            <EditText
+                android:id="@+id/room_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:layout_marginTop="5sp"
+                android:paddingTop="5sp"
+                android:paddingBottom="5sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:fontFamily="sans-serif"
+                android:paddingStart="10sp"
+                android:background="@drawable/rectangular_background"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight=".3"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:fontFamily="sans-serif"
+                android:text="No. of Windows"/>
+
+            <EditText
+                android:id="@+id/number_of_windows"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:inputType="numberDecimal"
+
+                android:layout_marginTop="5sp"
+                android:paddingTop="5sp"
+                android:paddingBottom="5sp"
+                android:fontFamily="sans-serif"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:paddingStart="10sp"
+                android:background="@drawable/rectangular_background"
+                />
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10sp"
+        android:orientation="vertical"
+
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp"
+            android:layout_marginStart="20sp"
+            android:layout_marginEnd="20sp"
+            android:fontFamily="sans-serif"
+            android:text="Room Description"/>
+
+        <EditText
+            android:id="@+id/room_description"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textColor="@color/colorAccent"
+            android:textSize="16sp"
+            android:maxLength="2000"
+            android:layout_marginTop="5sp"
+            android:paddingTop="5sp"
+            android:maxLines="3"
+            android:lines="3"
+            android:paddingBottom="5sp"
+            android:fontFamily="sans-serif"
+            android:layout_marginStart="20sp"
+            android:inputType="textCapSentences|textMultiLine"
+            android:layout_marginEnd="20sp"
+            android:paddingStart="10sp"
+            android:background="@drawable/rectangular_background"
+            />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/add_room_btn"
+        android:layout_height="45sp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:textColor="@color/white"
+        android:layout_marginStart="5sp"
+        android:layout_marginEnd="5sp"
+        android:textSize="15sp"
+        android:textAllCaps="false"
+        android:layout_marginTop="20sp"
+        android:backgroundTint="@color/login_button_color"
+        android:text="Add Room  "/>
+
+
+</LinearLayout>
