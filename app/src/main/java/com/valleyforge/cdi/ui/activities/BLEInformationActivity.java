@@ -1,28 +1,56 @@
 package com.valleyforge.cdi.ui.activities;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.Target;
 import com.valleyforge.cdi.R;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,6 +98,10 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     //Textfields present information to user
 
+    private int PICK_FROM_GALLERY = 1;
+    private static final int REQUEST_WRITE_STORAGE = 112;
+    private final String[] requiredPermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+    String imgDecodableString;
 
 
     AlertDialog commandDialog;
@@ -158,10 +190,19 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     @BindView(R.id.ll_on_measurement_click)
     LinearLayout llOnMeasurementClick;
 
+    @BindView(R.id.ceiling_pic_added_layout)
+    LinearLayout llCeilingPicAddedLayout;
+
+    @BindView(R.id.progress)
+    ProgressBar imageProgressBar;
 
 
 
 
+
+
+    @BindView(R.id.person_image)
+    ImageView personImage;
     @BindView(R.id.back_icon)
     ImageView ivBackIcon;
     @BindView(R.id.toolbar)
@@ -177,6 +218,63 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @BindView(R.id.additional_data)
     EditText etAdditionalData;
+
+    @BindView(R.id.ceiling_to_floor_button)
+    LinearLayout llCeilingToFloor;
+
+    @BindView(R.id.wall_to_wall_btn)
+    LinearLayout llWallToWall;
+
+    @BindView(R.id.wall_to_wall_pic_added_layout)
+    LinearLayout llWallToWallPicAddedLayout;
+
+    @BindView(R.id.windows_added_layout)
+    LinearLayout llWindowsAddedLayout;
+
+
+    @BindView(R.id.windows_btn)
+    LinearLayout llWindows;
+
+
+    @OnClick(R.id.add_ceiling_pic_again)
+    public void addCeilingImage(View view) {
+        Checkpermission();
+
+    }
+
+   /* @OnClick(R.id.delete_ceiling_pic)
+    public void deleteCeilingPic(View view) {
+        llCeilingToFloor.setVisibility(View.GONE);
+        llCeilingPicAddedLayout.setVisibility(View.VISIBLE);
+        Checkpermission();
+
+    }
+    */
+
+
+
+    @OnClick(R.id.ceiling_to_floor_button)
+    public void ceilingToFloor(View view) {
+        llCeilingToFloor.setVisibility(View.GONE);
+        llCeilingPicAddedLayout.setVisibility(View.VISIBLE);
+        Checkpermission();
+
+        }
+
+    @OnClick(R.id.wall_to_wall_btn)
+    public void wallToWall(View view) {
+        llWallToWall.setVisibility(View.GONE);
+        llWallToWallPicAddedLayout.setVisibility(View.VISIBLE);
+        Checkpermission();
+    }
+
+    @OnClick(R.id.windows_btn)
+    public void windows(View view) {
+        llWindows.setVisibility(View.GONE);
+        llWindowsAddedLayout.setVisibility(View.VISIBLE);
+        Checkpermission();
+    }
+
 
 
 
@@ -1221,6 +1319,244 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
         });
 
+    }
+
+
+    private void Checkpermission() {
+
+        if (getPermissions()) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.CAMERA)) {
+                makeRequest();
+            } else {
+                makeRequest();
+            }
+        } else {
+            setDialogForImage();
+        }
+    }
+
+    protected void makeRequest() {
+        ActivityCompat.requestPermissions(this,
+                requiredPermissions,
+                REQUEST_WRITE_STORAGE);
+    }
+
+
+    private void setDialogForImage() {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_select_from_source);
+        ImageView btnCamera = (ImageView) dialog.findViewById(R.id.btnCamera);
+        ImageView btnDocs = (ImageView) dialog.findViewById(R.id.btnDoc);
+        TextView txtDoc = (TextView) dialog.findViewById(R.id.txtDoc);
+        btnDocs.setVisibility(View.GONE);
+        txtDoc.setVisibility(View.GONE);
+        ImageView btnGallery = (ImageView) dialog.findViewById(R.id.btnGallery);
+
+        WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
+        wmlp.gravity = Gravity.TOP;
+        wmlp.x = 0;   //x position
+        Resources r = getResources();
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, r.getDisplayMetrics());
+        wmlp.y = (int) px; //y position
+        Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+        int width = display.getWidth();
+        int height = display.getHeight();
+        dialog.getWindow().setLayout((6 * width) / 10, Toolbar.LayoutParams.WRAP_CONTENT);
+        dialog.show();
+
+
+        btnCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, 0);
+
+                dialog.cancel();
+            }
+        });
+
+        btnGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galleryIntent, PICK_FROM_GALLERY);
+                dialog.cancel();
+
+            }
+        });
+
+    }
+
+
+    public static Bitmap getCircularBitmap(Bitmap bitmap) {
+        Bitmap output;
+
+        if (bitmap.getWidth() > bitmap.getHeight()) {
+            output = Bitmap.createBitmap(bitmap.getHeight(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        } else {
+            output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getWidth(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0,500, 500);
+
+        /*float r = 0;
+
+        if (bitmap.getWidth() > bitmap.getHeight()) {
+            r = bitmap.getHeight() / 2;
+        } else {
+            r = bitmap.getWidth() / 2;
+        }
+*/
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRect(0, 0, 500, 500, paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+        return output;
+    }
+
+
+
+
+    private void setProfilePicURL(String profilepicUrlComplete) {
+        Glide.with(this).load(profilepicUrlComplete).asBitmap().centerCrop().dontAnimate().dontTransform().listener(new RequestListener<String, Bitmap>() {
+            @Override
+            public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                imageProgressBar.setVisibility(View.GONE);
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                imageProgressBar.setVisibility(View.GONE);
+                return false;
+            }
+        })
+                .into(new BitmapImageViewTarget(personImage) {
+                    @Override
+                    protected void setResource(Bitmap bitmap) {
+                        Bitmap output;
+
+                        if (bitmap.getWidth() > bitmap.getHeight()) {
+                            output = Bitmap.createBitmap(bitmap.getHeight(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+                        } else {
+                            output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getWidth(), Bitmap.Config.ARGB_8888);
+                        }
+
+                        Canvas canvas = new Canvas(output);
+
+                        final int color = 0xff424242;
+                        final Paint paint = new Paint();
+                        final Rect rect = new Rect(0, 0,500, 500);
+
+                       /* float r = 0;
+
+                        if (bitmap.getWidth() > bitmap.getHeight()) {
+                            r = bitmap.getHeight() / 2;
+                        } else {
+                            r = bitmap.getWidth() / 2;
+                        }*/
+
+                        paint.setAntiAlias(true);
+                        canvas.drawARGB(0, 0, 0, 0);
+                        paint.setColor(color);
+                        //canvas.drawCircle(r, r, r, paint);
+                        canvas.drawRect(0  , 0, 500, 500,paint);
+
+                        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+                        canvas.drawBitmap(bitmap, rect, rect, paint);
+                        Log.e("abhi", "setResource: -----------output"+output );
+                        personImage.setImageBitmap(output);
+                        imageProgressBar.setVisibility(View.GONE);
+
+
+                    }
+                });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        if (requestCode == 0 && resultCode == RESULT_OK) {
+
+
+            Bitmap bp = (Bitmap) data.getExtras().get("data");
+
+            if (bp !=null) {
+                personImage.setImageBitmap(getCircularBitmap(bp));
+                Uri tempUri = getImageUri(getApplicationContext(), bp);
+                File filePath = new File(getRealPathFromURI(tempUri));
+               // imageProgressBar.setVisibility(View.VISIBLE);
+                setProfilePicURL(filePath.getPath());
+                //sendImagesToServerFromCamera(filePath.getPath());
+            }
+
+
+        } else if (requestCode == PICK_FROM_GALLERY && resultCode == RESULT_OK) {
+
+          //  personImage.setBackgroundResource(R.drawable.profile_icon);
+
+
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            if (cursor != null) {
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                imgDecodableString = cursor.getString(columnIndex);
+                cursor.close();
+                setProfilePicURL(imgDecodableString);
+                // sendImagesToServerFromCamera(imgDecodableString);
+            }
+
+            Log.e("abhi", "onActivityResult: image decodable "+imgDecodableString );
+            imageProgressBar.setVisibility(View.VISIBLE);
+            Log.e("abhi", "onActivityResult:.......... " +imgDecodableString );
+
+
+
+        }
+    }
+
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+    private String getRealPathFromURI(Uri tempUri) {
+        Cursor cursor = getContentResolver().query(tempUri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
+    }
+    private boolean getPermissions() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)
+            return true;
+        else if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)
+            return true;
+        return false;
     }
 
 

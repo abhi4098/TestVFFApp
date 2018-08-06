@@ -22,6 +22,7 @@ import com.valleyforge.cdi.api.RetrofitInterface;
 import com.valleyforge.cdi.generated.model.DashboardDataResponse;
 import com.valleyforge.cdi.generated.model.LoginResponse;
 import com.valleyforge.cdi.ui.activities.ActivePendingActivity;
+import com.valleyforge.cdi.ui.activities.BLEInformationActivity;
 import com.valleyforge.cdi.ui.activities.CompletedProjectsActivity;
 import com.valleyforge.cdi.ui.activities.LoginActivity;
 import com.valleyforge.cdi.ui.activities.NavigationActivity;
@@ -129,7 +130,7 @@ public class DashboardFragment extends Fragment {
         cvActivePending.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), ActivePendingActivity.class);
+                Intent i = new Intent(getActivity(), BLEInformationActivity.class);
                 startActivity(i);
             }
         });

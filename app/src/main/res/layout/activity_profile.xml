@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="110dp"
         android:layout_height="110dp"
         android:focusable="true"
@@ -32,21 +32,28 @@
         <requestFocus />
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profilePic"
+            android:id="@+id/person_image"
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:src="#ffffff"
             android:layout_gravity="bottom|center_horizontal" />
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/iv_camera"
+            android:id="@+id/upload_pic"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/green_camera_icon_36"
             android:layout_gravity="bottom|right"
 
             />
-    </FrameLayout>
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="35sp"
+            android:layout_height="35sp"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+    </RelativeLayout>
 
 
         <android.support.design.widget.TextInputLayout
