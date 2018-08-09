@@ -2,11 +2,14 @@ package com.valleyforge.cdi.api;
 
 
 import com.valleyforge.cdi.generated.model.DashboardDataResponse;
+import com.valleyforge.cdi.generated.model.FloorDetailsResponse;
 import com.valleyforge.cdi.generated.model.ForgotPasswordResponse;
 import com.valleyforge.cdi.generated.model.Login;
 import com.valleyforge.cdi.generated.model.LoginResponse;
 import com.valleyforge.cdi.generated.model.ProjectDetailResponse;
 import com.valleyforge.cdi.generated.model.ProjectListResponse;
+import com.valleyforge.cdi.generated.model.RoomsListResponse;
+import com.valleyforge.cdi.generated.model.SkipResponse;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -70,6 +73,25 @@ public class RetrofitInterface {
         );
     }
 
+    public interface UserFloorDetailsClient {
+        @FormUrlEncoded
+        @POST("floordetailsApi")
+        public Call<FloorDetailsResponse> userFloorDetailData(
+                @Field("id") String id
+
+        );
+    }
+
+
+    public interface UserRoomListClient {
+        @FormUrlEncoded
+        @POST("floorroomslistApi")
+        public Call<RoomsListResponse> userRoomListData(
+                @Field("floor_plan_id") int floor_plan_id
+
+        );
+    }
+
     public interface UserProfileDetailsClient {
         @FormUrlEncoded
         @POST("profileApi")
@@ -78,6 +100,28 @@ public class RetrofitInterface {
 
         );
     }
+
+    public interface SkipFloorClient {
+        @FormUrlEncoded
+        @POST("skipFloorApi")
+        public Call<SkipResponse> skipFloorData(
+                @Field("floor_plan_id") int floor_plan_id,
+                @Field("skip_reason") String skip_reason
+
+        );
+    }
+
+    public interface SkipRoomClient {
+        @FormUrlEncoded
+        @POST("skipRoomApi")
+        public Call<SkipResponse> skipRoomData(
+                @Field("floor_plan_id") Integer floor_plan_id,
+                @Field("skip_reason") String skip_reason,
+                @Field("room_id") Integer room_id
+
+        );
+    }
+
 
 
     public interface UpdateProfileDetailsClient {
@@ -90,6 +134,22 @@ public class RetrofitInterface {
                 @Field("email") String email,
                 @Field("phone") String phone,
                 @Field("address") String address
+
+
+        );
+    }
+
+
+    public interface AddRoomClient {
+        @FormUrlEncoded
+        @POST("addRoomApi")
+        public Call<RoomsListResponse> addRoomDataData(
+                @Field("room_name") String room_name,
+                @Field("floor_plan_id") int floor_plan_id,
+                @Field("no_of_windows") String no_of_windows,
+                @Field("room_status") int room_status,
+                @Field("room_desc") String room_desc
+
 
 
         );

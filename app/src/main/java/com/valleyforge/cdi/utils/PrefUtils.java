@@ -29,6 +29,7 @@ public class PrefUtils {
     public static String LOGGED_IN_USER_ADD = "address";
     public static String LOGGED_IN_USER_EMAIL = "user_email";
     public static String CONTEXT_ID = "context_id";
+    public static String PROJECT_ID = "project_id";
 
   /*  public static String LOGGED_IN_USER_EMAIL = "user_email";
     public static String LOGGED_IN_USER_ADD = "user_add";
@@ -100,17 +101,17 @@ public class PrefUtils {
         return sharedPreferences.getString(PrefUtils.KEY_AUTH_TOKEN, "");
     }*/
 
-    public static void storeProject(String project, Context context) {
+    public static void storeProjectId(String project, Context context) {
         SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);
         sharedPreferences.edit()
-                .putString(PROJECT, project)
+                .putString(PROJECT_ID, project)
                 .apply();
 
     }
 
-    public static String getProject(Context context) {
+    public static String getProjectId(Context context) {
         SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);
-        return sharedPreferences.getString(PROJECT, "");
+        return sharedPreferences.getString(PROJECT_ID, "");
     }
 
     public static void storeProjectOwner(String owner, Context context) {

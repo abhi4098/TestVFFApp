@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import ch.leica.sdk.Devices.Device;
 import ch.leica.sdk.Devices.DeviceManager;
 import ch.leica.sdk.ErrorHandling.ErrorDefinitions;
@@ -89,6 +91,17 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 	TextView tvAppTitle;
 	@BindView(R.id.logout)
 	ImageView ivLogout;
+
+	@BindView(R.id.skip_device_connection)
+    Button btnSkipConnection;
+
+	@OnClick(R.id.skip_device_connection)
+            public void skipConnection(){
+
+        Intent informationIntent = new Intent(SearchDevicesActivity.this, MeasurementGridActivity.class);
+        startActivity(informationIntent);
+
+    }
 	/**
 	 * Current selected device
 	 */

@@ -130,7 +130,7 @@ public class DashboardFragment extends Fragment {
         cvActivePending.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), BLEInformationActivity.class);
+                Intent i = new Intent(getActivity(), ActivePendingActivity.class);
                 startActivity(i);
             }
         });

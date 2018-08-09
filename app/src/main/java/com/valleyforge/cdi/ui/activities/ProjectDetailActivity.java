@@ -165,6 +165,9 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
            /* pDetail.setA(response.body().getPdetail().get(i).getProjectManagerName());
             pDetail.setProjectAssignedPm(response.body().getPdetail().get(i).getProjectAssignedPm());*/
 
+           PrefUtils.storeProjectId(response.body().getPdetail().get(i).getId(),this);
+            Log.e("abhi", "setProjectDetail:............................... "  +response.body().getPdetail().get(i).getId());
+
             tvPropertyName.setText(response.body().getPdetail().get(i).getPropertiesName());
 
            // tvDateOfAppointment.setText(response.body().getPdetail().get(i).getPropertiesName());
