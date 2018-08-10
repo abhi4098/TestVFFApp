@@ -55,16 +55,12 @@ import com.bumptech.glide.request.target.Target;
 import com.valleyforge.cdi.R;
 import com.valleyforge.cdi.api.ApiAdapter;
 import com.valleyforge.cdi.api.RetrofitInterface;
-import com.valleyforge.cdi.generated.model.DashboardDataResponse;
 import com.valleyforge.cdi.generated.model.MeasurementResponse;
-import com.valleyforge.cdi.generated.model.Roomslist;
 import com.valleyforge.cdi.generated.model.WindowsListResponse;
 import com.valleyforge.cdi.generated.model.Windowslist;
-import com.valleyforge.cdi.ui.adapters.FloorListAdapter;
 import com.valleyforge.cdi.ui.adapters.HLVAdapter;
 import com.valleyforge.cdi.utils.LoadingDialog;
 import com.valleyforge.cdi.utils.NetworkUtils;
-import com.valleyforge.cdi.utils.PrefUtils;
 import com.valleyforge.cdi.utils.SnakBarUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -93,7 +89,6 @@ import ch.leica.sdk.commands.ReceivedData;
 import ch.leica.sdk.commands.ReceivedDataPacket;
 import ch.leica.sdk.commands.response.Response;
 import ch.leica.sdk.commands.response.ResponseBLEMeasurements;
-import ch.leica.sdk.connection.BleConnectionManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -369,7 +364,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                 windowDescription = etWindowDescription.getText().toString();
                 if ( windowName!= null && !windowName.equals("")) {
                     dialog.cancel();
-                    measurementScreen(v);
+                    measurementScreen(v, windowName);
 
                 }
                 else
@@ -408,6 +403,8 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         llOnDetailsClick.setVisibility(View.VISIBLE);
         llOnMeasurementClick.setVisibility(View.GONE);
         llOnPicturesClick.setVisibility(View.GONE);
+        setUpRestAdapter();
+        setWindowsList();
 
 
 
@@ -415,7 +412,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
 
     @OnClick(R.id.measurements)
-    public void measurementScreen(View view) {
+    public void measureScreen(View view ) {
         tvAppTitle.setText("Room Measurement");
         tvMeasurement.setTextColor(Color.parseColor("#ffffff")); // custom color
         llMeasurement.setBackgroundColor(Color.parseColor("#048700"));
@@ -432,6 +429,23 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     }
 
+    public void measurementScreen(View view, String window) {
+        windowName = window;
+        tvAppTitle.setText("Room Measurement");
+        tvMeasurement.setTextColor(Color.parseColor("#ffffff")); // custom color
+        llMeasurement.setBackgroundColor(Color.parseColor("#048700"));
+        tvDetails.setTextColor(Color.parseColor("#252525")); // custom color
+        llDetails.setBackgroundColor(Color.parseColor("#ffffff"));
+        tvPictures.setTextColor(Color.parseColor("#252525")); // custom color
+        llPictures.setBackgroundColor(Color.parseColor("#ffffff"));
+
+        llOnDetailsClick.setVisibility(View.GONE);
+        llOnMeasurementClick.setVisibility(View.VISIBLE);
+        llOnPicturesClick.setVisibility(View.GONE);
+
+
+
+    }
     @OnClick(R.id.pictures)
     public void picturesScreen(View view) {
         tvAppTitle.setText("Room Pictures");
@@ -658,13 +672,14 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         else
         {
          setUpRestAdapter();
-         sendMeasurementData();
+         sendMeasurementData(view);
 
         }
 
     }
 
-    private void sendMeasurementData() {
+    private void sendMeasurementData(final View view) {
+        Log.e("abhi", "sendMeasurementData: ..................." +windowName );
         LoadingDialog.showLoadingDialog(this,"Loading...");
         Call<MeasurementResponse> call = MeasurementAdapter.measurementData(floorPlanId,roomId,windowName,wallWidth,widthLeftOfWindow,ibWidthOfWindow,ibLengthOfWindow,widthRightOfWindow,lengthCielFlr,
                 pocketDepth,carpetInst);
@@ -676,6 +691,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                     if (response.isSuccessful()) {
                         if(response.body().getType() == 1) {
                             Log.e("abhi", "onResponse:........... " +response.body().getMsg());
+                            picturesScreen(view);
                             /*alWindows = new ArrayList<>();
                             for (int i=0; i<response.body().getMeasurementDetails().size(); i++) {
 
@@ -803,6 +819,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                                 windowslist.setFloorRoom(response.body().getWindowslist().get(i).getFloorRoom());
                                 windowslist.setId(response.body().getWindowslist().get(i).getId());
                                 windowslist.setWindow(response.body().getWindowslist().get(i).getWindow());
+                                windowslist.setWindowStatus(response.body().getWindowslist().get(i).getWindowStatus());
                                 Log.e("abhi", "onResponse:................. " +response.body().getWindowslist().get(i).getWindow() );
 
 
@@ -819,9 +836,10 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                             mAdapter = new HLVAdapter(BLEInformationActivity.this, alWindows,"windowList","test","test2");
                             mRecyclerView.setAdapter(mAdapter);
                             Toast.makeText(BLEInformationActivity.this,response.body().getMsg(),Toast.LENGTH_SHORT).show();
-
+                            LoadingDialog.cancelLoading();
                         }
                         else{
+                            LoadingDialog.cancelLoading();
                             Toast.makeText(BLEInformationActivity.this,response.body().getMsg(),Toast.LENGTH_SHORT).show();
                         }
                         LoadingDialog.cancelLoading();

@@ -64,6 +64,20 @@ public class Windowslist {
     @Expose
     private Integer projectId;
 
+    @SerializedName("window_status")
+    @Expose
+    private String windowStatus;
+
+
+    public String getWindowStatus() {
+        return windowStatus;
+    }
+
+    public void setWindowStatus(String windowStatus) {
+        this.windowStatus = windowStatus;
+    }
+
+
     public Integer getId() {
         return id;
     }

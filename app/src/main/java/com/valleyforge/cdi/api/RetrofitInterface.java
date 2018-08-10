@@ -128,9 +128,9 @@ public class RetrofitInterface {
         @FormUrlEncoded
         @POST("skipRoomApi")
         public Call<SkipResponse> skipRoomData(
-                @Field("floor_plan_id") Integer floor_plan_id,
+                @Field("floor_plan_id") String floor_plan_id,
                 @Field("skip_reason") String skip_reason,
-                @Field("room_id") Integer room_id
+                @Field("room_id") String room_id
 
         );
     }

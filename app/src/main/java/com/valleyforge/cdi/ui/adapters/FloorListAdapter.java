@@ -469,7 +469,7 @@ public class FloorListAdapter extends ArrayAdapter<Floorslist> {
 
                 @Override
                 public void onFailure(Call<RoomsListResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... "  );
+                    Log.e("abhi", "onResponse: error....................... " +t.getMessage()  );
 
                     LoadingDialog.cancelLoading();
                 }

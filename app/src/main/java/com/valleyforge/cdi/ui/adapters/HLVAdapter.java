@@ -85,7 +85,7 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
             Log.e("abhi", "onBindViewHolder:............................................. " + alRooms.get(i).getRoomName());
             viewHolder.tvRoomName.setText(alRooms.get(i).getRoomName());
             viewHolder.tvWindowsCount.setText(alRooms.get(i).getNoOfWindows());
-            if (alRooms.get(i).getRoomStatus() == 1) {
+            if (alRooms.get(i).getRoomStatus().toString().equals("Yes")) {
                 viewHolder.cvHorizontalRoom.setCardBackgroundColor(Color.parseColor("#048700"));
             } else {
                 viewHolder.cvHorizontalRoom.setCardBackgroundColor(Color.parseColor("#252525"));
@@ -103,6 +103,12 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
         }
         else{
             viewHolder.tvRoomName.setText(alWindows.get(i).getWindow());
+            if (alWindows.get(i).getWindowStatus().equals("Yes")) {
+                viewHolder.cvHorizontalRoom.setCardBackgroundColor(Color.parseColor("#048700"));
+            } else {
+                viewHolder.cvHorizontalRoom.setCardBackgroundColor(Color.parseColor("#252525"));
+
+            }
             viewHolder.tvWindowsHeader.setVisibility(View.GONE);
             viewHolder.tvWindowsCount.setVisibility(View.GONE);
 
@@ -110,7 +116,7 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
                 @Override
                 public void onClick(View v) {
                     if(context1 != null){
-                        ((BLEInformationActivity)context1).measurementScreen(v);
+                        ((BLEInformationActivity)context1).measurementScreen(v,alWindows.get(i).getWindow());
                     }
 
 
@@ -122,7 +128,7 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
 
     }
 
-    private void skipPopUp(View v, final ViewHolder viewHolder, final Integer floorPlanId, final Integer id, final String roomName) {
+    private void skipPopUp(View v, final ViewHolder viewHolder, final String floorPlanId, final String id, final String roomName) {
         LayoutInflater inflater = context.getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.layout_skip_room, null);
         final Button measureBtn = alertLayout.findViewById(R.id.measure_btn);
@@ -190,7 +196,7 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
         });
     }
 
-    private void addSkipRoomPopUp(View v, final ViewHolder viewHolder, final Integer floorPlanId, final Integer id, String roomName) {
+    private void addSkipRoomPopUp(View v, final ViewHolder viewHolder, final String floorPlanId, final String id, String roomName) {
         LayoutInflater inflater = context.getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.layout_skip_floor_or_room, null);
         final EditText etComment = alertLayout.findViewById(R.id.comment);
@@ -239,7 +245,7 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
 
         SkipRoomAdapter = ApiAdapter.createRestAdapter(RetrofitInterface.SkipRoomClient.class, BASE_URL, context);
     }
-    private void skipRoom(View v, ViewHolder viewHolder, Integer id, String roomSkipComment, Integer floorPlanId) {
+    private void skipRoom(View v, ViewHolder viewHolder, String id, String roomSkipComment, String floorPlanId) {
 
         Log.e("abhi", "setRoomList: ........................" +id );
         LoadingDialog.showLoadingDialog(context,"Loading...");
