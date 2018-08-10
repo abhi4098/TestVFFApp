@@ -66,8 +66,14 @@
         <activity
             android:name=".ui.activities.YetiInformationActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".ui.activities.MeasurementGridActivity" />
-        <activity android:name=".ui.activities.CompletedProjectsActivity"></activity>
+        <activity android:name=".ui.activities.MeasurementGridActivity"
+            android:screenOrientation="landscape"
+            />
+        <activity android:name=".ui.activities.CompletedProjectsActivity"
+            android:screenOrientation="landscape"
+            >
+
+        </activity>
     </application>
 
 </manifest>

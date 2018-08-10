@@ -85,7 +85,7 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
             Log.e("abhi", "onBindViewHolder:............................................. " + alRooms.get(i).getRoomName());
             viewHolder.tvRoomName.setText(alRooms.get(i).getRoomName());
             viewHolder.tvWindowsCount.setText(alRooms.get(i).getNoOfWindows());
-            if (alRooms.get(i).getRoomStatus().toString().equals("Yes")) {
+            if (alRooms.get(i).getRoomStatus().equals("Yes")) {
                 viewHolder.cvHorizontalRoom.setCardBackgroundColor(Color.parseColor("#048700"));
             } else {
                 viewHolder.cvHorizontalRoom.setCardBackgroundColor(Color.parseColor("#252525"));
