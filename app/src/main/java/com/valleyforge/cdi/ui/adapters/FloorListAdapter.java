@@ -365,7 +365,7 @@ public class FloorListAdapter extends ArrayAdapter<Floorslist> {
         tvPopUpHeader.setText(floor);
         mRecyclerView= alertLayout.findViewById(R.id.recycler_view);
         setUpRestAdapter();
-        setRoomList(id);
+        setRoomList(id,floor);
 
 
        /* final EditText etUsername = alertLayout.findViewById(R.id.et_username);
@@ -420,7 +420,7 @@ public class FloorListAdapter extends ArrayAdapter<Floorslist> {
         });*/
     }
 
-    private void setRoomList(int id) {
+    private void setRoomList(int id, final String floor) {
         Log.e("abhi", "setRoomList: ........................" +id );
         LoadingDialog.showLoadingDialog(context,"Loading...");
         Call<RoomsListResponse> call = UserRoomAdapter.userRoomListData(id);
@@ -453,7 +453,7 @@ public class FloorListAdapter extends ArrayAdapter<Floorslist> {
                             mLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                             mRecyclerView.setLayoutManager(mLayoutManager);
 
-                            mAdapter = new HLVAdapter(context, alrooms);
+                            mAdapter = new HLVAdapter(context, alrooms,"roomList",floor);
                             mRecyclerView.setAdapter(mAdapter);
 
                             Toast.makeText(context,response.body().getMsg(),Toast.LENGTH_SHORT).show();

@@ -27,11 +27,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -42,15 +46,30 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.Target;
 import com.valleyforge.cdi.R;
+import com.valleyforge.cdi.api.ApiAdapter;
+import com.valleyforge.cdi.api.RetrofitInterface;
+import com.valleyforge.cdi.generated.model.DashboardDataResponse;
+import com.valleyforge.cdi.generated.model.MeasurementResponse;
+import com.valleyforge.cdi.generated.model.Roomslist;
+import com.valleyforge.cdi.generated.model.WindowsListResponse;
+import com.valleyforge.cdi.generated.model.Windowslist;
+import com.valleyforge.cdi.ui.adapters.FloorListAdapter;
+import com.valleyforge.cdi.ui.adapters.HLVAdapter;
+import com.valleyforge.cdi.utils.LoadingDialog;
+import com.valleyforge.cdi.utils.NetworkUtils;
+import com.valleyforge.cdi.utils.PrefUtils;
+import com.valleyforge.cdi.utils.SnakBarUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,6 +94,10 @@ import ch.leica.sdk.commands.ReceivedDataPacket;
 import ch.leica.sdk.commands.response.Response;
 import ch.leica.sdk.commands.response.ResponseBLEMeasurements;
 import ch.leica.sdk.connection.BleConnectionManager;
+import retrofit2.Call;
+import retrofit2.Callback;
+
+import static com.valleyforge.cdi.api.ApiEndPoints.BASE_URL;
 
 /**
  * UI to diplay bluetooth device information.
@@ -181,7 +204,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     TextView tvPictures;
 
     @BindView(R.id.ll_on_details_click)
-    LinearLayout llOnDetailsClick;
+    RelativeLayout llOnDetailsClick;
 
     @BindView(R.id.ll_on_pictures_click)
     LinearLayout llOnPicturesClick;
@@ -216,8 +239,14 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     @BindView(R.id.status)
     TextView status;
 
-    @BindView(R.id.additional_data)
-    EditText etAdditionalData;
+    @BindView(R.id.floor_count)
+    TextView tvFloorCount;
+
+    @BindView(R.id.rooms_count)
+    TextView tvRoomCount;
+
+    /*@BindView(R.id.additional_data)
+    EditText etAdditionalData;*/
 
     @BindView(R.id.ceiling_to_floor_button)
     LinearLayout llCeilingToFloor;
@@ -235,6 +264,23 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     @BindView(R.id.windows_btn)
     LinearLayout llWindows;
 
+    @BindView(R.id.recycler_view)
+    RecyclerView  mRecyclerView;
+
+    @BindView(R.id.add_new_window_cardview)
+    CardView cvAddWindow;
+
+
+
+    String floorPlanId,roomId,floorName,roomName;
+
+    private RetrofitInterface.WindowsListClient WindowListAdapter;
+    private RetrofitInterface.MeasurementDataClient MeasurementAdapter;
+
+    ArrayList<Windowslist> alWindows;
+    //RecyclerView mRecyclerView;
+    RecyclerView.LayoutManager mLayoutManager;
+    RecyclerView.Adapter mAdapter;
 
     @OnClick(R.id.add_ceiling_pic_again)
     public void addCeilingImage(View view) {
@@ -275,6 +321,66 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         Checkpermission();
     }
 
+
+    @OnClick(R.id.add_new_window_cardview)
+    public void addNewWindow(View view) {
+        cvAddWindow.setCardBackgroundColor(Color.parseColor("#252525"));
+        addRoom();
+
+
+    }
+
+    String windowName,windowDescription;
+
+    public  void addRoom()
+    {
+        LayoutInflater inflater = getLayoutInflater();
+        View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_add_windows, null);
+        final Button addWindowBtn = alertLayout.findViewById(R.id.add_window_btn);
+
+        final EditText etWindowName = alertLayout.findViewById(R.id.window_name);
+        final EditText etWindowDescription = alertLayout.findViewById(R.id.window_description);
+
+
+
+        final android.support.v7.app.AlertDialog.Builder alert = new android.support.v7.app.AlertDialog.Builder(this);
+        // this is set the view from XML inside AlertDialog
+        alert.setView(alertLayout);
+        // disallow cancel of AlertDialog on click of back button and outside touch
+        alert.setCancelable(false);
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(BLEInformationActivity.this, "Cancel clicked", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+        final android.support.v7.app.AlertDialog dialog = alert.create();
+        dialog.show();
+        dialog.getWindow().setLayout(1000, 550);
+        addWindowBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cvAddWindow.setCardBackgroundColor(Color.parseColor("#048700"));
+                windowName = etWindowName.getText().toString();
+                windowDescription = etWindowDescription.getText().toString();
+                if ( windowName!= null && !windowName.equals("")) {
+                    dialog.cancel();
+                    measurementScreen(v);
+
+                }
+                else
+                {
+                    etWindowName.setError("Please Add Window Name");
+
+                }
+
+            }
+        });
+    }
 
 
 
@@ -507,8 +613,112 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     public void saveMeasurement(View view) {
         wallWidth = etWallWidth.getText().toString();
         widthLeftOfWindow = etWidthLeftOfWindow.getText().toString();
-        Log.e("abhi", "widthLeftOfWindow:  ............" +wallWidth  );
+        ibWidthOfWindow = etIbWidthOfWindow.getText().toString();
+        ibLengthOfWindow = etIbLengthOfWindow.getText().toString();
+        widthRightOfWindow = etWidthRightOfWindow.getText().toString();
+        lengthCielFlr = etLengthCielFlr.getText().toString();
+        pocketDepth = etPocketDepth.getText().toString();
+        carpetInst = "Yes";
+        additionalData = "comment";
+
+        Log.e("abhi", "wallWidth:  ............" +wallWidth  );
         Log.e("abhi", "widthLeftOfWindow:  ............" +widthLeftOfWindow  );
+        Log.e("abhi", "ibWidthOfWindow:  ............" +ibWidthOfWindow  );
+        Log.e("abhi", "ibLengthOfWindow:  ............" +ibLengthOfWindow  );
+        Log.e("abhi", "widthRightOfWindow:  ............" +widthRightOfWindow  );
+        Log.e("abhi", "lengthCielFlr:  ............" +lengthCielFlr  );
+        Log.e("abhi", "pocketDepth:  ............" +pocketDepth  );
+        Log.e("abhi", "carpetInst:  ............" +carpetInst  );
+        Log.e("abhi", "additionalData:  ............" +additionalData  );
+
+        if ( wallWidth== null && wallWidth.equals("")) {
+            etWallWidth.setError("Add Wall Width");
+            }
+        else if ( widthLeftOfWindow == null && widthLeftOfWindow.equals("")) {
+            etWidthLeftOfWindow.setError("Add Width Left Of Window");
+        }
+        else if ( ibWidthOfWindow == null && ibWidthOfWindow.equals("")) {
+            etIbWidthOfWindow.setError("Add Ib Width Of Window");
+        }
+        else if ( ibLengthOfWindow == null && ibLengthOfWindow.equals("")) {
+            etIbLengthOfWindow.setError("Add Ib Length Of Window");
+        }
+        else if ( widthRightOfWindow == null && widthRightOfWindow.equals("")) {
+            etWidthRightOfWindow.setError("Add Width Right Of Window");
+        }
+        else if ( lengthCielFlr == null && lengthCielFlr.equals("")) {
+            etLengthCielFlr.setError("Add Length Ciel Flr");
+        }
+        else if ( pocketDepth == null && pocketDepth.equals("")) {
+            etPocketDepth.setError("Add Pocket Depth");
+        }
+        /*else if ( carpetInst!= null && !carpetInst.equals("")) {
+            carpetInst.setError("Add Wall Width");
+        }*/
+        else
+        {
+         setUpRestAdapter();
+         sendMeasurementData();
+
+        }
+
+    }
+
+    private void sendMeasurementData() {
+        LoadingDialog.showLoadingDialog(this,"Loading...");
+        Call<MeasurementResponse> call = MeasurementAdapter.measurementData(floorPlanId,roomId,windowName,wallWidth,widthLeftOfWindow,ibWidthOfWindow,ibLengthOfWindow,widthRightOfWindow,lengthCielFlr,
+                pocketDepth,carpetInst);
+        if (NetworkUtils.isNetworkConnected(this)) {
+            call.enqueue(new Callback<MeasurementResponse>() {
+
+                @Override
+                public void onResponse(Call<MeasurementResponse> call, retrofit2.Response<MeasurementResponse> response) {
+                    if (response.isSuccessful()) {
+                        if(response.body().getType() == 1) {
+                            Log.e("abhi", "onResponse:........... " +response.body().getMsg());
+                            /*alWindows = new ArrayList<>();
+                            for (int i=0; i<response.body().getMeasurementDetails().size(); i++) {
+
+
+                                 windowslist  = new Windowslist();
+                                windowslist.setFloorPlanId(response.body().getWindowslist().get(i).getFloorPlanId());
+                                windowslist.setFloorRoom(response.body().getWindowslist().get(i).getFloorRoom());
+                                windowslist.setId(response.body().getWindowslist().get(i).getId());
+                                windowslist.setWindow(response.body().getWindowslist().get(i).getWindow());
+                                Log.e("abhi", "onResponse:................. " +response.body().getWindowslist().get(i).getWindow() );
+
+
+
+                                alWindows.add(windowslist);
+
+
+                            }*/
+
+                            Toast.makeText(BLEInformationActivity.this,response.body().getMsg(),Toast.LENGTH_SHORT).show();
+
+                        }
+                        else{
+                            Toast.makeText(BLEInformationActivity.this,response.body().getMsg(),Toast.LENGTH_SHORT).show();
+                        }
+                        LoadingDialog.cancelLoading();
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<MeasurementResponse> call, Throwable t) {
+                    Log.e("abhi", "onResponse: error....................... "  );
+
+                    LoadingDialog.cancelLoading();
+                }
+
+
+            });
+
+        } else {
+            SnakBarUtils.networkConnected(this);
+        }
+
     }
 
 
@@ -526,6 +736,16 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         ivLogout.setVisibility(View.GONE);
         status.setVisibility(View.VISIBLE);
         tvAppTitle.setText("Room Details");
+        floorPlanId = getIntent().getStringExtra("FLOOR_ID");
+        roomId = getIntent().getStringExtra("ROOM_ID");
+        floorName = getIntent().getStringExtra("FLOOR_NAME");
+        roomName = getIntent().getStringExtra("ROOM_NAME");
+        tvFloorCount.setText(floorName);
+        tvRoomCount.setText(roomName);
+        Log.e("abhi", "onCreate: ................................floor plan id " +floorPlanId + " room id " +roomId);
+        setUpRestAdapter();
+        setWindowsList();
+
         //Initialize all UI Fields
 
         //inclinationLabel = (TextView) findViewById(R.id.inclinationLabel);
@@ -556,6 +776,73 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         alertDialogDisconnect 	= alertDisconnectedBuilder.create();
     }
 
+
+    private void setUpRestAdapter() {
+        WindowListAdapter = ApiAdapter.createRestAdapter(RetrofitInterface.WindowsListClient.class, BASE_URL, this);
+        MeasurementAdapter = ApiAdapter.createRestAdapter(RetrofitInterface.MeasurementDataClient.class, BASE_URL, this);
+
+    }
+
+    private void setWindowsList() {
+        LoadingDialog.showLoadingDialog(this,"Loading...");
+        Call<WindowsListResponse> call = WindowListAdapter.windowsListData(Integer.parseInt(floorPlanId),roomId);
+        if (NetworkUtils.isNetworkConnected(this)) {
+            call.enqueue(new Callback<WindowsListResponse>() {
+
+                @Override
+                public void onResponse(Call<WindowsListResponse> call, retrofit2.Response<WindowsListResponse> response) {
+                    if (response.isSuccessful()) {
+                        if(response.body().getType() == 1) {
+                            Log.e("abhi", "onResponse:........... " +response.body().getMsg());
+                            alWindows = new ArrayList<>();
+                            for (int i=0; i<response.body().getWindowslist().size(); i++) {
+
+
+                                Windowslist windowslist  = new Windowslist();
+                                windowslist.setFloorPlanId(response.body().getWindowslist().get(i).getFloorPlanId());
+                                windowslist.setFloorRoom(response.body().getWindowslist().get(i).getFloorRoom());
+                                windowslist.setId(response.body().getWindowslist().get(i).getId());
+                                windowslist.setWindow(response.body().getWindowslist().get(i).getWindow());
+                                Log.e("abhi", "onResponse:................. " +response.body().getWindowslist().get(i).getWindow() );
+
+
+
+                                alWindows.add(windowslist);
+
+
+                            }
+
+                            mRecyclerView.setHasFixedSize(true);
+                            mLayoutManager = new LinearLayoutManager(BLEInformationActivity.this, LinearLayoutManager.HORIZONTAL, false);
+                            mRecyclerView.setLayoutManager(mLayoutManager);
+
+                            mAdapter = new HLVAdapter(BLEInformationActivity.this, alWindows,"windowList","test","test2");
+                            mRecyclerView.setAdapter(mAdapter);
+                            Toast.makeText(BLEInformationActivity.this,response.body().getMsg(),Toast.LENGTH_SHORT).show();
+
+                        }
+                        else{
+                            Toast.makeText(BLEInformationActivity.this,response.body().getMsg(),Toast.LENGTH_SHORT).show();
+                        }
+                        LoadingDialog.cancelLoading();
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<WindowsListResponse> call, Throwable t) {
+                    Log.e("abhi", "onResponse: error....................... "  );
+
+                    LoadingDialog.cancelLoading();
+                }
+
+
+            });
+
+        } else {
+            SnakBarUtils.networkConnected(this);
+        }
+    }
     @Override
     protected void onResume() {
         super.onResume();

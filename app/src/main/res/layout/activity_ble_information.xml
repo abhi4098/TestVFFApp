@@ -98,7 +98,7 @@ tools:context=".ui.activities.ProjectDetailActivity">
         </LinearLayout>
     </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/ll_on_details_click"
             android:layout_width="match_parent"
             android:layout_height="350sp"
@@ -109,9 +109,249 @@ tools:context=".ui.activities.ProjectDetailActivity">
             android:orientation="vertical"
             android:background="@color/colorPrimary"
             android:focusable="true"
+            android:gravity="center"
             android:focusableInTouchMode="true"
 
-           />
+           >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:gravity="center_horizontal"
+                android:layout_height="match_parent"
+
+                android:orientation="horizontal">
+            <android.support.v7.widget.CardView
+                android:id="@+id/floor_number_cardView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardElevation="5dp"
+                android:layout_marginTop="30sp"
+                android:padding="20sp"
+                app:cardBackgroundColor="@color/colorPrimary"
+                >
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_margin="10sp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/floor_number_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Floor Name - "
+
+                        android:fontFamily="sans-serif"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorAccent"/>
+                    <TextView
+
+                        android:id="@+id/floor_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:textColor="@color/login_button_color"
+                        android:textSize="18sp"
+                        />
+
+
+
+
+
+                </LinearLayout>
+
+
+
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:layout_toRightOf="@+id/floor_number_cardView"
+                android:id="@+id/room_number_cardView"
+                android:layout_width="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="15sp"
+                android:layout_height="wrap_content"
+                app:cardElevation="5dp"
+                android:layout_marginTop="30sp"
+                android:padding="20sp"
+                app:cardBackgroundColor="@color/colorPrimary"
+
+                >
+            <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="10sp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/room_number_header"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif"
+                            android:text="Room Name - "
+                            android:textSize="18sp"
+                            android:textColor="@color/colorAccent"/>
+
+
+                        <TextView
+
+                            android:id="@+id/rooms_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            android:textColor="@color/login_button_color"
+                            android:textSize="18sp"
+                            />
+
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+            </LinearLayout>
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical"
+
+                android:layout_width="match_parent"
+                android:layout_marginTop="15sp"
+                android:layout_height="200sp"
+                android:layout_marginStart="10sp"
+                android:layout_marginEnd="10sp"
+                android:layout_marginBottom="30sp"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/main_layout"
+                app:cardBackgroundColor="@color/colorPrimary"
+                app:cardElevation="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="1"
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".13"
+                        app:cardBackgroundColor="@color/colorPrimary"
+                        app:cardElevation="5dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@mipmap/window"/>
+
+                            <TextView
+                                android:text="WINDOWS"
+                                android:layout_marginTop="5sp"
+                                android:layout_width="wrap_content"
+                                android:textColor="@color/colorAccent"
+                                android:layout_height="wrap_content"
+                                />
+
+
+
+                        </LinearLayout>
+
+                    </android.support.v7.widget.CardView>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".7"
+                        android:gravity="center"
+                        android:layout_marginStart="5sp"
+                        android:layout_marginEnd="5sp"
+                        android:orientation="horizontal">
+
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="25sp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:tint="@color/colorPrimaryDark"
+                            android:src="@drawable/left_arrow36"/>
+
+                        <RelativeLayout
+                            android:id="@+id/layout_horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="35sp"
+                            android:layout_marginEnd="45sp">
+
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/recycler_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center" >
+                            </android.support.v7.widget.RecyclerView>
+
+                        </RelativeLayout>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="25sp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:tint="@color/colorPrimaryDark"
+                            android:src="@drawable/right_arrow36"/>
+
+
+
+
+
+                    </RelativeLayout>
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/add_new_window_cardview"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".17"
+                        app:cardBackgroundColor="@color/login_button_color"
+                        app:cardElevation="5dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:drawableTop="@mipmap/add_button"
+                                android:drawableTint="@color/white"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/white"
+                                android:text="ADD NEW WINDOW"
+                                />
+                        </LinearLayout>
+
+                    </android.support.v7.widget.CardView>
+
+
+
+
+
+
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+        </RelativeLayout>
 
 
 
@@ -158,7 +398,7 @@ tools:context=".ui.activities.ProjectDetailActivity">
                 android:layout_marginStart="20sp"
                 android:layout_marginEnd="20sp"
                 android:fontFamily="sans-serif"
-                android:text="Wall/WallWidth"/>
+                android:text="Wall/WallWidth *"/>
 
             <EditText
                 android:id="@+id/wall_width"
@@ -195,7 +435,7 @@ tools:context=".ui.activities.ProjectDetailActivity">
                 android:layout_marginStart="20sp"
                 android:layout_marginEnd="20sp"
                 android:fontFamily="sans-serif"
-                android:text="Width Left of Window"/>
+                android:text="Width Left of Window *"/>
 
             <EditText
                 android:id="@+id/width_left_of_window"
@@ -230,7 +470,7 @@ tools:context=".ui.activities.ProjectDetailActivity">
                 android:layout_marginStart="20sp"
                 android:layout_marginEnd="20sp"
                 android:fontFamily="sans-serif"
-                android:text="IB Width of Window"/>
+                android:text="IB Width of Window *"/>
 
             <EditText
                 android:id="@+id/ib_width_of_window"
@@ -279,7 +519,7 @@ tools:context=".ui.activities.ProjectDetailActivity">
                 android:layout_marginStart="20sp"
                 android:layout_marginEnd="20sp"
                 android:fontFamily="sans-serif"
-                android:text="IB Length of Window"/>
+                android:text="IB Length of Window *"/>
 
             <EditText
                 android:id="@+id/ib_length_of_window"
@@ -317,7 +557,7 @@ tools:context=".ui.activities.ProjectDetailActivity">
                 android:layout_marginStart="20sp"
                 android:layout_marginEnd="20sp"
                 android:fontFamily="sans-serif"
-                android:text="Width Right of Window"/>
+                android:text="Width Right of Window *"/>
 
             <EditText
                 android:id="@+id/width_right_of_window"
@@ -353,7 +593,7 @@ tools:context=".ui.activities.ProjectDetailActivity">
                 android:layout_marginStart="20sp"
                 android:layout_marginEnd="20sp"
                 android:fontFamily="sans-serif"
-                android:text="Length CEIL/FLR"/>
+                android:text="Length CEIL/FLR *"/>
 
             <EditText
                 android:id="@+id/length_of_ceil_floor"
@@ -403,7 +643,7 @@ tools:context=".ui.activities.ProjectDetailActivity">
                 android:layout_marginStart="20sp"
                 android:layout_marginEnd="20sp"
                 android:fontFamily="sans-serif"
-                android:text="Pocket Depth"/>
+                android:text="Pocket Depth *"/>
 
             <EditText
                 android:id="@+id/pocket_depth"
@@ -441,7 +681,7 @@ tools:context=".ui.activities.ProjectDetailActivity">
                 android:layout_marginStart="20sp"
                 android:layout_marginEnd="20sp"
                 android:fontFamily="sans-serif"
-                android:text="Carpet INST"/>
+                android:text="Carpet INST *"/>
 
             <TextView
                 android:id="@+id/carpet_inst"
@@ -460,7 +700,7 @@ tools:context=".ui.activities.ProjectDetailActivity">
                 />
         </LinearLayout>
 
-        <LinearLayout
+        <!--<LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -492,7 +732,7 @@ tools:context=".ui.activities.ProjectDetailActivity">
                 android:paddingStart="10sp"
                 android:background="@drawable/rectangular_background"
                 />
-        </LinearLayout>
+        </LinearLayout>-->
 
 
 

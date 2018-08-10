@@ -20,9 +20,10 @@ import android.widget.Toast;
 import com.valleyforge.cdi.R;
 import com.valleyforge.cdi.api.ApiAdapter;
 import com.valleyforge.cdi.api.RetrofitInterface;
-import com.valleyforge.cdi.generated.model.Room;
 import com.valleyforge.cdi.generated.model.Roomslist;
 import com.valleyforge.cdi.generated.model.SkipResponse;
+import com.valleyforge.cdi.generated.model.WindowsListResponse;
+import com.valleyforge.cdi.generated.model.Windowslist;
 import com.valleyforge.cdi.ui.activities.BLEInformationActivity;
 import com.valleyforge.cdi.ui.activities.MeasurementGridActivity;
 import com.valleyforge.cdi.utils.LoadingDialog;
@@ -39,17 +40,31 @@ import static com.valleyforge.cdi.api.ApiEndPoints.BASE_URL;
 
 public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
     MeasurementGridActivity context;
+    BLEInformationActivity context1;
     LayoutInflater inflater;
     int GroupPosition,ListPosition;
     ArrayList<Roomslist> alRooms;
+    ArrayList<Windowslist> alWindows;
+    String floorName;
     private RetrofitInterface.SkipRoomClient SkipRoomAdapter;
-    String roomSkipComment ;
+    String roomSkipComment,listSeparator ;
 
-
-    public HLVAdapter(Context Context, ArrayList<Roomslist> alRooms) {
+    public HLVAdapter(Context Context, ArrayList<Roomslist> alRooms, String roomList,String floor) {
         super();
-       this.context = (MeasurementGridActivity) Context;
+        this.context = (MeasurementGridActivity) Context;
         this.alRooms = alRooms;
+        this.listSeparator = roomList;
+        this.floorName = floor;
+
+    }
+
+
+    public HLVAdapter(Context Context1, ArrayList<Windowslist> alWindows, String s, String list, String windowList) {
+        super();
+       this.context1= (BLEInformationActivity) Context1;
+        this.alWindows = alWindows;
+        this.listSeparator = windowList;
+
 
     }
 
@@ -64,28 +79,45 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
-        Log.e("abhi", "onBindViewHolder:............................................. " +alRooms.get(i).getRoomName());
-        viewHolder.tvRoomName.setText(alRooms.get(i).getRoomName());
-        viewHolder.tvWindowsCount.setText(alRooms.get(i).getNoOfWindows());
-        if (alRooms.get(i).getRoomStatus() == 1)
-        {
-            viewHolder.cvHorizontalRoom.setCardBackgroundColor(Color.parseColor("#048700"));
-        }
-        else
-        {
-            viewHolder.cvHorizontalRoom.setCardBackgroundColor(Color.parseColor("#252525"));
+        Log.e("abhi", "onBindViewHolder:......................lis separator "  +listSeparator);
 
-        }
-        viewHolder.cvHorizontalRoom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e("abhi", "onClick: onbind............................................" +alRooms.get(i).getRoomName() );
-
-                skipPopUp(v,viewHolder,alRooms.get(i).getFloorPlanId(),alRooms.get(i).getId(),alRooms.get(i).getRoomName());
-
+        if (listSeparator.equals("roomList")) {
+            Log.e("abhi", "onBindViewHolder:............................................. " + alRooms.get(i).getRoomName());
+            viewHolder.tvRoomName.setText(alRooms.get(i).getRoomName());
+            viewHolder.tvWindowsCount.setText(alRooms.get(i).getNoOfWindows());
+            if (alRooms.get(i).getRoomStatus() == 1) {
+                viewHolder.cvHorizontalRoom.setCardBackgroundColor(Color.parseColor("#048700"));
+            } else {
+                viewHolder.cvHorizontalRoom.setCardBackgroundColor(Color.parseColor("#252525"));
 
             }
-        });
+            viewHolder.cvHorizontalRoom.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    skipPopUp(v, viewHolder, alRooms.get(i).getFloorPlanId(), alRooms.get(i).getId(), alRooms.get(i).getRoomName());
+
+
+                }
+            });
+        }
+        else{
+            viewHolder.tvRoomName.setText(alWindows.get(i).getWindow());
+            viewHolder.tvWindowsHeader.setVisibility(View.GONE);
+            viewHolder.tvWindowsCount.setVisibility(View.GONE);
+
+            viewHolder.cvHorizontalRoom.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(context1 != null){
+                        ((BLEInformationActivity)context1).measurementScreen(v);
+                    }
+
+
+                }
+            });
+
+        }
 
 
     }
@@ -133,7 +165,14 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
         measureBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e("abhi", "onClick: ........................measure"  +floorPlanId + " " +id );
+
                 Intent i = new Intent(context, BLEInformationActivity.class);
+                i.putExtra("FLOOR_ID", String.valueOf(floorPlanId));
+                i.putExtra("ROOM_ID", String.valueOf(id));
+                i.putExtra("ROOM_NAME", roomName);
+                i.putExtra("FLOOR_NAME", floorName);
+
                 context.startActivity(i);
                 dialog.cancel();
             }
@@ -144,6 +183,7 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
             public void onClick(View v) {
                 /*Intent i = new Intent(context, BLEInformationActivity.class);
                 context.startActivity(i);*/
+
                 dialog.cancel();
                 addSkipRoomPopUp(v,viewHolder,floorPlanId,id,roomName);
             }
@@ -243,7 +283,17 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
 
     @Override
     public int getItemCount() {
-        return alRooms.size();
+        if (listSeparator.equals("roomList"))
+        {
+            Log.e("abhi", "getItemCount: ....................no of rooms" +alRooms.size() );
+            return alRooms.size();
+        }
+        else{
+           // Log.e("abhi", "getItemCount: ....................no of windows" +alWindows.size() );
+
+            return alWindows.size();
+        }
+
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
@@ -251,6 +301,7 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
 
         public TextView tvRoomName;
         public TextView tvWindowsCount;
+        public TextView tvWindowsHeader;
         public CardView cvHorizontalRoom;
 
 
@@ -260,6 +311,7 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
             super(itemView);
             tvRoomName = (TextView) itemView.findViewById(R.id.room_name);
             tvWindowsCount = (TextView) itemView.findViewById(R.id.window_count);
+            tvWindowsHeader = (TextView) itemView.findViewById(R.id.windows_heading);
             cvHorizontalRoom = (CardView) itemView.findViewById(R.id.room_cardview);
 
             itemView.setOnClickListener(this);
