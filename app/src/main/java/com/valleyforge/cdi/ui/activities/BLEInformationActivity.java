@@ -43,22 +43,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.target.Target;
 import com.valleyforge.cdi.R;
 import com.valleyforge.cdi.api.ApiAdapter;
 import com.valleyforge.cdi.api.RetrofitInterface;
+import com.valleyforge.cdi.generated.model.ImageList;
 import com.valleyforge.cdi.generated.model.MeasurementResponse;
+import com.valleyforge.cdi.generated.model.UploadPhotoResponse;
 import com.valleyforge.cdi.generated.model.WindowsListResponse;
 import com.valleyforge.cdi.generated.model.Windowslist;
 import com.valleyforge.cdi.ui.adapters.HLVAdapter;
+import com.valleyforge.cdi.ui.adapters.HLVImagesAdapter;
 import com.valleyforge.cdi.utils.LoadingDialog;
 import com.valleyforge.cdi.utils.NetworkUtils;
 import com.valleyforge.cdi.utils.SnakBarUtils;
@@ -66,6 +64,7 @@ import com.valleyforge.cdi.utils.SnakBarUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -89,6 +88,9 @@ import ch.leica.sdk.commands.ReceivedData;
 import ch.leica.sdk.commands.ReceivedDataPacket;
 import ch.leica.sdk.commands.response.Response;
 import ch.leica.sdk.commands.response.ResponseBLEMeasurements;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -98,7 +100,7 @@ import static com.valleyforge.cdi.api.ApiEndPoints.BASE_URL;
  * UI to diplay bluetooth device information.
  * Excluding Yeti.
  */
-public class BLEInformationActivity extends AppCompatActivity implements ReceivedDataListener, Device.ConnectionListener, ErrorListener, ReconnectionHelper.ReconnectListener{
+public class BLEInformationActivity extends AppCompatActivity implements ReceivedDataListener, Device.ConnectionListener, ErrorListener, ReconnectionHelper.ReconnectListener {
 
     /**
      * ClassName
@@ -156,8 +158,10 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     private boolean hasDistanceMeasurement = false;
 
-    String wallWidth, widthLeftOfWindow ,ibWidthOfWindow,ibLengthOfWindow,widthRightOfWindow,lengthCielFlr,pocketDepth,carpetInst,additionalData;
+    String wallWidth, widthLeftOfWindow, ibWidthOfWindow, ibLengthOfWindow, widthRightOfWindow, lengthCielFlr, pocketDepth, carpetInst, additionalData;
 
+
+    String IMAGE_URL = "http://myhostapp.com/vff-staging-new/la-assets/floors/";
     @BindView(R.id.wall_width)
     EditText etWallWidth;
 
@@ -174,8 +178,8 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     EditText etLengthCielFlr;
     @BindView(R.id.pocket_depth)
     EditText etPocketDepth;
-    /*@BindView(R.id.carpet_inst)
-    EditText tvCarpetInst;*/
+    @BindView(R.id.carpet_inst)
+    EditText etCarpetInst;
   /*  @BindView(R.id.additional_data)
     EditText tvAdditionalData;*/
 
@@ -208,19 +212,122 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     @BindView(R.id.ll_on_measurement_click)
     LinearLayout llOnMeasurementClick;
 
-    @BindView(R.id.ceiling_pic_added_layout)
-    LinearLayout llCeilingPicAddedLayout;
+    /*@BindView(R.id.ceiling_pic_added_layout)
+    LinearLayout llCeilingPicAddedLayout;*/
 
-    @BindView(R.id.progress)
-    ProgressBar imageProgressBar;
+    /*@BindView(R.id.progress)
+    ProgressBar imageProgressBar;*/
+
+    @BindView(R.id.add_more_images)
+    ImageView imageViewAddMoreImages;
+
+    @BindView(R.id.ceiling_to_floor_textview)
+    TextView tvCeilToFloor;
+
+    @BindView(R.id.wall_to_wall_textview)
+    TextView tvWallToWall;
+
+    @BindView(R.id.windows_textview)
+    TextView tvWindows;
+
+    String imageTypeToBeSendViaAPi = "Ceiling to Floor";
+
+    @OnClick(R.id.ceiling_to_floor_textview)
+    public void ceilToFloorButtonSelected() {
+        tvCeilToFloor.setBackgroundColor(Color.parseColor("#ffffff"));
+        tvWallToWall.setBackgroundColor(Color.parseColor("#fbebdc"));
+        tvWindows.setBackgroundColor(Color.parseColor("#fbebdc"));
+        selectedImageType = "ceiltofloor";
+        imageTypeToBeSendViaAPi = "Ceiling to Floor";
+        combineImageListToBeShown = new ArrayList<>();
+        for (int i = combineImageList.size() - 1; i >= 0; i--) {
+            if (combineImageList.get(i).getimageType().equals(selectedImageType)) {
+                ImageList imageList = new ImageList();
+                imageList.setimageUrl(combineImageList.get(i).getimageUrl());
+                imageList.setimageType(selectedImageType);
+                combineImageListToBeShown.add(imageList);
+            }
+        }
+
+        mRecyclerViewImages.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(BLEInformationActivity.this, LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerViewImages.setLayoutManager(mLayoutManager);
+
+        mAdapter = new HLVImagesAdapter(BLEInformationActivity.this, combineImageListToBeShown, selectedImageType);
+        mRecyclerViewImages.setAdapter(mAdapter);
+        LoadingDialog.cancelLoading();
 
 
+    }
+
+    @OnClick(R.id.wall_to_wall_textview)
+    public void wallToWallButtonSelected() {
+        Log.e("abhi", "wallToWallButtonSelected:................... ");
+        selectedImageType = "walltowall";
+        imageTypeToBeSendViaAPi = "Wall to Wall";
+        tvCeilToFloor.setBackgroundColor(Color.parseColor("#fbebdc"));
+        tvWallToWall.setBackgroundColor(Color.parseColor("#ffffff"));
+        tvWindows.setBackgroundColor(Color.parseColor("#fbebdc"));
+        combineImageListToBeShown = new ArrayList<>();
+        for (int i = combineImageList.size() - 1; i >= 0; i--) {
+            if (combineImageList.get(i).getimageType().equals(selectedImageType)) {
+                ImageList imageList = new ImageList();
+                imageList.setimageUrl(combineImageList.get(i).getimageUrl());
+                imageList.setimageType(selectedImageType);
+                combineImageListToBeShown.add(imageList);
+            }
+        }
+
+        mRecyclerViewImages.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(BLEInformationActivity.this, LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerViewImages.setLayoutManager(mLayoutManager);
+
+        mAdapter = new HLVImagesAdapter(BLEInformationActivity.this, combineImageListToBeShown, selectedImageType);
+        mRecyclerViewImages.setAdapter(mAdapter);
+        LoadingDialog.cancelLoading();
 
 
+    }
+
+    @OnClick(R.id.windows_textview)
+    public void windowsButtonSelected() {
+        Log.e("abhi", "windowsButtonSelected:................... ");
+        selectedImageType = "windows";
+        imageTypeToBeSendViaAPi = "Windows";
+        tvCeilToFloor.setBackgroundColor(Color.parseColor("#fbebdc"));
+        tvWallToWall.setBackgroundColor(Color.parseColor("#fbebdc"));
+        tvWindows.setBackgroundColor(Color.parseColor("#ffffff"));
+        combineImageListToBeShown = new ArrayList<>();
+        for (int i = combineImageList.size() - 1; i >= 0; i--) {
+            if (combineImageList.get(i).getimageType().equals(selectedImageType)) {
+                ImageList imageList = new ImageList();
+                imageList.setimageUrl(combineImageList.get(i).getimageUrl());
+                imageList.setimageType(selectedImageType);
+                combineImageListToBeShown.add(imageList);
+            }
+        }
+
+        mRecyclerViewImages.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(BLEInformationActivity.this, LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerViewImages.setLayoutManager(mLayoutManager);
+
+        mAdapter = new HLVImagesAdapter(BLEInformationActivity.this, combineImageListToBeShown, selectedImageType);
+        mRecyclerViewImages.setAdapter(mAdapter);
+        LoadingDialog.cancelLoading();
+
+    }
 
 
-    @BindView(R.id.person_image)
-    ImageView personImage;
+    @OnClick(R.id.add_more_images)
+    public void addImages() {
+        Log.e("abhi", "addImages:................... ");
+        Checkpermission();
+
+    }
+
+
+    /*@BindView(R.id.person_image)
+    ImageView personImage;*/
     @BindView(R.id.back_icon)
     ImageView ivBackIcon;
     @BindView(R.id.toolbar)
@@ -243,7 +350,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     /*@BindView(R.id.additional_data)
     EditText etAdditionalData;*/
 
-    @BindView(R.id.ceiling_to_floor_button)
+   /* @BindView(R.id.ceiling_to_floor_button)
     LinearLayout llCeilingToFloor;
 
     @BindView(R.id.wall_to_wall_btn)
@@ -257,85 +364,54 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
 
     @BindView(R.id.windows_btn)
-    LinearLayout llWindows;
+    LinearLayout llWindows;*/
 
     @BindView(R.id.recycler_view)
-    RecyclerView  mRecyclerView;
+    RecyclerView mRecyclerView;
+
+    @BindView(R.id.recycler_view_images)
+    RecyclerView mRecyclerViewImages;
 
     @BindView(R.id.add_new_window_cardview)
     CardView cvAddWindow;
 
 
+    String floorPlanId, roomId, floorName, roomName;
 
-    String floorPlanId,roomId,floorName,roomName;
+    String selectedImageType = "ceiltofloor";
+
+    ArrayList<ImageList> combineImageList = new ArrayList<>();
+    ArrayList<ImageList> combineImageListToBeShown = null;
+
 
     private RetrofitInterface.WindowsListClient WindowListAdapter;
     private RetrofitInterface.MeasurementDataClient MeasurementAdapter;
+    private RetrofitInterface.uploadPhotosClient UploadPhotoAdapter;
 
     ArrayList<Windowslist> alWindows;
     //RecyclerView mRecyclerView;
     RecyclerView.LayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
 
-    @OnClick(R.id.add_ceiling_pic_again)
-    public void addCeilingImage(View view) {
-        Checkpermission();
-
-    }
-
-   /* @OnClick(R.id.delete_ceiling_pic)
-    public void deleteCeilingPic(View view) {
-        llCeilingToFloor.setVisibility(View.GONE);
-        llCeilingPicAddedLayout.setVisibility(View.VISIBLE);
-        Checkpermission();
-
-    }
-    */
-
-
-
-    @OnClick(R.id.ceiling_to_floor_button)
-    public void ceilingToFloor(View view) {
-        llCeilingToFloor.setVisibility(View.GONE);
-        llCeilingPicAddedLayout.setVisibility(View.VISIBLE);
-        Checkpermission();
-
-        }
-
-    @OnClick(R.id.wall_to_wall_btn)
-    public void wallToWall(View view) {
-        llWallToWall.setVisibility(View.GONE);
-        llWallToWallPicAddedLayout.setVisibility(View.VISIBLE);
-        Checkpermission();
-    }
-
-    @OnClick(R.id.windows_btn)
-    public void windows(View view) {
-        llWindows.setVisibility(View.GONE);
-        llWindowsAddedLayout.setVisibility(View.VISIBLE);
-        Checkpermission();
-    }
 
 
     @OnClick(R.id.add_new_window_cardview)
     public void addNewWindow(View view) {
         cvAddWindow.setCardBackgroundColor(Color.parseColor("#252525"));
-        addRoom();
+        addWindow();
 
 
     }
 
-    String windowName,windowDescription;
+    String windowName, windowDescription,windowCompletionStatus,windowApprovalCheck,windowId;
 
-    public  void addRoom()
-    {
+    public void addWindow() {
         LayoutInflater inflater = getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.layout_custom_dialog_add_windows, null);
         final Button addWindowBtn = alertLayout.findViewById(R.id.add_window_btn);
 
         final EditText etWindowName = alertLayout.findViewById(R.id.window_name);
         final EditText etWindowDescription = alertLayout.findViewById(R.id.window_description);
-
 
 
         final android.support.v7.app.AlertDialog.Builder alert = new android.support.v7.app.AlertDialog.Builder(this);
@@ -362,13 +438,12 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                 cvAddWindow.setCardBackgroundColor(Color.parseColor("#048700"));
                 windowName = etWindowName.getText().toString();
                 windowDescription = etWindowDescription.getText().toString();
-                if ( windowName!= null && !windowName.equals("")) {
+                if (windowName != null && !windowName.equals("")) {
                     dialog.cancel();
-                    measurementScreen(v, windowName);
+                    List<String> testList = new ArrayList<>();
+                    measurementScreen(v, windowName,"SameActivity", wallWidth, widthLeftOfWindow, widthRightOfWindow, ibLengthOfWindow, ibWidthOfWindow, lengthCielFlr,carpetInst, pocketDepth, "No", "No", testList, "id");
 
-                }
-                else
-                {
+                } else {
                     etWindowName.setError("Please Add Window Name");
 
                 }
@@ -378,13 +453,11 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     }
 
 
-
-
     // listen to changes to the bluetooth adapter
     BroadcastReceiver bluetoothAdapterReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            final String METHODTAG =".bluetoothAdapterReceiver.receive()";
+            final String METHODTAG = ".bluetoothAdapterReceiver.receive()";
             Log.d(CLASSTAG, METHODTAG);
             checkForReconnection();
         }
@@ -407,30 +480,38 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         setWindowsList();
 
 
-
     }
 
 
     @OnClick(R.id.measurements)
-    public void measureScreen(View view ) {
-        tvAppTitle.setText("Room Measurement");
-        tvMeasurement.setTextColor(Color.parseColor("#ffffff")); // custom color
-        llMeasurement.setBackgroundColor(Color.parseColor("#048700"));
-        tvDetails.setTextColor(Color.parseColor("#252525")); // custom color
-        llDetails.setBackgroundColor(Color.parseColor("#ffffff"));
-        tvPictures.setTextColor(Color.parseColor("#252525")); // custom color
-        llPictures.setBackgroundColor(Color.parseColor("#ffffff"));
+    public void measureScreen(View view) {
+        if (windowName != null) {
+            tvAppTitle.setText("Room Measurement");
+            tvMeasurement.setTextColor(Color.parseColor("#ffffff")); // custom color
+            llMeasurement.setBackgroundColor(Color.parseColor("#048700"));
+            tvDetails.setTextColor(Color.parseColor("#252525")); // custom color
+            llDetails.setBackgroundColor(Color.parseColor("#ffffff"));
+            tvPictures.setTextColor(Color.parseColor("#252525")); // custom color
+            llPictures.setBackgroundColor(Color.parseColor("#ffffff"));
 
-        llOnDetailsClick.setVisibility(View.GONE);
-        llOnMeasurementClick.setVisibility(View.VISIBLE);
-        llOnPicturesClick.setVisibility(View.GONE);
-
+            llOnDetailsClick.setVisibility(View.GONE);
+            llOnMeasurementClick.setVisibility(View.VISIBLE);
+            llOnPicturesClick.setVisibility(View.GONE);
+        }
+        else
+        {
+            Toast.makeText(BLEInformationActivity.this,"Please Select a Window", Toast.LENGTH_SHORT).show();
+        }
 
 
     }
 
-    public void measurementScreen(View view, String window) {
+    public void measurementScreen(View view, String window, String pathFrom, String ewallWidth, String widthLeftWindow, String widthRightWindow, String ibLengthWindow, String ibWidthWindow, String lengthCeilFlr, String carpetInst, String pocketDepth, String windowApproval, String windowStatus, List<String> allimages, String id) {
         windowName = window;
+        windowCompletionStatus = windowStatus;
+        windowApprovalCheck = windowApproval;
+        windowId = id;
+        Log.e("abhi", "measurementScreen: ....." +ewallWidth + " " +widthLeftWindow);
         tvAppTitle.setText("Room Measurement");
         tvMeasurement.setTextColor(Color.parseColor("#ffffff")); // custom color
         llMeasurement.setBackgroundColor(Color.parseColor("#048700"));
@@ -443,45 +524,80 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         llOnMeasurementClick.setVisibility(View.VISIBLE);
         llOnPicturesClick.setVisibility(View.GONE);
 
+        if (pathFrom.equals("fromHLVAdapter"))
+        {
+
+            etWallWidth.setText(ewallWidth);
+            etWidthLeftOfWindow.setText(widthLeftWindow);
+            etIbWidthOfWindow.setText(ibWidthWindow);
+            etIbLengthOfWindow.setText(ibLengthWindow);
+            etWidthRightOfWindow.setText(widthRightWindow);
+            etLengthCielFlr.setText(lengthCeilFlr);
+            etPocketDepth.setText(pocketDepth);
+            etCarpetInst.setText(carpetInst);
+
+            for (int j=0; j < allimages.size(); j++)
+            {
+                String url = allimages.get(j);
+                String[] separated = url.split("/");
+
+                Log.e("abhi", "measurementScreen:................folder name " +separated[0]);
+
+                ImageList imageList = new ImageList();
+                imageList.setimageUrl(IMAGE_URL + allimages.get(j));
+                Log.e("abhi", "measurementScreen:................folder name " +imageList.getimageUrl());
+            }
+
+        }
+
+
 
 
     }
+
     @OnClick(R.id.pictures)
     public void picturesScreen(View view) {
-        tvAppTitle.setText("Room Pictures");
-        tvPictures.setTextColor(Color.parseColor("#ffffff")); // custom color
-        llPictures.setBackgroundColor(Color.parseColor("#048700"));
-        tvDetails.setTextColor(Color.parseColor("#252525")); // custom color
-        llDetails.setBackgroundColor(Color.parseColor("#ffffff"));
-        tvMeasurement.setTextColor(Color.parseColor("#252525")); // custom color
-        llMeasurement.setBackgroundColor(Color.parseColor("#ffffff"));
+        if (windowName != null) {
+            tvAppTitle.setText("Room Pictures");
+            tvPictures.setTextColor(Color.parseColor("#ffffff")); // custom color
+            llPictures.setBackgroundColor(Color.parseColor("#048700"));
+            tvDetails.setTextColor(Color.parseColor("#252525")); // custom color
+            llDetails.setBackgroundColor(Color.parseColor("#ffffff"));
+            tvMeasurement.setTextColor(Color.parseColor("#252525")); // custom color
+            llMeasurement.setBackgroundColor(Color.parseColor("#ffffff"));
+            tvCeilToFloor.setBackgroundColor(Color.parseColor("#ffffff"));
 
-        llOnDetailsClick.setVisibility(View.GONE);
-        llOnMeasurementClick.setVisibility(View.GONE);
-        llOnPicturesClick.setVisibility(View.VISIBLE);
+            llOnDetailsClick.setVisibility(View.GONE);
+            llOnMeasurementClick.setVisibility(View.GONE);
+            llOnPicturesClick.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            Toast.makeText(BLEInformationActivity.this,"Please Select a Window", Toast.LENGTH_SHORT).show();
+
+        }
 
     }
-
 
 
     @OnClick(R.id.width_left_of_window)
     public void setWidthLeftOfWindow(View view) {
-         etWallWidth.setFocusableInTouchMode(false);
-         etWidthLeftOfWindow.setFocusableInTouchMode(true);
-         etIbWidthOfWindow.setFocusableInTouchMode(false);
-         etIbLengthOfWindow.setFocusableInTouchMode(false);
-         etWidthRightOfWindow.setFocusableInTouchMode(false);
-         etLengthCielFlr.setFocusableInTouchMode(false);
-         etPocketDepth.setFocusableInTouchMode(false);
+        etWallWidth.setFocusableInTouchMode(false);
+        etWidthLeftOfWindow.setFocusableInTouchMode(true);
+        etIbWidthOfWindow.setFocusableInTouchMode(false);
+        etIbLengthOfWindow.setFocusableInTouchMode(false);
+        etWidthRightOfWindow.setFocusableInTouchMode(false);
+        etLengthCielFlr.setFocusableInTouchMode(false);
+        etPocketDepth.setFocusableInTouchMode(false);
 
 
-         isWallWidthSelected = false;
-         isWidthLeftOfwindowSelected = true;
-         isIBWidthOfWindow = false;
-         isIBLenghtOfWindow = false;
-         isWidthRightOfwindowSelected = false;
-         isLengthCeilFlr = false;
-         PocketDepth = false;
+        isWallWidthSelected = false;
+        isWidthLeftOfwindowSelected = true;
+        isIBWidthOfWindow = false;
+        isIBLenghtOfWindow = false;
+        isWidthRightOfwindowSelected = false;
+        isLengthCeilFlr = false;
+        PocketDepth = false;
     }
 
 
@@ -495,17 +611,16 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         etLengthCielFlr.setFocusableInTouchMode(false);
         etPocketDepth.setFocusableInTouchMode(false);
 
-         isWallWidthSelected = true;
+        isWallWidthSelected = true;
         isWidthLeftOfwindowSelected = false;
-         isIBWidthOfWindow = false;
-         isIBLenghtOfWindow = false;
-         isWidthRightOfwindowSelected = false;
-         isLengthCeilFlr = false;
-         PocketDepth = false;
+        isIBWidthOfWindow = false;
+        isIBLenghtOfWindow = false;
+        isWidthRightOfwindowSelected = false;
+        isLengthCeilFlr = false;
+        PocketDepth = false;
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-
 
 
     }
@@ -521,13 +636,13 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         etPocketDepth.setFocusableInTouchMode(false);
 
 
-         isWallWidthSelected = false;
-         isWidthLeftOfwindowSelected = false;
-         isIBWidthOfWindow = true;
-         isIBLenghtOfWindow = false;
-         isWidthRightOfwindowSelected = false;
-         isLengthCeilFlr = false;
-         PocketDepth = false;
+        isWallWidthSelected = false;
+        isWidthLeftOfwindowSelected = false;
+        isIBWidthOfWindow = true;
+        isIBLenghtOfWindow = false;
+        isWidthRightOfwindowSelected = false;
+        isLengthCeilFlr = false;
+        PocketDepth = false;
 
 
     }
@@ -543,13 +658,13 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         etLengthCielFlr.setFocusableInTouchMode(false);
         etPocketDepth.setFocusableInTouchMode(false);
 
-         isWallWidthSelected = false;
-         isWidthLeftOfwindowSelected = false;
-         isIBWidthOfWindow = false;
-         isIBLenghtOfWindow = true;
-         isWidthRightOfwindowSelected = false;
-         isLengthCeilFlr = false;
-         PocketDepth = false;
+        isWallWidthSelected = false;
+        isWidthLeftOfwindowSelected = false;
+        isIBWidthOfWindow = false;
+        isIBLenghtOfWindow = true;
+        isWidthRightOfwindowSelected = false;
+        isLengthCeilFlr = false;
+        PocketDepth = false;
 
 
     }
@@ -567,13 +682,13 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         etPocketDepth.setFocusableInTouchMode(false);
 
 
-         isWallWidthSelected = false;
-         isWidthLeftOfwindowSelected = false;
-         isIBWidthOfWindow = false;
-         isIBLenghtOfWindow = false;
-         isWidthRightOfwindowSelected = true;
-         isLengthCeilFlr = false;
-         PocketDepth = false;
+        isWallWidthSelected = false;
+        isWidthLeftOfwindowSelected = false;
+        isIBWidthOfWindow = false;
+        isIBLenghtOfWindow = false;
+        isWidthRightOfwindowSelected = true;
+        isLengthCeilFlr = false;
+        PocketDepth = false;
 
 
     }
@@ -589,13 +704,13 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         etLengthCielFlr.setFocusableInTouchMode(true);
         etPocketDepth.setFocusableInTouchMode(false);
 
-         isWallWidthSelected = false;
-         isWidthLeftOfwindowSelected = false;
-         isIBWidthOfWindow = false;
-         isIBLenghtOfWindow = false;
-         isWidthRightOfwindowSelected = false;
-         isLengthCeilFlr = true;
-         PocketDepth = false;
+        isWallWidthSelected = false;
+        isWidthLeftOfwindowSelected = false;
+        isIBWidthOfWindow = false;
+        isIBLenghtOfWindow = false;
+        isWidthRightOfwindowSelected = false;
+        isLengthCeilFlr = true;
+        PocketDepth = false;
 
 
     }
@@ -611,13 +726,13 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         etLengthCielFlr.setFocusableInTouchMode(false);
         etPocketDepth.setFocusableInTouchMode(true);
 
-         isWallWidthSelected = false;
-         isWidthLeftOfwindowSelected = false;
-         isIBWidthOfWindow = false;
-         isIBLenghtOfWindow = false;
-         isWidthRightOfwindowSelected = false;
-         isLengthCeilFlr = false;
-         PocketDepth = true;
+        isWallWidthSelected = false;
+        isWidthLeftOfwindowSelected = false;
+        isIBWidthOfWindow = false;
+        isIBLenghtOfWindow = false;
+        isWidthRightOfwindowSelected = false;
+        isLengthCeilFlr = false;
+        PocketDepth = true;
 
 
     }
@@ -632,89 +747,75 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         widthRightOfWindow = etWidthRightOfWindow.getText().toString();
         lengthCielFlr = etLengthCielFlr.getText().toString();
         pocketDepth = etPocketDepth.getText().toString();
-        carpetInst = "Yes";
+        carpetInst = etCarpetInst.getText().toString();
         additionalData = "comment";
 
-        Log.e("abhi", "wallWidth:  ............" +wallWidth  );
-        Log.e("abhi", "widthLeftOfWindow:  ............" +widthLeftOfWindow  );
-        Log.e("abhi", "ibWidthOfWindow:  ............" +ibWidthOfWindow  );
-        Log.e("abhi", "ibLengthOfWindow:  ............" +ibLengthOfWindow  );
-        Log.e("abhi", "widthRightOfWindow:  ............" +widthRightOfWindow  );
-        Log.e("abhi", "lengthCielFlr:  ............" +lengthCielFlr  );
-        Log.e("abhi", "pocketDepth:  ............" +pocketDepth  );
-        Log.e("abhi", "carpetInst:  ............" +carpetInst  );
-        Log.e("abhi", "additionalData:  ............" +additionalData  );
+        Log.e("abhi", "wallWidth:  ............" + wallWidth);
+        Log.e("abhi", "widthLeftOfWindow:  ............" + widthLeftOfWindow);
+        Log.e("abhi", "ibWidthOfWindow:  ............" + ibWidthOfWindow);
+        Log.e("abhi", "ibLengthOfWindow:  ............" + ibLengthOfWindow);
+        Log.e("abhi", "widthRightOfWindow:  ............" + widthRightOfWindow);
+        Log.e("abhi", "lengthCielFlr:  ............" + lengthCielFlr);
+        Log.e("abhi", "pocketDepth:  ............" + pocketDepth);
+        Log.e("abhi", "carpetInst:  ............" + carpetInst);
+        Log.e("abhi", "additionalData:  ............" + additionalData);
 
-        if ( wallWidth== null && wallWidth.equals("")) {
-            etWallWidth.setError("Add Wall Width");
-            }
-        else if ( widthLeftOfWindow == null && widthLeftOfWindow.equals("")) {
+
+        if ((wallWidth != null && !wallWidth.equals("")) &&(widthLeftOfWindow != null && !widthLeftOfWindow.equals(""))
+                &&(ibWidthOfWindow != null && !ibWidthOfWindow.equals(""))&&(ibLengthOfWindow != null && !ibLengthOfWindow.equals(""))
+                &&(widthRightOfWindow != null && !widthRightOfWindow.equals(""))&& (lengthCielFlr != null && !lengthCielFlr.equals(""))
+                && (pocketDepth != null && !pocketDepth.equals(""))&&(carpetInst != null && !carpetInst.equals("")))
+        {
+            setUpRestAdapter();
+            sendMeasurementData(view);
+
+        } else if (widthLeftOfWindow == null && widthLeftOfWindow.equals("")) {
             etWidthLeftOfWindow.setError("Add Width Left Of Window");
-        }
-        else if ( ibWidthOfWindow == null && ibWidthOfWindow.equals("")) {
+        } else if (ibWidthOfWindow == null && ibWidthOfWindow.equals("")) {
             etIbWidthOfWindow.setError("Add Ib Width Of Window");
-        }
-        else if ( ibLengthOfWindow == null && ibLengthOfWindow.equals("")) {
+        } else if (ibLengthOfWindow == null && ibLengthOfWindow.equals("")) {
             etIbLengthOfWindow.setError("Add Ib Length Of Window");
-        }
-        else if ( widthRightOfWindow == null && widthRightOfWindow.equals("")) {
+        } else if (widthRightOfWindow == null && widthRightOfWindow.equals("")) {
             etWidthRightOfWindow.setError("Add Width Right Of Window");
-        }
-        else if ( lengthCielFlr == null && lengthCielFlr.equals("")) {
+        } else if (lengthCielFlr == null && lengthCielFlr.equals("")) {
             etLengthCielFlr.setError("Add Length Ciel Flr");
-        }
-        else if ( pocketDepth == null && pocketDepth.equals("")) {
+        } else if (pocketDepth == null && pocketDepth.equals("")) {
             etPocketDepth.setError("Add Pocket Depth");
         }
-        /*else if ( carpetInst!= null && !carpetInst.equals("")) {
-            carpetInst.setError("Add Wall Width");
-        }*/
-        else
-        {
-         setUpRestAdapter();
-         sendMeasurementData(view);
+        else if (wallWidth == null && wallWidth.equals("")){
+            etWallWidth.setError("Add Wall Width");
+            }
+        else if (carpetInst == null && carpetInst.equals("")){
+            etWallWidth.setError("Add Carpet Inst");
+        }
 
+            else
+        {
+            Toast.makeText(BLEInformationActivity.this,"Please fill all required Fields", Toast.LENGTH_SHORT).show();
         }
 
     }
 
     private void sendMeasurementData(final View view) {
-        Log.e("abhi", "sendMeasurementData: ..................." +windowName );
-        LoadingDialog.showLoadingDialog(this,"Loading...");
-        Call<MeasurementResponse> call = MeasurementAdapter.measurementData(floorPlanId,roomId,windowName,wallWidth,widthLeftOfWindow,ibWidthOfWindow,ibLengthOfWindow,widthRightOfWindow,lengthCielFlr,
-                pocketDepth,carpetInst);
+        Log.e("abhi", "sendMeasurementData: ..................." + windowId);
+        LoadingDialog.showLoadingDialog(this, "Loading...");
+        Call<MeasurementResponse> call = MeasurementAdapter.measurementData(floorPlanId, roomId, windowName, wallWidth, widthLeftOfWindow, ibWidthOfWindow, ibLengthOfWindow, widthRightOfWindow, lengthCielFlr,
+                pocketDepth, carpetInst,windowCompletionStatus,windowApprovalCheck,windowId);
         if (NetworkUtils.isNetworkConnected(this)) {
             call.enqueue(new Callback<MeasurementResponse>() {
 
                 @Override
                 public void onResponse(Call<MeasurementResponse> call, retrofit2.Response<MeasurementResponse> response) {
                     if (response.isSuccessful()) {
-                        if(response.body().getType() == 1) {
-                            Log.e("abhi", "onResponse:........... " +response.body().getMsg());
+                        if (response.body().getType() == 1) {
+                            Log.e("abhi", "onResponse:........... " + response.body().getMsg());
                             picturesScreen(view);
-                            /*alWindows = new ArrayList<>();
-                            for (int i=0; i<response.body().getMeasurementDetails().size(); i++) {
 
 
-                                 windowslist  = new Windowslist();
-                                windowslist.setFloorPlanId(response.body().getWindowslist().get(i).getFloorPlanId());
-                                windowslist.setFloorRoom(response.body().getWindowslist().get(i).getFloorRoom());
-                                windowslist.setId(response.body().getWindowslist().get(i).getId());
-                                windowslist.setWindow(response.body().getWindowslist().get(i).getWindow());
-                                Log.e("abhi", "onResponse:................. " +response.body().getWindowslist().get(i).getWindow() );
+                            Toast.makeText(BLEInformationActivity.this, response.body().getMsg(), Toast.LENGTH_SHORT).show();
 
-
-
-                                alWindows.add(windowslist);
-
-
-                            }*/
-
-                            Toast.makeText(BLEInformationActivity.this,response.body().getMsg(),Toast.LENGTH_SHORT).show();
-
-                        }
-                        else{
-                            Toast.makeText(BLEInformationActivity.this,response.body().getMsg(),Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(BLEInformationActivity.this, response.body().getMsg(), Toast.LENGTH_SHORT).show();
                         }
                         LoadingDialog.cancelLoading();
 
@@ -723,7 +824,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
                 @Override
                 public void onFailure(Call<MeasurementResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... "  );
+                    Log.e("abhi", "onResponse: error....................... ");
 
                     LoadingDialog.cancelLoading();
                 }
@@ -758,7 +859,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         roomName = getIntent().getStringExtra("ROOM_NAME");
         tvFloorCount.setText(floorName);
         tvRoomCount.setText(roomName);
-        Log.e("abhi", "onCreate: ................................floor plan id " +floorPlanId + " room id " +roomId);
+        Log.e("abhi", "onCreate: ................................floor plan id " + floorPlanId + " room id " + roomId);
         setUpRestAdapter();
         setWindowsList();
 
@@ -788,40 +889,56 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         alertDisconnectedBuilder.setMessage("lost connection to device");
         alertDisconnectedBuilder.setPositiveButton("Ok", null);
 
-        alertDialogConnect 		= alertConnectedBuilder.create();
-        alertDialogDisconnect 	= alertDisconnectedBuilder.create();
+        alertDialogConnect = alertConnectedBuilder.create();
+        alertDialogDisconnect = alertDisconnectedBuilder.create();
     }
 
 
     private void setUpRestAdapter() {
         WindowListAdapter = ApiAdapter.createRestAdapter(RetrofitInterface.WindowsListClient.class, BASE_URL, this);
         MeasurementAdapter = ApiAdapter.createRestAdapter(RetrofitInterface.MeasurementDataClient.class, BASE_URL, this);
+        UploadPhotoAdapter = ApiAdapter.createRestAdapter(RetrofitInterface.uploadPhotosClient.class, BASE_URL, this);
 
     }
 
     private void setWindowsList() {
-        LoadingDialog.showLoadingDialog(this,"Loading...");
-        Call<WindowsListResponse> call = WindowListAdapter.windowsListData(Integer.parseInt(floorPlanId),roomId);
+        LoadingDialog.showLoadingDialog(this, "Loading...");
+        Call<WindowsListResponse> call = WindowListAdapter.windowsListData(Integer.parseInt(floorPlanId), roomId);
         if (NetworkUtils.isNetworkConnected(this)) {
             call.enqueue(new Callback<WindowsListResponse>() {
 
                 @Override
                 public void onResponse(Call<WindowsListResponse> call, retrofit2.Response<WindowsListResponse> response) {
                     if (response.isSuccessful()) {
-                        if(response.body().getType() == 1) {
-                            Log.e("abhi", "onResponse:........... " +response.body().getMsg());
+                        if (response.body().getType() == 1) {
+                            Log.e("abhi", "onResponse:........... " + response.body().getMsg());
                             alWindows = new ArrayList<>();
-                            for (int i=0; i<response.body().getWindowslist().size(); i++) {
+                            for (int i = 0; i < response.body().getWindowslist().size(); i++) {
 
 
-                                Windowslist windowslist  = new Windowslist();
+                                Windowslist windowslist = new Windowslist();
                                 windowslist.setFloorPlanId(response.body().getWindowslist().get(i).getFloorPlanId());
                                 windowslist.setFloorRoom(response.body().getWindowslist().get(i).getFloorRoom());
                                 windowslist.setId(response.body().getWindowslist().get(i).getId());
                                 windowslist.setWindow(response.body().getWindowslist().get(i).getWindow());
                                 windowslist.setWindowStatus(response.body().getWindowslist().get(i).getWindowStatus());
-                                Log.e("abhi", "onResponse:................. " +response.body().getWindowslist().get(i).getWindow() );
+                                windowslist.setWindowApproval(response.body().getWindowslist().get(i).getWindowApproval());
 
+
+                                windowslist.setWallWidth(response.body().getWindowslist().get(i).getWallWidth());
+                                windowslist.setIbLengthWindow(response.body().getWindowslist().get(i).getIbLengthWindow());
+                                windowslist.setIbWidthWindow(response.body().getWindowslist().get(i).getIbWidthWindow());
+                                windowslist.setWidthLeftWindow(response.body().getWindowslist().get(i).getWidthLeftWindow());
+                                windowslist.setWidthRightWindow(response.body().getWindowslist().get(i).getWidthRightWindow());
+                                windowslist.setPocketDepth(response.body().getWindowslist().get(i).getPocketDepth());
+                                windowslist.setCarpetInst(response.body().getWindowslist().get(i).getCarpetInst());
+                                windowslist.setLengthCeilFlr(response.body().getWindowslist().get(i).getLengthCeilFlr());
+
+                                windowslist.setAllimages(response.body().getWindowslist().get(i).getAllimages());
+
+
+
+                                Log.e("abhi", "onResponse:................. " + response.body().getWindowslist().get(i).getAllimages());
 
 
                                 alWindows.add(windowslist);
@@ -833,14 +950,13 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                             mLayoutManager = new LinearLayoutManager(BLEInformationActivity.this, LinearLayoutManager.HORIZONTAL, false);
                             mRecyclerView.setLayoutManager(mLayoutManager);
 
-                            mAdapter = new HLVAdapter(BLEInformationActivity.this, alWindows,"windowList","test","test2");
+                            mAdapter = new HLVAdapter(BLEInformationActivity.this, alWindows, "windowList", "test", "test2");
                             mRecyclerView.setAdapter(mAdapter);
-                            Toast.makeText(BLEInformationActivity.this,response.body().getMsg(),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BLEInformationActivity.this, response.body().getMsg(), Toast.LENGTH_SHORT).show();
                             LoadingDialog.cancelLoading();
-                        }
-                        else{
+                        } else {
                             LoadingDialog.cancelLoading();
-                            Toast.makeText(BLEInformationActivity.this,response.body().getMsg(),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BLEInformationActivity.this, response.body().getMsg(), Toast.LENGTH_SHORT).show();
                         }
                         LoadingDialog.cancelLoading();
 
@@ -849,7 +965,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
                 @Override
                 public void onFailure(Call<WindowsListResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... "  );
+                    Log.e("abhi", "onResponse: error....................... ");
 
                     LoadingDialog.cancelLoading();
                 }
@@ -861,6 +977,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             SnakBarUtils.networkConnected(this);
         }
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -873,7 +990,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         }
 
         // setup according to device
-        if(currentDevice != null){
+        if (currentDevice != null) {
             currentDevice.setConnectionListener(this);
             currentDevice.setReceiveDataListener(this);
             currentDevice.setErrorListener(this);
@@ -881,10 +998,10 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             status.setText(currentDevice.getConnectionState().toString());
             status.setTextColor(Color.parseColor("#048700"));
 
-            if(currentDevice.getConnectionState().equals(Device.ConnectionState.connected)){
+            if (currentDevice.getConnectionState().equals(Device.ConnectionState.connected)) {
 
                 String model = currentDevice.getModel();
-                if(model.isEmpty() == false) {
+                if (model.isEmpty() == false) {
                     // setUI(model);
                 }
 
@@ -893,17 +1010,17 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         }
 
         // Register activity for reconnection
-        if (reconnectionHelper != null){
+        if (reconnectionHelper != null) {
             reconnectionHelper.setErrorListener(this);
             reconnectionHelper.setReconnectListener(this);
         }
 
-        if (reconnectionIsRunning){
+        if (reconnectionIsRunning) {
             status.setText(R.string.reconnecting);
         }
 
         // start bt connection
-        if(currentDevice != null){
+        if (currentDevice != null) {
             currentDevice.startBTConnection();
         }
     }
@@ -919,16 +1036,16 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         }
 
         // Dismiss opened dialogs
-        if(commandDialog != null) {
+        if (commandDialog != null) {
             commandDialog.dismiss();
         }
 
-        if(customCommandDialog != null) {
+        if (customCommandDialog != null) {
             customCommandDialog.dismiss();
         }
 
         // Pause the bluetooth connection
-        if(currentDevice != null){
+        if (currentDevice != null) {
             currentDevice.pauseBTConnection();
         }
     }
@@ -941,14 +1058,14 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         isDestroyed = true;
 
         //unregister activity for connection changes
-        if (currentDevice != null){
+        if (currentDevice != null) {
             currentDevice.setReceiveDataListener(null);
             currentDevice.setConnectionListener(null);
             currentDevice.setErrorListener(null);
             currentDevice = null;
         }
         //unregister activity for reconnection
-        if (reconnectionHelper != null){
+        if (reconnectionHelper != null) {
             reconnectionHelper.setErrorListener(null);
             reconnectionHelper.setReconnectListener(null);
             reconnectionHelper.stopReconnecting();
@@ -956,10 +1073,10 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             reconnectionIsRunning = false;
         }
 
-        if (currentDevice != null){
+        if (currentDevice != null) {
             //Disconnect the device
             currentDevice.disconnect();
-            Log.d(CLASSTAG, METHODTAG + "Disconnected Device: "+currentDevice.modelName);
+            Log.d(CLASSTAG, METHODTAG + "Disconnected Device: " + currentDevice.modelName);
 
         }
 
@@ -976,23 +1093,23 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
      * Verify if the current device need to be reconnected.
      * If the device disconnected and the reconnection function has not been called, then it will start.
      */
-    synchronized void checkForReconnection(){
+    synchronized void checkForReconnection() {
         final String METHODTAG = ".checkForReconnection";
-        Log.d(CLASSTAG,METHODTAG+": called");
-        if (currentDevice == null){
-            Log.d(CLASSTAG,METHODTAG+": device is null");
+        Log.d(CLASSTAG, METHODTAG + ": called");
+        if (currentDevice == null) {
+            Log.d(CLASSTAG, METHODTAG + ": device is null");
             return;
         }
-        if (currentDevice.getConnectionState() == Device.ConnectionState.connected){
-            Log.d(CLASSTAG,METHODTAG+": device connectionstate is connected ?!?!");
+        if (currentDevice.getConnectionState() == Device.ConnectionState.connected) {
+            Log.d(CLASSTAG, METHODTAG + ": device connectionstate is connected ?!?!");
             return;
         }
-        if (!currentDevice.getConnectionType().equals(Types.ConnectionType.ble)){
-            Log.d(CLASSTAG,METHODTAG+": device is not ble ???");
+        if (!currentDevice.getConnectionType().equals(Types.ConnectionType.ble)) {
+            Log.d(CLASSTAG, METHODTAG + ": device is not ble ???");
             return;
         }
-        if (turnOnBluetoothDialogIsShown){
-            Log.d(CLASSTAG, METHODTAG+": turnOnBluetoothDialogIsShown is true");
+        if (turnOnBluetoothDialogIsShown) {
+            Log.d(CLASSTAG, METHODTAG + ": turnOnBluetoothDialogIsShown is true");
             return;
         }
 
@@ -1007,8 +1124,8 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                 // check if bluetooth is available
                 boolean bluetoothIsAvailable = DeviceManager.getInstance(getApplicationContext()).checkBluetoothAvailibilty();
 
-                if (!bluetoothIsAvailable){
-                    Log.d(CLASSTAG,METHODTAG+": bluetooth is not available");
+                if (!bluetoothIsAvailable) {
+                    Log.d(CLASSTAG, METHODTAG + ": bluetooth is not available");
 
                     // show alert to turn on bluetooth
                     showBluetoothTurnOn();
@@ -1017,10 +1134,10 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                 }
 
                 // if the reconnection is not running already, it will be called
-                if (!reconnectionIsRunning){
+                if (!reconnectionIsRunning) {
                     reconnectionIsRunning = true;
 
-                    Log.d(CLASSTAG,METHODTAG+": start reconnecting!!");
+                    Log.d(CLASSTAG, METHODTAG + ": start reconnecting!!");
                     reconnectionHelper.startReconnecting();
 
                     runOnUiThread(new Runnable() {
@@ -1035,9 +1152,6 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             }
         }).start();
     }
-
-
-
 
 
     /**
@@ -1060,13 +1174,13 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
      * Check if the device is disconnected, if it is disconnected launch the reconnection functiono
      *
      * @param device the device on which the connection state changed
-     * @param state the current connection state. If state is disconnected, the device object is not valid anymore. No connection can be established with this object any more.
+     * @param state  the current connection state. If state is disconnected, the device object is not valid anymore. No connection can be established with this object any more.
      */
     @Override
     public void onConnectionStateChanged(Device device, final Device.ConnectionState state) {
 
         final String METHODTAG = ".onConnectionStateChanged";
-        Log.d(CLASSTAG, METHODTAG +": " + device.getDeviceID() + ", state: " + state);
+        Log.d(CLASSTAG, METHODTAG + ": " + device.getDeviceID() + ", state: " + state);
 
         try {
             // set the current state as text
@@ -1078,12 +1192,11 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             });
 
             // if disconnected, try reconnecting
-            if (state == Device.ConnectionState.disconnected){
+            if (state == Device.ConnectionState.disconnected) {
                 showConnectedDisconnectedDialog(false);
                 checkForReconnection();
                 return;
-            }
-            else{
+            } else {
                 // if connected ask for model. this will result in onDataReceived()
 
                 //setUI(currentDevice.getModel());
@@ -1091,7 +1204,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             }
 
             showConnectedDisconnectedDialog(true);
-        }catch(Exception e){
+        } catch (Exception e) {
             Log.e(CLASSTAG, METHODTAG, e);
         }
     }
@@ -1103,8 +1216,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     public void onAsyncDataReceived(final ReceivedData receivedData) {
 
         final String METHODTAG = ".onDataReceived";
-        Log.d(CLASSTAG, METHODTAG+ ": called.");
-
+        Log.d(CLASSTAG, METHODTAG + ": called.");
 
 
         if (receivedData != null) {
@@ -1219,7 +1331,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                                                 isWidthRightOfwindowSelected = false;
                                                 isLengthCeilFlr = false;
                                                 PocketDepth = false;
-                                            } else if(isWidthLeftOfwindowSelected) {
+                                            } else if (isWidthLeftOfwindowSelected) {
                                                 etWidthLeftOfWindow.setText(distanceValue.getConvertedValueStrNoUnit());
 
                                                 etWallWidth.setFocusableInTouchMode(false);
@@ -1238,8 +1350,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                                                 isWidthRightOfwindowSelected = false;
                                                 isLengthCeilFlr = false;
                                                 PocketDepth = false;
-                                            }
-                                            else if(isIBWidthOfWindow) {
+                                            } else if (isIBWidthOfWindow) {
                                                 etIbWidthOfWindow.setText(distanceValue.getConvertedValueStrNoUnit());
 
                                                 etWallWidth.setFocusableInTouchMode(false);
@@ -1258,8 +1369,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                                                 isWidthRightOfwindowSelected = false;
                                                 isLengthCeilFlr = false;
                                                 PocketDepth = false;
-                                            }
-                                            else if(isIBLenghtOfWindow) {
+                                            } else if (isIBLenghtOfWindow) {
 
                                                 etWallWidth.setFocusableInTouchMode(false);
                                                 etWidthLeftOfWindow.setFocusableInTouchMode(false);
@@ -1278,8 +1388,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                                                 isWidthRightOfwindowSelected = true;
                                                 isLengthCeilFlr = false;
                                                 PocketDepth = false;
-                                            }
-                                            else if(isWidthRightOfwindowSelected) {
+                                            } else if (isWidthRightOfwindowSelected) {
 
                                                 etWidthRightOfWindow.setText(distanceValue.getConvertedValueStrNoUnit());
 
@@ -1300,8 +1409,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                                                 isWidthRightOfwindowSelected = false;
                                                 isLengthCeilFlr = true;
                                                 PocketDepth = false;
-                                            }
-                                            else if(isLengthCeilFlr) {
+                                            } else if (isLengthCeilFlr) {
                                                 etLengthCielFlr.setText(distanceValue.getConvertedValueStrNoUnit());
 
                                                 etWallWidth.setFocusableInTouchMode(false);
@@ -1320,8 +1428,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                                                 isWidthRightOfwindowSelected = false;
                                                 isLengthCeilFlr = false;
                                                 PocketDepth = true;
-                                            }
-                                            else {
+                                            } else {
                                                 etPocketDepth.setText(distanceValue.getConvertedValueStrNoUnit());
 
                                                 etWallWidth.setFocusableInTouchMode(false);
@@ -1366,7 +1473,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
                                         }
 
-                                        if(hasDistanceMeasurement == false) {
+                                        if (hasDistanceMeasurement == false) {
                                             //  etWallWidth.setText(R.string.blank_value);
                                             //  etWidthLeftOfWindow.setText(R.string.blank_value);
                                             //distanceUnit.setText(R.string.blank_value);
@@ -1409,7 +1516,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                                             Log.d(CLASSTAG, METHODTAG + ": called with id: " + id + ", value: " + data);
                                         }
 
-                                        if(hasDistanceMeasurement == false) {
+                                        if (hasDistanceMeasurement == false) {
                                             //  etWallWidth.setText(R.string.blank_value);
                                             // etWidthLeftOfWindow.setText(R.string.blank_value);
                                             // distanceUnit.setText(R.string.blank_value);
@@ -1419,7 +1526,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                                     break;
                                 }
                             } catch (IllegalArgumentCheckedException e) {
-                                Log.e(CLASSTAG, METHODTAG+": Error onAsyncDataReceived ", e);
+                                Log.e(CLASSTAG, METHODTAG + ": Error onAsyncDataReceived ", e);
                             } catch (WrongDataException e) {
 
                                 Log.d(CLASSTAG, METHODTAG + " A wrong value has been set into the UI");
@@ -1430,10 +1537,10 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                     }
                 });
             } catch (Exception e) {
-                Log.e(CLASSTAG, METHODTAG+": Error onAsyncDataReceived ", e);
+                Log.e(CLASSTAG, METHODTAG + ": Error onAsyncDataReceived ", e);
             }
-        }else{
-            Log.d(CLASSTAG, METHODTAG+": Error onAsyncDataReceived: receivedData object is null  ");
+        } else {
+            Log.d(CLASSTAG, METHODTAG + ": Error onAsyncDataReceived: receivedData object is null  ");
         }
 
     }
@@ -1454,19 +1561,18 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
      */
 
 
-
     synchronized void showConnectedDisconnectedDialog(final boolean connected) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (connected) {
                     alertDialogConnect.show();
-                    if(alertDialogDisconnect.isShowing()) {
+                    if (alertDialogDisconnect.isShowing()) {
                         alertDialogDisconnect.dismiss();
                     }
                 } else {
                     alertDialogDisconnect.show();
-                    if(alertDialogDisconnect.isShowing()) {
+                    if (alertDialogDisconnect.isShowing()) {
                         alertDialogConnect.dismiss();
                     }
                 }
@@ -1477,10 +1583,11 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     /**
      * Show alert messages
+     *
      * @param message message shown in the UI
      */
-    public void showAlert(final String message){
-        if (isDestroyed){
+    public void showAlert(final String message) {
+        if (isDestroyed) {
             return;
         }
         runOnUiThread(new Runnable() {
@@ -1497,16 +1604,16 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     /**
      * Show bluetooth turnOn dialog
      */
-    synchronized void showBluetoothTurnOn(){
+    synchronized void showBluetoothTurnOn() {
         final String METHODTAG = ".showBluetoothTurnOn";
 
-        if(turnOnBluetoothDialogIsShown){
-            Log.d(CLASSTAG, METHODTAG +": dialog is already shown");
+        if (turnOnBluetoothDialogIsShown) {
+            Log.d(CLASSTAG, METHODTAG + ": dialog is already shown");
             return;
         }
 
         turnOnBluetoothDialogIsShown = true;
-        Log.d(CLASSTAG, METHODTAG +": turnOnBluetoothDialogIsShown is true");
+        Log.d(CLASSTAG, METHODTAG + ": turnOnBluetoothDialogIsShown is true");
 
         runOnUiThread(new Runnable() {
             @Override
@@ -1522,22 +1629,23 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                     }
                 });
                 builder.create().show();
-                Log.d(CLASSTAG, METHODTAG +": SHOW");
+                Log.d(CLASSTAG, METHODTAG + ": SHOW");
             }
         });
     }
 
     /**
      * Get object error and show it in the UI
+     *
      * @param errorObject errorObject send by the API
      */
     @Override
     public void onError(ErrorObject errorObject) {
 
         final String METHODTAG = ".onError";
-        Log.e(CLASSTAG, METHODTAG +": "+ errorObject.getErrorMessage() + ", errorCode: " + errorObject.getErrorCode());
+        Log.e(CLASSTAG, METHODTAG + ": " + errorObject.getErrorMessage() + ", errorCode: " + errorObject.getErrorCode());
 
-        if (errorObject.getErrorCode() == ErrorDefinitions.AP_NO_WIFI_CONNECTED_CODE){ // || errorObject.getErrorCode() == ErrorDefinitions.AP_IS_CONNECTED_TO_HOTSPOT_CODE ){
+        if (errorObject.getErrorCode() == ErrorDefinitions.AP_NO_WIFI_CONNECTED_CODE) { // || errorObject.getErrorCode() == ErrorDefinitions.AP_IS_CONNECTED_TO_HOTSPOT_CODE ){
             return;
         }
         showAlert(errorObject.getErrorMessage() + ", errorCode: " + errorObject.getErrorCode());
@@ -1547,6 +1655,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     /**
      * On reconnect the newly connected device will be set as currentDevice.
      * And a new ReconnectionHelper will be created for the new device object.
+     *
      * @param device previously connected device
      */
     @Override
@@ -1573,27 +1682,28 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         reconnectionHelper = new ReconnectionHelper(currentDevice, context);
     }
 
-    public void readDataFromResponseObject(Response response)  {
+    public void readDataFromResponseObject(Response response) {
 
         final String METHODTAG = ".readDataFromResponseObject";
 
-        if (response.getError() != null){
+        if (response.getError() != null) {
 
-            Log.e(CLASSTAG, METHODTAG +": response error: " + response.getError().getErrorMessage());
+            Log.e(CLASSTAG, METHODTAG + ": response error: " + response.getError().getErrorMessage());
 
             return;
         }
 
-        if(response instanceof ResponseBLEMeasurements){
+        if (response instanceof ResponseBLEMeasurements) {
             this.extractDataFromBLEResponseObject((ResponseBLEMeasurements) response);
         }
     }
 
     /**
      * The ResponseWifiMeasurementExtract contains all measured data
+     *
      * @param response
      */
-    public void extractDataFromBLEResponseObject(final ResponseBLEMeasurements response){
+    public void extractDataFromBLEResponseObject(final ResponseBLEMeasurements response) {
 
 
         runOnUiThread(new Runnable() {
@@ -1603,7 +1713,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                 MeasuredValue data = response.getDistanceValue();
 
                 //Distance Measurement
-                if(data != null && data.getConvertedValue() != Defines.defaultFloatValue && !data.getUnitStr().equals(Defines.defaultStringValue)){
+                if (data != null && data.getConvertedValue() != Defines.defaultFloatValue && !data.getUnitStr().equals(Defines.defaultStringValue)) {
                     etWallWidth.setText(data.getConvertedValueStrNoUnit());
                     etWidthLeftOfWindow.setText(data.getConvertedValueStrNoUnit());
                     //  distanceUnit.setText(data.getUnitStr());
@@ -1611,13 +1721,13 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
                 //Inclination Angle Measurement
                 data = response.getAngleInclination();
-                if(data != null && data.getConvertedValue() !=  Defines.defaultFloatValue && !data.getUnitStr().equals(Defines.defaultStringValue)){
+                if (data != null && data.getConvertedValue() != Defines.defaultFloatValue && !data.getUnitStr().equals(Defines.defaultStringValue)) {
 
                 }
 
                 //Direction Angle Measurement
                 data = response.getAngleDirection();
-                if(data != null && data.getConvertedValue() !=  Defines.defaultFloatValue && !data.getUnitStr().equals(Defines.defaultStringValue)){
+                if (data != null && data.getConvertedValue() != Defines.defaultFloatValue && !data.getUnitStr().equals(Defines.defaultStringValue)) {
 
                 }
             }
@@ -1714,16 +1824,16 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
         final int color = 0xff424242;
         final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0,500, 500);
+        final Rect rect = new Rect(0, 0, 500, 500);
 
-        /*float r = 0;
+        float r = 0;
 
         if (bitmap.getWidth() > bitmap.getHeight()) {
             r = bitmap.getHeight() / 2;
         } else {
             r = bitmap.getWidth() / 2;
         }
-*/
+
         paint.setAntiAlias(true);
         canvas.drawARGB(0, 0, 0, 0);
         paint.setColor(color);
@@ -1734,63 +1844,6 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     }
 
 
-
-
-    private void setProfilePicURL(String profilepicUrlComplete) {
-        Glide.with(this).load(profilepicUrlComplete).asBitmap().centerCrop().dontAnimate().dontTransform().listener(new RequestListener<String, Bitmap>() {
-            @Override
-            public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
-                imageProgressBar.setVisibility(View.GONE);
-                return false;
-            }
-
-            @Override
-            public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                imageProgressBar.setVisibility(View.GONE);
-                return false;
-            }
-        })
-                .into(new BitmapImageViewTarget(personImage) {
-                    @Override
-                    protected void setResource(Bitmap bitmap) {
-                        Bitmap output;
-
-                        if (bitmap.getWidth() > bitmap.getHeight()) {
-                            output = Bitmap.createBitmap(bitmap.getHeight(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-                        } else {
-                            output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getWidth(), Bitmap.Config.ARGB_8888);
-                        }
-
-                        Canvas canvas = new Canvas(output);
-
-                        final int color = 0xff424242;
-                        final Paint paint = new Paint();
-                        final Rect rect = new Rect(0, 0,500, 500);
-
-                       /* float r = 0;
-
-                        if (bitmap.getWidth() > bitmap.getHeight()) {
-                            r = bitmap.getHeight() / 2;
-                        } else {
-                            r = bitmap.getWidth() / 2;
-                        }*/
-
-                        paint.setAntiAlias(true);
-                        canvas.drawARGB(0, 0, 0, 0);
-                        paint.setColor(color);
-                        //canvas.drawCircle(r, r, r, paint);
-                        canvas.drawRect(0  , 0, 500, 500,paint);
-
-                        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-                        canvas.drawBitmap(bitmap, rect, rect, paint);
-                        Log.e("abhi", "setResource: -----------output"+output );
-                        personImage.setImageBitmap(output);
-                        imageProgressBar.setVisibility(View.GONE);
-
-
-                    }
-                });
-    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1802,19 +1855,20 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
             Bitmap bp = (Bitmap) data.getExtras().get("data");
 
-            if (bp !=null) {
-                personImage.setImageBitmap(getCircularBitmap(bp));
+            if (bp != null) {
+                // personImage.setImageBitmap(getCircularBitmap(bp));
                 Uri tempUri = getImageUri(getApplicationContext(), bp);
                 File filePath = new File(getRealPathFromURI(tempUri));
-               // imageProgressBar.setVisibility(View.VISIBLE);
-                setProfilePicURL(filePath.getPath());
-                //sendImagesToServerFromCamera(filePath.getPath());
+                // imageProgressBar.setVisibility(View.VISIBLE);
+                // setProfilePicURL(filePath.getPath());
+                sendImagesToServerFromCamera(filePath.getPath());
+                Log.e("abhi", "onActivityResult:   on taking pic from camera......................" + filePath.getPath());
             }
 
 
         } else if (requestCode == PICK_FROM_GALLERY && resultCode == RESULT_OK) {
 
-          //  personImage.setBackgroundResource(R.drawable.profile_icon);
+            //  personImage.setBackgroundResource(R.drawable.profile_icon);
 
 
             Uri selectedImage = data.getData();
@@ -1825,19 +1879,95 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 imgDecodableString = cursor.getString(columnIndex);
                 cursor.close();
-                setProfilePicURL(imgDecodableString);
-                // sendImagesToServerFromCamera(imgDecodableString);
+                //setProfilePicURL(imgDecodableString);
+                sendImagesToServerFromCamera(imgDecodableString);
             }
 
-            Log.e("abhi", "onActivityResult: image decodable "+imgDecodableString );
-            imageProgressBar.setVisibility(View.VISIBLE);
-            Log.e("abhi", "onActivityResult:.......... " +imgDecodableString );
-
+            Log.e("abhi", "onActivityResult: image decodable " + imgDecodableString);
+            //imageProgressBar.setVisibility(View.VISIBLE);
+            Log.e("abhi", "onActivityResult:..........  from gallery " + imgDecodableString);
 
 
         }
     }
 
+
+    private void sendImagesToServerFromCamera(String imgString) {
+        MultipartBody.Part fileToUpload = null;
+        if (imgString != null) {
+            File imgPath = new File(imgString);
+
+            RequestBody mFile = RequestBody.create(MediaType.parse("image/jpg"), imgPath);
+            fileToUpload = MultipartBody.Part.createFormData("file", imgPath.getName(), mFile);
+        }
+        RequestBody userId = RequestBody.create(
+                MediaType.parse("text/plain"),
+                "8");
+
+        RequestBody measurementId = RequestBody.create(
+                MediaType.parse("text/plain"),
+                "5");
+
+        final RequestBody imageType = RequestBody.create(
+                MediaType.parse("text/plain"),
+                imageTypeToBeSendViaAPi);
+
+
+        LoadingDialog.showLoadingDialog(this, "Loading...");
+        Call<UploadPhotoResponse> call = UploadPhotoAdapter.uploadImageData(userId, measurementId, fileToUpload, imageType);
+        if (NetworkUtils.isNetworkConnected(this)) {
+            call.enqueue(new Callback<UploadPhotoResponse>() {
+
+                @Override
+                public void onResponse(Call<UploadPhotoResponse> call, retrofit2.Response<UploadPhotoResponse> response) {
+
+                    if (response.isSuccessful()) {
+                        if (response.body().getType() == 1) {
+
+                            Log.e("abhi", "onResponse: .............................................." + response.body().getMsg());
+                            Log.e("abhi", "onResponse: image link............" + response.body().getImageurl());
+                            ImageList imageList = new ImageList();
+                            imageList.setimageUrl(response.body().getImageurl());
+                            imageList.setimageType(selectedImageType);
+                            combineImageList.add(imageList);
+
+
+                        }
+                        combineImageListToBeShown = new ArrayList<>();
+                        for (int i = combineImageList.size() - 1; i >= 0; i--) {
+                            if (combineImageList.get(i).getimageType().equals(selectedImageType)) {
+                                ImageList imageList = new ImageList();
+                                imageList.setimageUrl(combineImageList.get(i).getimageUrl());
+                                imageList.setimageType(selectedImageType);
+                                combineImageListToBeShown.add(imageList);
+                            }
+                        }
+
+                        mRecyclerViewImages.setHasFixedSize(true);
+                        mLayoutManager = new LinearLayoutManager(BLEInformationActivity.this, LinearLayoutManager.HORIZONTAL, false);
+                        mRecyclerViewImages.setLayoutManager(mLayoutManager);
+
+                        mAdapter = new HLVImagesAdapter(BLEInformationActivity.this, combineImageListToBeShown, selectedImageType);
+                        mRecyclerViewImages.setAdapter(mAdapter);
+                        LoadingDialog.cancelLoading();
+
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<UploadPhotoResponse> call, Throwable t) {
+                    Log.e("abhi", "onFailure: ............" + t.getCause());
+                    LoadingDialog.cancelLoading();
+                }
+
+
+            });
+
+        } else {
+            SnakBarUtils.networkConnected(this);
+        }
+    }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -1852,6 +1982,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
         return cursor.getString(idx);
     }
+
     private boolean getPermissions() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)

@@ -116,7 +116,12 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
                 @Override
                 public void onClick(View v) {
                     if(context1 != null){
-                        ((BLEInformationActivity)context1).measurementScreen(v,alWindows.get(i).getWindow());
+                        ((BLEInformationActivity)context1).measurementScreen(v,alWindows.get(i).getWindow(),"fromHLVAdapter",
+                                alWindows.get(i).getWallWidth(),alWindows.get(i).getWidthLeftWindow(),alWindows.get(i).getWidthRightWindow()
+                                ,alWindows.get(i).getIbLengthWindow(),alWindows.get(i).getIbWidthWindow(),
+                                alWindows.get(i).getLengthCeilFlr(),alWindows.get(i).getCarpetInst(),alWindows.get(i).getPocketDepth(),
+                                alWindows.get(i).getWindowApproval(),alWindows.get(i).getWindowStatus(),alWindows.get(i).getAllimages(),alWindows.get(i).getId()
+                        );
                     }
 
 

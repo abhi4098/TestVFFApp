@@ -11,6 +11,7 @@ import com.valleyforge.cdi.generated.model.ProjectDetailResponse;
 import com.valleyforge.cdi.generated.model.ProjectListResponse;
 import com.valleyforge.cdi.generated.model.RoomsListResponse;
 import com.valleyforge.cdi.generated.model.SkipResponse;
+import com.valleyforge.cdi.generated.model.UploadPhotoResponse;
 import com.valleyforge.cdi.generated.model.WindowsListResponse;
 
 import okhttp3.MultipartBody;
@@ -184,12 +185,33 @@ public class RetrofitInterface {
                 @Field("width_right_window") String width_right_window,
                 @Field("length_ceil_flr") String length_ceil_flr,
                 @Field("pocket_depth") String pocket_depth,
-                @Field("carpet_inst") String carpet_inst
+                @Field("carpet_inst") String carpet_inst,
+                @Field("window_status") String window_status,
+                @Field("window_approval") String window_approval,
+                @Field("window_id") String window_id
 
 
 
         );
     }
+
+    /*public interface uploadPhotosClient {
+        @Multipart
+        @POST("imageuploadApi")
+        Call<UploadPhotoResponse> uploadImageData(@Part MultipartBody.Part profilepic , @Part("profilepic") RequestBody name);
+
+    }*/
+
+    public interface uploadPhotosClient {
+        @Multipart
+        @POST("imageuploadApi")
+        public Call<UploadPhotoResponse> uploadImageData(
+                @Part("userid") RequestBody userid,
+                @Part("measurement_id") RequestBody measurement_id,
+                @Part MultipartBody.Part file,
+                @Part("image_type") RequestBody image_type);
+    }
+
   /*  public interface UserLoginClient {
         @FormUrlEncoded
         @POST("query.php")

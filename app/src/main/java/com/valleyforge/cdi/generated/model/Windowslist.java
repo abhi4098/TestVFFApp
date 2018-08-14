@@ -4,11 +4,13 @@ package com.valleyforge.cdi.generated.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Windowslist {
 
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private String id;
     @SerializedName("deleted_at")
     @Expose
     private Object deletedAt;
@@ -20,10 +22,10 @@ public class Windowslist {
     private String updatedAt;
     @SerializedName("floor_plan_id")
     @Expose
-    private Integer floorPlanId;
+    private String floorPlanId;
     @SerializedName("floor_room")
     @Expose
-    private Integer floorRoom;
+    private String floorRoom;
     @SerializedName("window")
     @Expose
     private String window;
@@ -59,30 +61,34 @@ public class Windowslist {
     private String images;
     @SerializedName("property_id")
     @Expose
-    private Integer propertyId;
+    private String propertyId;
     @SerializedName("project_id")
     @Expose
-    private Integer projectId;
-
+    private String projectId;
+    @SerializedName("ceiling_to_floor")
+    @Expose
+    private String ceilingToFloor;
+    @SerializedName("wall_to_wall")
+    @Expose
+    private String wallToWall;
+    @SerializedName("image_type")
+    @Expose
+    private String imageType;
+    @SerializedName("window_approval")
+    @Expose
+    private String windowApproval;
     @SerializedName("window_status")
     @Expose
     private String windowStatus;
+    @SerializedName("allimages")
+    @Expose
+    private List<String> allimages = null;
 
-
-    public String getWindowStatus() {
-        return windowStatus;
-    }
-
-    public void setWindowStatus(String windowStatus) {
-        this.windowStatus = windowStatus;
-    }
-
-
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -110,19 +116,19 @@ public class Windowslist {
         this.updatedAt = updatedAt;
     }
 
-    public Integer getFloorPlanId() {
+    public String getFloorPlanId() {
         return floorPlanId;
     }
 
-    public void setFloorPlanId(Integer floorPlanId) {
+    public void setFloorPlanId(String floorPlanId) {
         this.floorPlanId = floorPlanId;
     }
 
-    public Integer getFloorRoom() {
+    public String getFloorRoom() {
         return floorRoom;
     }
 
-    public void setFloorRoom(Integer floorRoom) {
+    public void setFloorRoom(String floorRoom) {
         this.floorRoom = floorRoom;
     }
 
@@ -214,20 +220,67 @@ public class Windowslist {
         this.images = images;
     }
 
-    public Integer getPropertyId() {
+    public String getPropertyId() {
         return propertyId;
     }
 
-    public void setPropertyId(Integer propertyId) {
+    public void setPropertyId(String propertyId) {
         this.propertyId = propertyId;
     }
 
-    public Integer getProjectId() {
+    public String getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(Integer projectId) {
+    public void setProjectId(String projectId) {
         this.projectId = projectId;
     }
 
+    public String getCeilingToFloor() {
+        return ceilingToFloor;
+    }
+
+    public void setCeilingToFloor(String ceilingToFloor) {
+        this.ceilingToFloor = ceilingToFloor;
+    }
+
+    public String getWallToWall() {
+        return wallToWall;
+    }
+
+    public void setWallToWall(String wallToWall) {
+        this.wallToWall = wallToWall;
+    }
+
+    public String getImageType() {
+        return imageType;
+    }
+
+    public void setImageType(String imageType) {
+        this.imageType = imageType;
+    }
+
+    public String getWindowApproval() {
+        return windowApproval;
+    }
+
+    public void setWindowApproval(String windowApproval) {
+        this.windowApproval = windowApproval;
+    }
+
+    public String getWindowStatus() {
+        return windowStatus;
+    }
+
+    public void setWindowStatus(String windowStatus) {
+        this.windowStatus = windowStatus;
+    }
+
+    public List<String> getAllimages() {
+        return allimages;
+    }
+
+    public void setAllimages(List<String> allimages) {
+        this.allimages = allimages;
+    }
 }

@@ -64,6 +64,19 @@ public class MeasurementDetail {
     @Expose
     private Integer projectId;
 
+    @SerializedName(" window_id")
+    @Expose
+    private String windowId;
+
+    public String getWindowId() {
+        return windowId;
+    }
+
+    public void setWindowId(String windowId) {
+        this.windowId = windowId;
+    }
+
+
     public Integer getId() {
         return id;
     }
