@@ -36,15 +36,24 @@ public class Datum {
     @SerializedName("updated_at")
     @Expose
     private String updatedAt;
-    @SerializedName("role")
-    @Expose
-    private String role;
     @SerializedName("phone")
     @Expose
     private String phone;
     @SerializedName("address")
     @Expose
     private String address;
+    @SerializedName("imageid")
+    @Expose
+    private String imageid;
+    @SerializedName("profile_image_name")
+    @Expose
+    private String profileImageName;
+    @SerializedName("profile_image_url")
+    @Expose
+    private String profileImageUrl;
+    @SerializedName("role")
+    @Expose
+    private String role;
 
     public String getId() {
         return id;
@@ -126,14 +135,6 @@ public class Datum {
         this.updatedAt = updatedAt;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public String getPhone() {
         return phone;
     }
@@ -148,6 +149,38 @@ public class Datum {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getImageid() {
+        return imageid;
+    }
+
+    public void setImageid(String imageid) {
+        this.imageid = imageid;
+    }
+
+    public String getProfileImageName() {
+        return profileImageName;
+    }
+
+    public void setProfileImageName(String profileImageName) {
+        this.profileImageName = profileImageName;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
 }

@@ -49,6 +49,7 @@ import android.widget.Toast;
 
 import com.valleyforge.cdi.R;
 import com.valleyforge.cdi.api.ApiAdapter;
+import com.valleyforge.cdi.api.ApiEndPoints;
 import com.valleyforge.cdi.api.RetrofitInterface;
 import com.valleyforge.cdi.generated.model.Allimage;
 import com.valleyforge.cdi.generated.model.ImageList;
@@ -163,7 +164,6 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     String wallWidth, widthLeftOfWindow, ibWidthOfWindow, ibLengthOfWindow, widthRightOfWindow, lengthCielFlr, pocketDepth, carpetInst, additionalData;
 
 
-    String IMAGE_URL = "http://myhostapp.com/vff-staging-new/la-assets/floors/";
     @BindView(R.id.wall_width)
     EditText etWallWidth;
 
@@ -473,6 +473,15 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         windowId = null;
         windowName = null;
         combineImageList.clear();
+        combineImageListToBeShown.clear();
+        etWallWidth.setText("");
+        etWidthLeftOfWindow.setText("");
+        etIbWidthOfWindow.setText("");
+        etIbLengthOfWindow.setText("");
+        etWidthRightOfWindow.setText("");
+        etLengthCielFlr.setText("");
+        etPocketDepth.setText(pocketDepth);
+        etCarpetInst.setText(carpetInst);
         tvAppTitle.setText("Room Details");
         tvDetails.setTextColor(Color.parseColor("#ffffff")); // custom color
         llDetails.setBackgroundColor(Color.parseColor("#048700"));
@@ -549,13 +558,13 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                 //Allimage allimage = new Allimage();
                imagesID =  allimages.get(j).getId();
                String url = allimages.get(j).getUrl();
-                String[] separated = url.split("/");
+                String[] separated = url.split("@__@");
 
                 Log.e("abhi", "measurementScreen:................from hlv adapter ---------------folder name " +separated[0] + " image Id...."+imagesID);
 
                 ImageList imageList = new ImageList();
-                imageList.setimageUrl(IMAGE_URL + allimages.get(j).getUrl());
-                Log.e("abhi", "measurementScreen: ........................." + IMAGE_URL + allimages.get(j).getUrl());
+                imageList.setimageUrl(ApiEndPoints.IMAGE_URL + allimages.get(j).getUrl());
+                Log.e("abhi", "measurementScreen: ........................." + ApiEndPoints.IMAGE_URL + allimages.get(j).getUrl());
                 imageList.setImageId(imagesID);
                 //for (int k=0; k<combineImageList.get(i).get)
                 imageList.setimageType(separated[0]);

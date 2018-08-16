@@ -39,6 +39,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.Target;
 import com.valleyforge.cdi.R;
 import com.valleyforge.cdi.api.ApiAdapter;
+import com.valleyforge.cdi.api.ApiEndPoints;
 import com.valleyforge.cdi.api.RetrofitInterface;
 import com.valleyforge.cdi.generated.model.LoginResponse;
 import com.valleyforge.cdi.generated.model.ProjectDetailResponse;
@@ -356,7 +357,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         } else if (requestCode == PICK_FROM_GALLERY && resultCode == RESULT_OK) {
 
-           // personImage.setBackgroundResource(R.drawable.profile_icon);
+           personImage.setBackgroundResource(R.drawable.profile_background);
 
 
             Uri selectedImage = data.getData();
@@ -418,14 +419,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     if (response.isSuccessful()) {
                         if(response.body().getType() == 1) {
                             finish();
-                           /* for (int i=0; i<response.body().getData().size(); i++) {
-                                Log.e("abhi.........      ", "onResponse: "+response.body().getData().get(i).getName() );
-                                etUsername.setText(response.body().getData().get(i).getName());
-                                etuserEmail.setText(response.body().getData().get(i).getEmail());
-                                etUserAdd.setText(response.body().getData().get(i).getAddress());
-                                etuserPhone.setText(response.body().getData().get(i).getPhone());
-                            }
-*/
+
                             Toast.makeText(getApplicationContext(),response.body().getMsg(),Toast.LENGTH_SHORT).show();
 
                         }
@@ -474,6 +468,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                 etuserEmail.setText(response.body().getData().get(i).getEmail());
                                 etUserAdd.setText(response.body().getData().get(i).getAddress());
                                 etuserPhone.setText(response.body().getData().get(i).getPhone());
+                                Log.e("abhi", "onResponse:.......................image url " + response.body().getData().get(i).getProfileImageUrl());
+                                setProfilePicURL(response.body().getData().get(i).getProfileImageUrl());
                             }
 
                             Toast.makeText(getApplicationContext(),response.body().getMsg(),Toast.LENGTH_SHORT).show();

@@ -2,6 +2,12 @@ package com.valleyforge.cdi.ui.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,13 +26,26 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.Target;
 import com.valleyforge.cdi.R;
+import com.valleyforge.cdi.api.ApiAdapter;
+import com.valleyforge.cdi.api.ApiEndPoints;
+import com.valleyforge.cdi.api.RetrofitInterface;
+import com.valleyforge.cdi.generated.model.LoginResponse;
 import com.valleyforge.cdi.ui.fragments.ActivePendingFragment;
 import com.valleyforge.cdi.ui.fragments.DashboardFragment;
 import com.valleyforge.cdi.ui.fragments.MyProfileFragment;
+import com.valleyforge.cdi.utils.LoadingDialog;
+import com.valleyforge.cdi.utils.NetworkUtils;
 import com.valleyforge.cdi.utils.PrefUtils;
+import com.valleyforge.cdi.utils.SnakBarUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,10 +53,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.valleyforge.cdi.api.ApiEndPoints.BASE_URL;
+
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
+    TextView headerName,headerEmail,headerPhone;
+    de.hdodenhof.circleimageview.CircleImageView personImage;
+    private RetrofitInterface.UserProfileDetailsClient UserProfileDetailAdapter;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -74,15 +97,133 @@ public class NavigationActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        headerName = (TextView)navigationView.getHeaderView(0).findViewById(R.id.username);
+        headerEmail = (TextView)navigationView.getHeaderView(0).findViewById(R.id.user_email);
+        headerPhone = (TextView)navigationView.getHeaderView(0).findViewById(R.id.user_phone);
+
+        personImage = (de.hdodenhof.circleimageview.CircleImageView)navigationView.getHeaderView(0).findViewById(R.id.person_image);
+        setUpRestAdapter();
+
+        setHeaderData();
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
         navigationView.setNavigationItemSelectedListener(this);
         setUserLoggedIn();
         setFragment();
+
     }
 
+    private void setUpRestAdapter() {
+        UserProfileDetailAdapter = ApiAdapter.createRestAdapter(RetrofitInterface.UserProfileDetailsClient.class, BASE_URL, this);
+
+    }
+
+    private void setProfilePicURL(String profilepicUrlComplete) {
+        Glide.with(this).load(profilepicUrlComplete).asBitmap().centerCrop().dontAnimate().dontTransform().listener(new RequestListener<String, Bitmap>() {
+            @Override
+            public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                //imageProgressBar.setVisibility(View.GONE);
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                //imageProgressBar.setVisibility(View.GONE);
+                return false;
+            }
+        })
+                .into(new BitmapImageViewTarget(personImage) {
+                    @Override
+                    protected void setResource(Bitmap bitmap) {
+                        Bitmap output;
+
+                        if (bitmap.getWidth() > bitmap.getHeight()) {
+                            output = Bitmap.createBitmap(bitmap.getHeight(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+                        } else {
+                            output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getWidth(), Bitmap.Config.ARGB_8888);
+                        }
+
+                        Canvas canvas = new Canvas(output);
+
+                        final int color = 0xff424242;
+                        final Paint paint = new Paint();
+                        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+
+                        float r = 0;
+
+                        if (bitmap.getWidth() > bitmap.getHeight()) {
+                            r = bitmap.getHeight() / 2;
+                        } else {
+                            r = bitmap.getWidth() / 2;
+                        }
+
+                        paint.setAntiAlias(true);
+                        canvas.drawARGB(0, 0, 0, 0);
+                        paint.setColor(color);
+                        canvas.drawCircle(r, r, r, paint);
+                        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+                        canvas.drawBitmap(bitmap, rect, rect, paint);
+                        Log.e("abhi", "setResource: -----------output"+output );
+                        personImage.setImageBitmap(output);
+                       // imageProgressBar.setVisibility(View.GONE);
 
 
+                    }
+                });
+    }
+
+    private void setProfileDetails() {
+        LoadingDialog.showLoadingDialog(this,"Loading...");
+        Call<LoginResponse> call = UserProfileDetailAdapter.userProfileDetailData(PrefUtils.getUserId(this));
+        if (NetworkUtils.isNetworkConnected(this)) {
+            call.enqueue(new Callback<LoginResponse>() {
+
+                @Override
+                public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                    if (response.isSuccessful()) {
+                        if(response.body().getType() == 1) {
+                            for (int i=0; i<response.body().getData().size(); i++) {
+                                Log.e("abhi", "onResponse:.......................image url " + response.body().getData().get(i).getProfileImageUrl());
+                                setProfilePicURL(response.body().getData().get(i).getProfileImageUrl());
+                            }
+
+                            Toast.makeText(getApplicationContext(),response.body().getMsg(),Toast.LENGTH_SHORT).show();
+
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(),response.body().getMsg(),Toast.LENGTH_SHORT).show();
+                        }
+                        LoadingDialog.cancelLoading();
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LoginResponse> call, Throwable t) {
+                    Log.e("abhi", "onResponse: error....................... "  );
+
+                    LoadingDialog.cancelLoading();
+                }
+
+
+            });
+
+        } else {
+            SnakBarUtils.networkConnected(this);
+        }
+    }
+
+    private void setHeaderData() {
+        headerName.setText(PrefUtils.getUserName(NavigationActivity.this));
+        headerEmail.setText(PrefUtils.getEmail(NavigationActivity.this));
+        headerPhone.setText(PrefUtils.getUserPhone(NavigationActivity.this));
+        /*if (PrefUtils.getUserImage(NavigationActivity.this) !=null) {
+            //imageUri = PrefUtils.getUserImage(NavigationalActivity.this);*/
+            setProfileDetails();
+       // }
+
+    }
     private void setUserLoggedIn() {
         PrefUtils.storeUserLoggedIn(true, this);
     }

@@ -30,6 +30,7 @@ public class PrefUtils {
     public static String LOGGED_IN_USER_EMAIL = "user_email";
     public static String CONTEXT_ID = "context_id";
     public static String PROJECT_ID = "project_id";
+    public static String IMAGE = "image";
 
   /*  public static String LOGGED_IN_USER_EMAIL = "user_email";
     public static String LOGGED_IN_USER_ADD = "user_add";
@@ -231,6 +232,19 @@ public class PrefUtils {
         SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);
         sharedPreferences.edit()
                 .putString(CONTEXT_ID, con)
+                .apply();
+
+    }
+
+    public static String getImageUrl(Context context) {
+        SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);
+        return sharedPreferences.getString(IMAGE, "");
+    }
+
+    public static void storeImageUrl(String image, Context context) {
+        SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);
+        sharedPreferences.edit()
+                .putString(IMAGE, image)
                 .apply();
 
     }

@@ -35,7 +35,7 @@
             android:id="@+id/person_image"
             android:layout_width="110dp"
             android:layout_height="110dp"
-            android:src="#ffffff"
+            android:src="@drawable/profile_background"
             android:layout_gravity="bottom|center_horizontal" />
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -174,7 +174,7 @@
         android:layout_width="wrap_content"
         android:layout_height="38sp"
         android:layout_gravity="center_horizontal"
-        android:background="@color/login_button_color"
+        android:background="@color/forgot_password_color"
         android:textColor="#ffffff"
         android:paddingStart="50sp"
         android:layout_marginTop="30sp"
