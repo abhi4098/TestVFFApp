@@ -153,6 +153,19 @@ public class RetrofitInterface {
         );
     }
 
+    public interface DeletePhotoClient {
+        @FormUrlEncoded
+        @POST("deleteimageApi")
+        public Call<LoginResponse> deleteImageData(
+                @Field("imageid") String imageid,
+                @Field("window_id") String window_id,
+                @Field("image_type") String image_type
+
+
+
+        );
+    }
+
 
 
 

@@ -19,12 +19,24 @@ public class UploadPhotoResponse {
     @Expose
     private String msg;
 
+    @SerializedName("imageid")
+    @Expose
+    private String imageId;
+
     public Integer getType() {
         return type;
     }
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
     }
 
     public String getTokenid() {

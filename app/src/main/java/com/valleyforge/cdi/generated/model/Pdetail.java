@@ -98,6 +98,18 @@ public class Pdetail {
     @Expose
     private String projectManagerName;
 
+    @SerializedName("project_appointment_date")
+    @Expose
+    private String appointmentDate;
+
+    public String getAppointmentDate() {
+        return appointmentDate;
+    }
+
+    public void setAppointmentDate(String appointmentDate) {
+        this.appointmentDate = appointmentDate;
+    }
+
     public String getId() {
         return id;
     }
@@ -105,6 +117,7 @@ public class Pdetail {
     public void setId(String id) {
         this.id = id;
     }
+
 
     public String getProjectdeletedAt() {
         return projectdeletedAt;

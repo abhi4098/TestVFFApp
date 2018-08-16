@@ -1,21 +1,13 @@
 package com.valleyforge.cdi.ui.adapters;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -23,13 +15,11 @@ import com.valleyforge.cdi.R;
 import com.valleyforge.cdi.api.ApiAdapter;
 import com.valleyforge.cdi.api.RetrofitInterface;
 import com.valleyforge.cdi.generated.model.ImageList;
-import com.valleyforge.cdi.generated.model.Roomslist;
-import com.valleyforge.cdi.generated.model.SkipResponse;
-import com.valleyforge.cdi.generated.model.Windowslist;
+import com.valleyforge.cdi.generated.model.LoginResponse;
 import com.valleyforge.cdi.ui.activities.BLEInformationActivity;
-import com.valleyforge.cdi.ui.activities.MeasurementGridActivity;
 import com.valleyforge.cdi.utils.LoadingDialog;
 import com.valleyforge.cdi.utils.NetworkUtils;
+import com.valleyforge.cdi.utils.PrefUtils;
 import com.valleyforge.cdi.utils.SnakBarUtils;
 
 import java.util.ArrayList;
@@ -42,21 +32,25 @@ import static com.valleyforge.cdi.api.ApiEndPoints.BASE_URL;
 
 public class HLVImagesAdapter extends RecyclerView.Adapter<HLVImagesAdapter.ViewHolder>  {
     BLEInformationActivity context;
+    private RetrofitInterface.DeletePhotoClient DeletePhotoAdapter;
+
 
     LayoutInflater inflater;
 
     ArrayList<ImageList> alImageList;
-    String selectedImageType;
+    ArrayList<ImageList> alImageListToShow;
+    String selectedImageType,windowId;
 
 
   //  private RetrofitInterface.SkipRoomClient SkipRoomAdapter;
 
 
-    public HLVImagesAdapter(Context Context, ArrayList<ImageList> alImageList, String selectedImageType) {
+    public HLVImagesAdapter(Context Context, ArrayList<ImageList> alImageList, String selectedImageType, String windowId) {
         super();
         this.context = (BLEInformationActivity) Context;
         this.alImageList = alImageList;
         this.selectedImageType = selectedImageType;
+        this.windowId = windowId;
 
 
     }
@@ -83,27 +77,76 @@ public class HLVImagesAdapter extends RecyclerView.Adapter<HLVImagesAdapter.View
                     .placeholder(R.drawable.add_image) // any placeholder to load at start
                     .error(R.drawable.add_image)  // any image in case of error
                     .into(viewHolder.ivImageUploaded);
-
-
-
-
-
-
-          /*  viewHolder.cvHorizontalRoom.setOnClickListener(new View.OnClickListener() {
+            viewHolder.ivCancelBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(context1 != null){
-                        ((BLEInformationActivity)context1).measurementScreen(v,alWindows.get(i).getWindow());
-                    }
+                    alImageList.get(i).getimageType();
+                    alImageList.get(i).getImageId();
+                    Log.e("abhi", "onClick: ................"+ alImageList.get(i).getImageId() );
+                    setUpRestAdapter();
+                    deletePhoto(alImageList.get(i).getimageType(),alImageList.get(i).getImageId());
+                    ((BLEInformationActivity)context).updateCombinedImageListFromAdapter(alImageList.get(i).getImageId());
+                    alImageList.remove(i);
 
-
+                    notifyDataSetChanged();
                 }
-            });*/
+            });
+
+
+
 
         }
 
+    private void deletePhoto(String imageType, String imageId) {
+        LoadingDialog.showLoadingDialog(context,"Loading...");
+        Log.e("abhi", "deletePhoto: .....................................imagetype " +imageType + " imageId" +imageId + " windowid" +windowId);
+        Call<LoginResponse> call = DeletePhotoAdapter.deleteImageData(imageId,windowId,imageType);
+        if (NetworkUtils.isNetworkConnected(context)) {
+            call.enqueue(new Callback<LoginResponse>() {
+
+                @Override
+                public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                    if (response.isSuccessful()) {
+                        if(response.body().getType() == 1) {
+
+                           /* for (int i=0; i<response.body().getData().size(); i++) {
+                                Log.e("abhi.........      ", "onResponse: "+response.body().getData().get(i).getName() );
+                                etUsername.setText(response.body().getData().get(i).getName());
+                                etuserEmail.setText(response.body().getData().get(i).getEmail());
+                                etUserAdd.setText(response.body().getData().get(i).getAddress());
+                                etuserPhone.setText(response.body().getData().get(i).getPhone());
+                            }
+*/
+                            Toast.makeText(context,response.body().getMsg(),Toast.LENGTH_SHORT).show();
+
+                        }
+                        else{
+                            Toast.makeText(context,response.body().getMsg(),Toast.LENGTH_SHORT).show();
+                        }
+                        LoadingDialog.cancelLoading();
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LoginResponse> call, Throwable t) {
+                    Log.e("abhi", "onResponse: error....................... "  );
+
+                    LoadingDialog.cancelLoading();
+                }
 
 
+            });
+
+        } else {
+            SnakBarUtils.networkConnected(context);
+        }
+    }
+
+    private void setUpRestAdapter() {
+        DeletePhotoAdapter = ApiAdapter.createRestAdapter(RetrofitInterface.DeletePhotoClient.class, BASE_URL, context);
+
+    }
 
 
 
@@ -119,6 +162,7 @@ public class HLVImagesAdapter extends RecyclerView.Adapter<HLVImagesAdapter.View
 
 
         public ImageView ivImageUploaded;
+        public ImageView ivCancelBtn;
 
 
        // private ItemClickListener clickListener;
@@ -127,6 +171,7 @@ public class HLVImagesAdapter extends RecyclerView.Adapter<HLVImagesAdapter.View
             super(itemView);
 
             ivImageUploaded = (ImageView) itemView.findViewById(R.id.ll_image_view);
+            ivCancelBtn = (ImageView) itemView.findViewById(R.id.cancel_button);
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);

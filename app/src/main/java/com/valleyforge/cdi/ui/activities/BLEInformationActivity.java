@@ -50,6 +50,7 @@ import android.widget.Toast;
 import com.valleyforge.cdi.R;
 import com.valleyforge.cdi.api.ApiAdapter;
 import com.valleyforge.cdi.api.RetrofitInterface;
+import com.valleyforge.cdi.generated.model.Allimage;
 import com.valleyforge.cdi.generated.model.ImageList;
 import com.valleyforge.cdi.generated.model.MeasurementResponse;
 import com.valleyforge.cdi.generated.model.UploadPhotoResponse;
@@ -59,6 +60,7 @@ import com.valleyforge.cdi.ui.adapters.HLVAdapter;
 import com.valleyforge.cdi.ui.adapters.HLVImagesAdapter;
 import com.valleyforge.cdi.utils.LoadingDialog;
 import com.valleyforge.cdi.utils.NetworkUtils;
+import com.valleyforge.cdi.utils.PrefUtils;
 import com.valleyforge.cdi.utils.SnakBarUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -244,6 +246,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             if (combineImageList.get(i).getimageType().equals(selectedImageType)) {
                 ImageList imageList = new ImageList();
                 imageList.setimageUrl(combineImageList.get(i).getimageUrl());
+                imageList.setImageId(combineImageList.get(i).getImageId());
                 imageList.setimageType(selectedImageType);
                 combineImageListToBeShown.add(imageList);
             }
@@ -253,7 +256,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         mLayoutManager = new LinearLayoutManager(BLEInformationActivity.this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerViewImages.setLayoutManager(mLayoutManager);
 
-        mAdapter = new HLVImagesAdapter(BLEInformationActivity.this, combineImageListToBeShown, selectedImageType);
+        mAdapter = new HLVImagesAdapter(BLEInformationActivity.this, combineImageListToBeShown, selectedImageType, windowId);
         mRecyclerViewImages.setAdapter(mAdapter);
         LoadingDialog.cancelLoading();
 
@@ -273,6 +276,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             if (combineImageList.get(i).getimageType().equals(selectedImageType)) {
                 ImageList imageList = new ImageList();
                 imageList.setimageUrl(combineImageList.get(i).getimageUrl());
+                imageList.setImageId(combineImageList.get(i).getImageId());
                 imageList.setimageType(selectedImageType);
                 combineImageListToBeShown.add(imageList);
             }
@@ -282,7 +286,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         mLayoutManager = new LinearLayoutManager(BLEInformationActivity.this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerViewImages.setLayoutManager(mLayoutManager);
 
-        mAdapter = new HLVImagesAdapter(BLEInformationActivity.this, combineImageListToBeShown, selectedImageType);
+        mAdapter = new HLVImagesAdapter(BLEInformationActivity.this, combineImageListToBeShown, selectedImageType, windowId);
         mRecyclerViewImages.setAdapter(mAdapter);
         LoadingDialog.cancelLoading();
 
@@ -302,6 +306,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             if (combineImageList.get(i).getimageType().equals(selectedImageType)) {
                 ImageList imageList = new ImageList();
                 imageList.setimageUrl(combineImageList.get(i).getimageUrl());
+                imageList.setImageId(combineImageList.get(i).getImageId());
                 imageList.setimageType(selectedImageType);
                 combineImageListToBeShown.add(imageList);
             }
@@ -311,7 +316,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         mLayoutManager = new LinearLayoutManager(BLEInformationActivity.this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerViewImages.setLayoutManager(mLayoutManager);
 
-        mAdapter = new HLVImagesAdapter(BLEInformationActivity.this, combineImageListToBeShown, selectedImageType);
+        mAdapter = new HLVImagesAdapter(BLEInformationActivity.this, combineImageListToBeShown, selectedImageType, windowId);
         mRecyclerViewImages.setAdapter(mAdapter);
         LoadingDialog.cancelLoading();
 
@@ -376,11 +381,11 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     CardView cvAddWindow;
 
 
-    String floorPlanId, roomId, floorName, roomName;
+    String floorPlanId, roomId, floorName, roomName,imagesID;
 
     String selectedImageType = "ceiltofloor";
 
-    ArrayList<ImageList> combineImageList = new ArrayList<>();
+    static ArrayList<ImageList> combineImageList = new ArrayList<>();
     ArrayList<ImageList> combineImageListToBeShown = null;
 
 
@@ -440,8 +445,8 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                 windowDescription = etWindowDescription.getText().toString();
                 if (windowName != null && !windowName.equals("")) {
                     dialog.cancel();
-                    List<String> testList = new ArrayList<>();
-                    measurementScreen(v, windowName,"SameActivity", wallWidth, widthLeftOfWindow, widthRightOfWindow, ibLengthOfWindow, ibWidthOfWindow, lengthCielFlr,carpetInst, pocketDepth, "No", "No", testList, "id");
+                    List<Allimage> testList = new ArrayList<>();
+                    measurementScreen(v, windowName,"SameActivity", wallWidth, widthLeftOfWindow, widthRightOfWindow, ibLengthOfWindow, ibWidthOfWindow, lengthCielFlr,carpetInst, pocketDepth, "No", "No", testList, "");
 
                 } else {
                     etWindowName.setError("Please Add Window Name");
@@ -465,6 +470,9 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @OnClick(R.id.details)
     public void detailsScreen(View view) {
+        windowId = null;
+        windowName = null;
+        combineImageList.clear();
         tvAppTitle.setText("Room Details");
         tvDetails.setTextColor(Color.parseColor("#ffffff")); // custom color
         llDetails.setBackgroundColor(Color.parseColor("#048700"));
@@ -506,7 +514,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     }
 
-    public void measurementScreen(View view, String window, String pathFrom, String ewallWidth, String widthLeftWindow, String widthRightWindow, String ibLengthWindow, String ibWidthWindow, String lengthCeilFlr, String carpetInst, String pocketDepth, String windowApproval, String windowStatus, List<String> allimages, String id) {
+    public void measurementScreen(View view, String window, String pathFrom, String ewallWidth, String widthLeftWindow, String widthRightWindow, String ibLengthWindow, String ibWidthWindow, String lengthCeilFlr, String carpetInst, String pocketDepth, String windowApproval, String windowStatus, List<Allimage> allimages, String id) {
         windowName = window;
         windowCompletionStatus = windowStatus;
         windowApprovalCheck = windowApproval;
@@ -538,14 +546,20 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
             for (int j=0; j < allimages.size(); j++)
             {
-                String url = allimages.get(j);
+                //Allimage allimage = new Allimage();
+               imagesID =  allimages.get(j).getId();
+               String url = allimages.get(j).getUrl();
                 String[] separated = url.split("/");
 
-                Log.e("abhi", "measurementScreen:................folder name " +separated[0]);
+                Log.e("abhi", "measurementScreen:................from hlv adapter ---------------folder name " +separated[0] + " image Id...."+imagesID);
 
                 ImageList imageList = new ImageList();
-                imageList.setimageUrl(IMAGE_URL + allimages.get(j));
-                Log.e("abhi", "measurementScreen:................folder name " +imageList.getimageUrl());
+                imageList.setimageUrl(IMAGE_URL + allimages.get(j).getUrl());
+                Log.e("abhi", "measurementScreen: ........................." + IMAGE_URL + allimages.get(j).getUrl());
+                imageList.setImageId(imagesID);
+                //for (int k=0; k<combineImageList.get(i).get)
+                imageList.setimageType(separated[0]);
+                combineImageList.add(imageList);
             }
 
         }
@@ -557,7 +571,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @OnClick(R.id.pictures)
     public void picturesScreen(View view) {
-        if (windowName != null) {
+        if (windowId != null) {
             tvAppTitle.setText("Room Pictures");
             tvPictures.setTextColor(Color.parseColor("#ffffff")); // custom color
             llPictures.setBackgroundColor(Color.parseColor("#048700"));
@@ -566,6 +580,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             tvMeasurement.setTextColor(Color.parseColor("#252525")); // custom color
             llMeasurement.setBackgroundColor(Color.parseColor("#ffffff"));
             tvCeilToFloor.setBackgroundColor(Color.parseColor("#ffffff"));
+            ceilToFloorButtonSelected();
 
             llOnDetailsClick.setVisibility(View.GONE);
             llOnMeasurementClick.setVisibility(View.GONE);
@@ -573,7 +588,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         }
         else
         {
-            Toast.makeText(BLEInformationActivity.this,"Please Select a Window", Toast.LENGTH_SHORT).show();
+            Toast.makeText(BLEInformationActivity.this,"Please add Measurements before uploading pictures", Toast.LENGTH_SHORT).show();
 
         }
 
@@ -809,6 +824,10 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                     if (response.isSuccessful()) {
                         if (response.body().getType() == 1) {
                             Log.e("abhi", "onResponse:........... " + response.body().getMsg());
+                            for (int i=0; i<response.body().getMeasurementDetails().size(); i++)
+                            {
+                                windowId = String.valueOf(response.body().getMeasurementDetails().get(i).getId());
+                            }
                             picturesScreen(view);
 
 
@@ -933,7 +952,10 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                                 windowslist.setPocketDepth(response.body().getWindowslist().get(i).getPocketDepth());
                                 windowslist.setCarpetInst(response.body().getWindowslist().get(i).getCarpetInst());
                                 windowslist.setLengthCeilFlr(response.body().getWindowslist().get(i).getLengthCeilFlr());
+                               /* for (int j=0; j<response.body().getWindowslist().get(i).getAllimages().size(); j++)
+                                {
 
+                                }*/
                                 windowslist.setAllimages(response.body().getWindowslist().get(i).getAllimages());
 
 
@@ -1902,11 +1924,11 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         }
         RequestBody userId = RequestBody.create(
                 MediaType.parse("text/plain"),
-                "8");
+                PrefUtils.getUserId(this));
 
         RequestBody measurementId = RequestBody.create(
                 MediaType.parse("text/plain"),
-                "5");
+                windowId);
 
         final RequestBody imageType = RequestBody.create(
                 MediaType.parse("text/plain"),
@@ -1928,6 +1950,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                             Log.e("abhi", "onResponse: image link............" + response.body().getImageurl());
                             ImageList imageList = new ImageList();
                             imageList.setimageUrl(response.body().getImageurl());
+                            imageList.setImageId(response.body().getImageId());
                             imageList.setimageType(selectedImageType);
                             combineImageList.add(imageList);
 
@@ -1938,6 +1961,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                             if (combineImageList.get(i).getimageType().equals(selectedImageType)) {
                                 ImageList imageList = new ImageList();
                                 imageList.setimageUrl(combineImageList.get(i).getimageUrl());
+                                imageList.setImageId(combineImageList.get(i).getImageId());
                                 imageList.setimageType(selectedImageType);
                                 combineImageListToBeShown.add(imageList);
                             }
@@ -1947,7 +1971,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                         mLayoutManager = new LinearLayoutManager(BLEInformationActivity.this, LinearLayoutManager.HORIZONTAL, false);
                         mRecyclerViewImages.setLayoutManager(mLayoutManager);
 
-                        mAdapter = new HLVImagesAdapter(BLEInformationActivity.this, combineImageListToBeShown, selectedImageType);
+                        mAdapter = new HLVImagesAdapter(BLEInformationActivity.this, combineImageListToBeShown, selectedImageType,windowId);
                         mRecyclerViewImages.setAdapter(mAdapter);
                         LoadingDialog.cancelLoading();
 
@@ -1993,6 +2017,15 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                 != PackageManager.PERMISSION_GRANTED)
             return true;
         return false;
+    }
+
+    public void updateCombinedImageListFromAdapter(String imageId)
+    {
+        for (int i = combineImageList.size() - 1; i >= 0; i--) {
+            if (combineImageList.get(i).getImageId().equals(imageId)) {
+                combineImageList.remove(i);
+            }
+        }
     }
 
 

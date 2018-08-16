@@ -1,10 +1,9 @@
 
 package com.valleyforge.cdi.generated.model;
 
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
 
 public class Windowslist {
 
@@ -82,7 +81,7 @@ public class Windowslist {
     private String windowStatus;
     @SerializedName("allimages")
     @Expose
-    private List<String> allimages = null;
+    private List<Allimage> allimages = null;
 
     public String getId() {
         return id;
@@ -276,11 +275,12 @@ public class Windowslist {
         this.windowStatus = windowStatus;
     }
 
-    public List<String> getAllimages() {
+    public List<Allimage> getAllimages() {
         return allimages;
     }
 
-    public void setAllimages(List<String> allimages) {
+    public void setAllimages(List<Allimage> allimages) {
         this.allimages = allimages;
     }
+
 }

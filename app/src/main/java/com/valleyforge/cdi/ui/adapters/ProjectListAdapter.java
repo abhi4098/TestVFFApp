@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,8 @@ import com.valleyforge.cdi.ui.activities.ProfileActivity;
 import com.valleyforge.cdi.ui.activities.ProjectDetailActivity;
 import com.valleyforge.cdi.ui.activities.SearchDevicesActivity;
 import com.valleyforge.cdi.ui.fragments.ActivePendingFragment;
+
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -65,6 +68,8 @@ public class ProjectListAdapter extends ArrayAdapter<Plist> {
         public Button btnViewDetails;
         public Button btnContinueMeasurement;
         public Button btnCall;
+        public ProgressBar pbPercentage;
+        public TextView tvPercentageText;
 
         }
 
@@ -82,6 +87,9 @@ public class ProjectListAdapter extends ArrayAdapter<Plist> {
             viewHolder.btnViewDetails= (Button) rowView.findViewById(R.id.view_details_button);
             viewHolder.btnContinueMeasurement= (Button) rowView.findViewById(R.id.continue_measurement_button);
             viewHolder.btnCall= (Button) rowView.findViewById(R.id.call_button);
+            viewHolder.pbPercentage= (ProgressBar) rowView.findViewById(R.id.progressBar4);
+            viewHolder.tvPercentageText= (TextView) rowView.findViewById(R.id.percentage_text);
+
 
 
             rowView.setTag(viewHolder);
@@ -94,6 +102,9 @@ public class ProjectListAdapter extends ArrayAdapter<Plist> {
         if (plist !=null) {
             holder.projectName.setText(plist.getPname());
             holder.projectId.setText(plist.getProjectId());
+            holder.tvPercentageText.setText(plist.getProjectPercentage());
+            Log.e("abhi", "getView: ............"  +plist.getProjectPercentage() );
+            holder.pbPercentage.setProgress(Integer.parseInt(plist.getProjectPercentage()));
             holder.btnContinueMeasurement.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
