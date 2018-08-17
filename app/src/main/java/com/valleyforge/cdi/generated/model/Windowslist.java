@@ -12,7 +12,7 @@ public class Windowslist {
     private String id;
     @SerializedName("deleted_at")
     @Expose
-    private Object deletedAt;
+    private String deletedAt;
     @SerializedName("created_at")
     @Expose
     private String createdAt;
@@ -91,11 +91,11 @@ public class Windowslist {
         this.id = id;
     }
 
-    public Object getDeletedAt() {
+    public String getDeletedAt() {
         return deletedAt;
     }
 
-    public void setDeletedAt(Object deletedAt) {
+    public void setDeletedAt(String deletedAt) {
         this.deletedAt = deletedAt;
     }
 

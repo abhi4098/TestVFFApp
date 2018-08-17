@@ -39,11 +39,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -180,8 +183,8 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     EditText etLengthCielFlr;
     @BindView(R.id.pocket_depth)
     EditText etPocketDepth;
-    @BindView(R.id.carpet_inst)
-    EditText etCarpetInst;
+    @BindView(R.id.spinner_carpet_inst)
+    Spinner spCarpetInst;
   /*  @BindView(R.id.additional_data)
     EditText tvAdditionalData;*/
 
@@ -352,6 +355,9 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     @BindView(R.id.rooms_count)
     TextView tvRoomCount;
 
+    @BindView(R.id.carpet_inst_ll)
+    LinearLayout llCarpetInst;
+
     /*@BindView(R.id.additional_data)
     EditText etAdditionalData;*/
 
@@ -381,7 +387,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     CardView cvAddWindow;
 
 
-    String floorPlanId, roomId, floorName, roomName,imagesID;
+    String floorPlanId, roomId, floorName, roomName,imagesID,selectedCarpetInstValue;
 
     String selectedImageType = "ceiltofloor";
 
@@ -486,7 +492,13 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         etWidthRightOfWindow.setText("");
         etLengthCielFlr.setText("");
         etPocketDepth.setText(pocketDepth);
-        etCarpetInst.setText(carpetInst);
+       /* if (carpetInst.equals("Yes")) {
+            spCarpetInst.setSelection(0);
+        }
+        else
+        {
+            spCarpetInst.setSelection(1);
+        }*/
         tvAppTitle.setText("Room Details");
         tvDetails.setTextColor(Color.parseColor("#ffffff")); // custom color
         llDetails.setBackgroundColor(Color.parseColor("#048700"));
@@ -556,7 +568,16 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             etWidthRightOfWindow.setText(widthRightWindow);
             etLengthCielFlr.setText(lengthCeilFlr);
             etPocketDepth.setText(pocketDepth);
-            etCarpetInst.setText(carpetInst);
+            if (carpetInst.equals("Yes")) {
+                spCarpetInst.setSelection(0);
+                Log.e("abhi", "measurementScreen:  yes.................." );
+            }
+            else
+            {
+                Log.e("abhi", "measurementScreen:  No.................." );
+
+                spCarpetInst.setSelection(1);
+            }
 
             for (int j=0; j < allimages.size(); j++)
             {
@@ -776,7 +797,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         widthRightOfWindow = etWidthRightOfWindow.getText().toString();
         lengthCielFlr = etLengthCielFlr.getText().toString();
         pocketDepth = etPocketDepth.getText().toString();
-        carpetInst = etCarpetInst.getText().toString();
+        carpetInst = selectedCarpetInstValue;
         additionalData = "comment";
 
         Log.e("abhi", "wallWidth:  ............" + wallWidth);
@@ -892,6 +913,29 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         roomName = getIntent().getStringExtra("ROOM_NAME");
         tvFloorCount.setText(floorName);
         tvRoomCount.setText(roomName);
+        spCarpetInst.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedCarpetInstValue = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        // Spinner Drop down elements
+        List<String> carpetInstOptions = new ArrayList<String>();
+        carpetInstOptions.add("Yes");
+        carpetInstOptions.add("No");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, carpetInstOptions);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spCarpetInst.setAdapter(dataAdapter);
         Log.e("abhi", "onCreate: ................................floor plan id " + floorPlanId + " room id " + roomId);
         setUpRestAdapter();
         setWindowsList();
