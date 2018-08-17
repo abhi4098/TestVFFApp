@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -62,6 +64,8 @@ import com.valleyforge.cdi.generated.model.WindowsListResponse;
 import com.valleyforge.cdi.generated.model.Windowslist;
 import com.valleyforge.cdi.ui.adapters.HLVAdapter;
 import com.valleyforge.cdi.ui.adapters.HLVImagesAdapter;
+import com.valleyforge.cdi.utils.IImageCompressTaskListener;
+import com.valleyforge.cdi.utils.ImageCompressTask;
 import com.valleyforge.cdi.utils.LoadingDialog;
 import com.valleyforge.cdi.utils.NetworkUtils;
 import com.valleyforge.cdi.utils.PrefUtils;
@@ -71,6 +75,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -128,8 +134,11 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     private static final int REQUEST_WRITE_STORAGE = 112;
     private final String[] requiredPermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
     String imgDecodableString;
+    Uri imageUri;
 
+    private ExecutorService mExecutorService = Executors.newFixedThreadPool(1);
 
+    private ImageCompressTask imageCompressTask;
     AlertDialog commandDialog;
     AlertDialog customCommandDialog;
     AlertDialog lostConnectionAlert;
@@ -850,7 +859,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         Log.e("abhi", "sendMeasurementData: ..................." + windowId);
         LoadingDialog.showLoadingDialog(this, "Loading...");
         Call<MeasurementResponse> call = MeasurementAdapter.measurementData(floorPlanId, roomId, windowName, wallWidth, widthLeftOfWindow, ibWidthOfWindow, ibLengthOfWindow, widthRightOfWindow, lengthCielFlr,
-                pocketDepth, carpetInst,windowCompletionStatus,windowApprovalCheck,windowId);
+                pocketDepth, carpetInst,windowCompletionStatus,windowApprovalCheck,windowId,PrefUtils.getUserId(this));
         if (NetworkUtils.isNetworkConnected(this)) {
             call.enqueue(new Callback<MeasurementResponse>() {
 
@@ -1133,6 +1142,10 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mExecutorService.shutdown();
+
+        mExecutorService = null;
+        imageCompressTask = null;
 
         final String METHODTAG = ".onDestroy";
         isDestroyed = true;
@@ -1868,7 +1881,13 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             @Override
             public void onClick(View v) {
 
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.TITLE, "New Picture");
+                values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+                imageUri = getContentResolver().insert(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                 startActivityForResult(intent, 0);
 
                 dialog.cancel();
@@ -1933,43 +1952,66 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         if (requestCode == 0 && resultCode == RESULT_OK) {
 
 
-            Bitmap bp = (Bitmap) data.getExtras().get("data");
+            Cursor cursor = MediaStore.Images.Media.query(getContentResolver(), imageUri, new String[]{MediaStore.Images.Media.DATA});
 
-            if (bp != null) {
-                // personImage.setImageBitmap(getCircularBitmap(bp));
-                Uri tempUri = getImageUri(getApplicationContext(), bp);
-                File filePath = new File(getRealPathFromURI(tempUri));
-                // imageProgressBar.setVisibility(View.VISIBLE);
-                // setProfilePicURL(filePath.getPath());
-                sendImagesToServerFromCamera(filePath.getPath());
-                Log.e("abhi", "onActivityResult:   on taking pic from camera......................" + filePath.getPath());
+            if(cursor != null && cursor.moveToFirst()) {
+                String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+
+                //Create ImageCompressTask and execute with Executor.
+                imageCompressTask = new ImageCompressTask(this, path, iImageCompressTaskListener);
+
+                mExecutorService.execute(imageCompressTask);
             }
 
 
         } else if (requestCode == PICK_FROM_GALLERY && resultCode == RESULT_OK) {
 
-            //  personImage.setBackgroundResource(R.drawable.profile_icon);
 
 
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-            if (cursor != null) {
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                imgDecodableString = cursor.getString(columnIndex);
-                cursor.close();
-                //setProfilePicURL(imgDecodableString);
-                sendImagesToServerFromCamera(imgDecodableString);
+            Uri uri = data.getData();
+            Cursor cursor = MediaStore.Images.Media.query(getContentResolver(), uri, new String[]{MediaStore.Images.Media.DATA});
+
+            if(cursor != null && cursor.moveToFirst()) {
+                String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+
+                //Create ImageCompressTask and execute with Executor.
+                imageCompressTask = new ImageCompressTask(this, path, iImageCompressTaskListener);
+
+                mExecutorService.execute(imageCompressTask);
             }
 
-            Log.e("abhi", "onActivityResult: image decodable " + imgDecodableString);
-            //imageProgressBar.setVisibility(View.VISIBLE);
-            Log.e("abhi", "onActivityResult:..........  from gallery " + imgDecodableString);
+
+
+            }
+
+
 
 
         }
-    }
+
+
+
+
+    //image compress task callback
+    private IImageCompressTaskListener iImageCompressTaskListener = new IImageCompressTaskListener() {
+        @Override
+        public void onComplete(List<File> compressed) {
+
+            File file = compressed.get(0);
+
+            Log.e("ImageCompressor", "New photo size ==> " + file.length()); //log new file size.
+            sendImagesToServerFromCamera(file.getAbsolutePath());
+
+        }
+
+        @Override
+        public void onError(Throwable error) {
+            //very unlikely, but it might happen on a device with extremely low storage.
+            //log it, log.WhatTheFuck?, or show a dialog asking the user to delete some files....etc, etc
+            Log.wtf("ImageCompressor", "Error occurred", error);
+        }
+    };
+
 
 
     private void sendImagesToServerFromCamera(String imgString) {
@@ -2010,10 +2052,28 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                             imageList.setimageUrl(response.body().getImageurl());
                             imageList.setImageId(response.body().getImageId());
                             imageList.setimageType(selectedImageType);
+                            if (selectedImageType.equals("ceiltofloor")) {
+                                for (int k = 0; k < combineImageList.size(); k++) {
+                                    if (combineImageList.get(k).getimageType().equals("ceiltofloor")) {
+                                        combineImageList.remove(k);
+                                    }
+
+                                }
+                            }
+                            else if (selectedImageType.equals("walltowall") ) {
+                                for (int k = 0; k < combineImageList.size(); k++) {
+                                    if (combineImageList.get(k).getimageType().equals("walltowall")) {
+                                        combineImageList.remove(k);
+                                    }
+
+                                }
+                            }
                             combineImageList.add(imageList);
 
 
                         }
+
+
                         combineImageListToBeShown = new ArrayList<>();
                         for (int i = combineImageList.size() - 1; i >= 0; i--) {
                             if (combineImageList.get(i).getimageType().equals(selectedImageType)) {
@@ -2052,8 +2112,8 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+      // ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+      // inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }

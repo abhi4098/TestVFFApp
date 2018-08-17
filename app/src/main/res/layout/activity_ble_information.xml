@@ -821,7 +821,9 @@
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="1dp"
-                                    android:background="@color/colorPrimaryDark"></LinearLayout>
+                                    android:background="@color/colorPrimaryDark">
+
+                                </LinearLayout>
 
 
                                 <TextView
@@ -837,7 +839,9 @@
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="1dp"
-                                    android:background="@color/colorPrimaryDark"></LinearLayout>
+                                    android:background="@color/colorPrimaryDark">
+
+                                </LinearLayout>
 
 
                                 <TextView
@@ -887,8 +891,10 @@
                                     android:id="@+id/recycler_view_images"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:background="@color/project_background_color_left"
-                                    android:gravity="center"></android.support.v7.widget.RecyclerView>
+                                    android:background="@drawable/click"
+                                    android:gravity="center">
+
+                                </android.support.v7.widget.RecyclerView>
 
                             </RelativeLayout>
 
