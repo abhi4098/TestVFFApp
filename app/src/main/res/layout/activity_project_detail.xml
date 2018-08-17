@@ -150,6 +150,7 @@
             android:weightSum=".9">
 
             <LinearLayout
+                android:id="@+id/ll_on_site_poc"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -201,6 +202,39 @@
                     android:layout_marginStart="20sp"
                     android:layout_marginEnd="20sp"
                     android:fontFamily="sans-serif"
+                    android:text="On Site POC Contact"/>
+
+                <TextView
+                    android:id="@+id/on_site_poc_contact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp"
+                    android:layout_marginTop="5sp"
+                    android:paddingTop="5sp"
+                    android:paddingBottom="5sp"
+                    android:layout_marginStart="20sp"
+                    android:layout_marginEnd="20sp"
+                    android:fontFamily="sans-serif"
+                    android:paddingStart="10sp"
+                    android:background="@drawable/rectangular_background"
+                   />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight=".3"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="18sp"
+                    android:layout_marginStart="20sp"
+                    android:layout_marginEnd="20sp"
+                    android:fontFamily="sans-serif"
                     android:text="Start Date"/>
 
                 <TextView
@@ -217,9 +251,58 @@
                     android:fontFamily="sans-serif"
                     android:paddingStart="10sp"
                     android:background="@drawable/rectangular_background"
-                   />
+                    />
             </LinearLayout>
 
+
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10sp"
+
+            android:weightSum=".9">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight=".6"
+
+
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:fontFamily="sans-serif"
+                android:text="Location Address"/>
+
+            <TextView
+                android:id="@+id/location_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:layout_marginTop="5sp"
+                android:paddingTop="5sp"
+                android:paddingBottom="5sp"
+                android:fontFamily="sans-serif"
+                android:paddingStart="10sp"
+                android:lines="2"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20sp"
+                android:background="@drawable/rectangular_background"
+                />
+
+
+        </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -253,46 +336,6 @@
                     android:background="@drawable/rectangular_background"
                     />
             </LinearLayout>
-
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="10sp"
-
-            >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
-                android:textSize="18sp"
-                android:layout_marginStart="20sp"
-                android:layout_marginEnd="20sp"
-                android:fontFamily="sans-serif"
-                android:text="Location Address"/>
-
-            <TextView
-                android:id="@+id/location_address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
-                android:textSize="16sp"
-                android:layout_marginTop="5sp"
-                android:paddingTop="5sp"
-                android:paddingBottom="5sp"
-                android:fontFamily="sans-serif"
-                android:paddingStart="10sp"
-                android:lines="2"
-                android:layout_marginStart="20sp"
-                android:layout_marginEnd="20sp"
-                android:background="@drawable/rectangular_background"
-                />
-
 
         </LinearLayout>
 

@@ -19,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
@@ -41,8 +42,11 @@ import com.valleyforge.cdi.R;
 import com.valleyforge.cdi.api.ApiAdapter;
 import com.valleyforge.cdi.api.ApiEndPoints;
 import com.valleyforge.cdi.api.RetrofitInterface;
+import com.valleyforge.cdi.generated.model.ImageList;
 import com.valleyforge.cdi.generated.model.LoginResponse;
 import com.valleyforge.cdi.generated.model.ProjectDetailResponse;
+import com.valleyforge.cdi.generated.model.UploadPhotoResponse;
+import com.valleyforge.cdi.ui.adapters.HLVImagesAdapter;
 import com.valleyforge.cdi.utils.LoadingDialog;
 import com.valleyforge.cdi.utils.NetworkUtils;
 import com.valleyforge.cdi.utils.PrefUtils;
@@ -50,6 +54,7 @@ import com.valleyforge.cdi.utils.SnakBarUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,7 +70,7 @@ import static com.valleyforge.cdi.api.ApiEndPoints.BASE_URL;
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private RetrofitInterface.UserProfileDetailsClient UserProfileDetailAdapter;
-
+    private RetrofitInterface.uploadProfilePhotoClient UploadProfilePhotoAdapter;
     private RetrofitInterface.UpdateProfileDetailsClient UpdateProfileDetailAdapter;
 
     private int PICK_FROM_GALLERY = 1;
@@ -350,8 +355,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 Uri tempUri = getImageUri(getApplicationContext(), bp);
                 File filePath = new File(getRealPathFromURI(tempUri));
                 imageProgressBar.setVisibility(View.VISIBLE);
-                setProfilePicURL(filePath.getPath());
-                //sendImagesToServerFromCamera(filePath.getPath());
+               // setProfilePicURL(filePath.getPath());
+                sendImagesToServerFromCamera(filePath.getPath());
             }
 
 
@@ -369,7 +374,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 imgDecodableString = cursor.getString(columnIndex);
                 cursor.close();
                 setProfilePicURL(imgDecodableString);
-               // sendImagesToServerFromCamera(imgDecodableString);
+               sendImagesToServerFromCamera(imgDecodableString);
             }
 
             Log.e("abhi", "onActivityResult: image decodable "+imgDecodableString );
@@ -378,6 +383,60 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
 
 
+        }
+    }
+
+    private void sendImagesToServerFromCamera(String imgString) {
+        MultipartBody.Part fileToUpload = null;
+        if (imgString != null) {
+            File imgPath = new File(imgString);
+
+            RequestBody mFile = RequestBody.create(MediaType.parse("image/jpg"), imgPath);
+            fileToUpload = MultipartBody.Part.createFormData("file", imgPath.getName(), mFile);
+        }
+        RequestBody userId = RequestBody.create(
+                MediaType.parse("text/plain"),
+                PrefUtils.getUserId(this));
+
+        RequestBody userid = RequestBody.create(
+                MediaType.parse("text/plain"),
+                PrefUtils.getUserId(this));
+
+
+
+        LoadingDialog.showLoadingDialog(this, "Loading...");
+        Call<UploadPhotoResponse> call = UploadProfilePhotoAdapter.uploadProfileData(fileToUpload, userid);
+        if (NetworkUtils.isNetworkConnected(this)) {
+            call.enqueue(new Callback<UploadPhotoResponse>() {
+
+                @Override
+                public void onResponse(Call<UploadPhotoResponse> call, retrofit2.Response<UploadPhotoResponse> response) {
+
+                    if (response.isSuccessful()) {
+                        if (response.body().getType() == 1) {
+                             String profileUrl = response.body().getImageurl();
+                            Log.e("abhi", "onResponse: ....................." +profileUrl );
+                            setProfilePicURL(profileUrl);
+
+                        }
+
+                        LoadingDialog.cancelLoading();
+
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<UploadPhotoResponse> call, Throwable t) {
+                    Log.e("abhi", "onFailure: ............" + t.getCause());
+                    LoadingDialog.cancelLoading();
+                }
+
+
+            });
+
+        } else {
+            SnakBarUtils.networkConnected(this);
         }
     }
 
@@ -449,6 +508,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private void setUpRestAdapter() {
         UserProfileDetailAdapter = ApiAdapter.createRestAdapter(RetrofitInterface.UserProfileDetailsClient.class, BASE_URL, this);
         UpdateProfileDetailAdapter = ApiAdapter.createRestAdapter(RetrofitInterface.UpdateProfileDetailsClient.class, BASE_URL, this);
+        UploadProfilePhotoAdapter = ApiAdapter.createRestAdapter(RetrofitInterface.uploadProfilePhotoClient.class, BASE_URL, this);
 
     }
 

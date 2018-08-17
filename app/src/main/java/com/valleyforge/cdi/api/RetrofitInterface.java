@@ -104,6 +104,8 @@ public class RetrofitInterface {
         );
     }
 
+
+
     public interface SkipFloorClient {
         @FormUrlEncoded
         @POST("skipFloorApi")
@@ -223,6 +225,14 @@ public class RetrofitInterface {
                 @Part("measurement_id") RequestBody measurement_id,
                 @Part MultipartBody.Part file,
                 @Part("image_type") RequestBody image_type);
+    }
+
+    public interface uploadProfilePhotoClient {
+        @Multipart
+        @POST("profileimageupdateApi")
+        public Call<UploadPhotoResponse> uploadProfileData(
+                 @Part MultipartBody.Part file,
+                 @Part("userid") RequestBody userid);
     }
 
   /*  public interface UserLoginClient {

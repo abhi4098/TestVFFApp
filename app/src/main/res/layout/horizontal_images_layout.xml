@@ -18,7 +18,6 @@
         android:layout_height="match_parent">
 
     <ImageView
-        android:orientation="horizontal"
         android:id="@+id/ll_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

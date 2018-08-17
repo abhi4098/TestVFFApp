@@ -241,8 +241,17 @@ public class NavigationActivity extends AppCompatActivity
 
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e("abhi", "onResume: ...... " );
+    }
+
     @Override
     public void onBackPressed() {
+        Log.e("abhi", "onBackPressed: ..........." );
+        setHeaderData();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -259,6 +268,7 @@ public class NavigationActivity extends AppCompatActivity
             }
             Log.e("abhi123", " outside null" );
             tvAppTitle.setText("Dashboard");
+
             // super.onBackPressed();
 
 
@@ -333,6 +343,7 @@ public class NavigationActivity extends AppCompatActivity
             fragment = new DashboardFragment();
             tvAppTitle.setText( item.getTitle());
             ivBackIcon.setVisibility(View.INVISIBLE);
+            setHeaderData();
         } else if (id == R.id.nav_completed) {
             Intent i = new Intent(NavigationActivity.this, CompletedProjectsActivity.class);
             startActivity(i);

@@ -6,9 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +31,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,6 +53,8 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
 
     @BindView(R.id.property_name)
     TextView tvPropertyName;
+    @BindView(R.id.on_site_poc_contact)
+    TextView tvOnSitePocContact;
     @BindView(R.id.date_of_appointment)
     TextView tvDateOfAppointment;
     @BindView(R.id.project_pm)
@@ -66,6 +72,19 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
 
     @BindView(R.id.begin_project_button)
     Button btnbeginProject;
+
+    @BindView(R.id.ll_on_site_poc)
+    LinearLayout llOnSitePoc;
+
+  /*  @OnClick(R.id.ll_on_site_poc)
+    public void onSitePOCDetails()
+       {
+           PopupMenu menu = new PopupMenu(this,);
+           menu.getMenu().add("AGIL");
+           menu.getMenu().add("AGILarasan");
+           menu.getMenu().add("Arasan");
+           menu.show();
+       }*/
 
 
 
@@ -90,6 +109,19 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
                 startActivity(i);
             }
         });
+      /*  llOnSitePoc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu menu = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                    menu = new PopupMenu(ProjectDetailActivity.this,v, Gravity.RIGHT);
+                }
+                menu.getMenu().add("AGIL");
+                menu.getMenu().add("AGILarasan");
+                menu.getMenu().add("Arasan");
+                menu.show();
+            }
+        });*/
         projectId =getIntent().getStringExtra("PROJECT_ID");
         setUpRestAdapter();
         getProjectDetail();
@@ -172,11 +204,12 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
 
            tvDateOfAppointment.setText(response.body().getPdetail().get(i).getAppointmentDate());
 
-            tvProjectPm.setText(response.body().getPdetail().get(i).getProjectAssignedPm());
+            tvProjectPm.setText(response.body().getPdetail().get(i).getProjectManagerName());
 
             tvOnSitePOC.setText(response.body().getPdetail().get(i).getPropertiesContactPersonName());
 
             tvStartDate.setText(response.body().getPdetail().get(i).getProjectStartDate());
+            tvOnSitePocContact.setText(response.body().getPdetail().get(i).getPropertiesContactPersonPhone());
 
             tvEndDate.setText(response.body().getPdetail().get(i).getProjectEndDate());
 

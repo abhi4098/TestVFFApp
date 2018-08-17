@@ -472,8 +472,13 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     public void detailsScreen(View view) {
         windowId = null;
         windowName = null;
-        combineImageList.clear();
-        combineImageListToBeShown.clear();
+        if(combineImageList != null) {
+            combineImageList.clear();
+        }
+
+        if(combineImageListToBeShown !=null) {
+            combineImageListToBeShown.clear();
+        }
         etWallWidth.setText("");
         etWidthLeftOfWindow.setText("");
         etIbWidthOfWindow.setText("");
