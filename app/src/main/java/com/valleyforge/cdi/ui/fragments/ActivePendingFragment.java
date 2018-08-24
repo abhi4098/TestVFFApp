@@ -192,6 +192,7 @@ public class ActivePendingFragment extends Fragment implements View.OnClickListe
 
         } else {
             SnakBarUtils.networkConnected(getActivity());
+            LoadingDialog.cancelLoading();
         }
     }
 

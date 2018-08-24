@@ -173,4 +173,5 @@
     <string name="horizontalangle">Horizontal Angle:</string>
     <string name="version">Version:</string>
     <string name="angleunit">Angle Unit:</string>
+    <string name="active_pending_text_header">Active/Pending Projects</string>
 </resources>

@@ -167,6 +167,9 @@ public class DashboardFragment extends Fragment {
                             Log.e("abhi", "onResponse:........... " +response.body().getPendingprojects() );
                             tvactiveCount.setText(String.valueOf(response.body().getPendingprojects()));
                             tvCompletedCount.setText(String.valueOf(response.body().getCompletedprojects()));
+                            PrefUtils.storeActiveCount(String.valueOf(response.body().getPendingprojects()),getActivity());
+                            PrefUtils.storeCompletedCount(String.valueOf(response.body().getCompletedprojects()),getActivity());
+
                         }
                         else{
                             Toast.makeText(getActivity(),response.body().getMsg(),Toast.LENGTH_SHORT).show();
@@ -187,7 +190,11 @@ public class DashboardFragment extends Fragment {
             });
 
         } else {
+            Log.e("abhi", "getDashboardData: offline mode....................");
+            tvactiveCount.setText(PrefUtils.getActiveCount(getActivity()));
+            tvCompletedCount.setText(PrefUtils.getCompletedCount(getActivity()));
             SnakBarUtils.networkConnected(getActivity());
+            LoadingDialog.cancelLoading();
         }
     }
 

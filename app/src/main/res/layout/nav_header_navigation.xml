@@ -14,7 +14,7 @@
         android:layout_width="90dp"
         android:layout_height="90dp"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/profile_background"
+        android:background="@drawable/profile_background"
 
         />
 

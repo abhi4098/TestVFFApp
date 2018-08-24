@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.valleyforge.cdi.R;
 import com.valleyforge.cdi.generated.model.Plist;
+import com.valleyforge.cdi.generated.tables.PListTable;
 import com.valleyforge.cdi.ui.activities.ActivePendingActivity;
 import com.valleyforge.cdi.ui.activities.BLEInformationActivity;
 import com.valleyforge.cdi.ui.activities.CompletedProjectsActivity;
@@ -42,15 +43,15 @@ import java.util.ArrayList;
  * Created by Abhinandan on 26/12/17.
  */
 
-public class ProjectListAdapter extends ArrayAdapter<Plist> {
+public class ProjectListAdapter extends ArrayAdapter<PListTable> {
 
     int groupid;
-    ArrayList<Plist> projectList;
+    ArrayList<PListTable> projectList;
     ActivePendingActivity context;
     String generatedCode ;
 
 
-    public ProjectListAdapter(ActivePendingActivity activePending, int layout_my_invoices, int invoice_name, ArrayList<Plist> projectList)
+    public ProjectListAdapter(ActivePendingActivity activePending, int layout_my_invoices, int invoice_name, ArrayList<PListTable> projectList)
     {
         super(activePending,layout_my_invoices,invoice_name,projectList);
         groupid=layout_my_invoices;
@@ -96,15 +97,15 @@ public class ProjectListAdapter extends ArrayAdapter<Plist> {
 
         }
         // Set text to each TextView of ListView item
-        final Plist plist = getItem(position);
+        final PListTable plist = getItem(position);
         final ViewHolder holder = (ViewHolder) rowView.getTag();
 
         if (plist !=null) {
-            holder.projectName.setText(plist.getPname());
-            holder.projectId.setText(plist.getProjectId());
-            holder.tvPercentageText.setText(plist.getProjectPercentage());
-            Log.e("abhi", "getView: ............"  +plist.getProjectPercentage() );
-            holder.pbPercentage.setProgress(Integer.parseInt(plist.getProjectPercentage()));
+            holder.projectName.setText(plist.pname);
+            holder.projectId.setText(plist.p_id);
+            holder.tvPercentageText.setText(plist.projectPercentage);
+            Log.e("abhi", "getView: ............"  +plist.projectPercentage );
+            holder.pbPercentage.setProgress(Integer.parseInt(plist.projectPercentage));
             holder.btnContinueMeasurement.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -116,7 +117,7 @@ public class ProjectListAdapter extends ArrayAdapter<Plist> {
                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override
                 public void onClick(View v) {
-                    String itemID = String.valueOf(plist.getId());
+                    String itemID = String.valueOf(plist.p_id);
                     Log.e("abhi", "onClick: pop up menu..........." +itemID );
                     //Creating the instance of PopupMenu
                     Context wrapper = new ContextThemeWrapper(getContext(), R.style.popupMenuStyle);

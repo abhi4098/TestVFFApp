@@ -1,5 +1,7 @@
 package com.valleyforge.cdi.ui.activities;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -49,7 +51,8 @@ public class MeasurementGridActivity extends AppCompatActivity implements View.O
     @BindView(R.id.logout)
     ImageView ivLogout;
 
-
+    @BindView(R.id.status)
+    TextView tvGoToDashboard;
 
     @BindView(R.id.listview)
     ListView listview;
@@ -74,6 +77,17 @@ public class MeasurementGridActivity extends AppCompatActivity implements View.O
         ButterKnife.bind(this);
         ivBackIcon.setOnClickListener(this);
         ivLogout.setVisibility(View.GONE);
+        tvGoToDashboard.setVisibility(View.VISIBLE);
+        tvGoToDashboard.setText("Dashboard");
+        tvGoToDashboard.setTextColor(Color.parseColor("#252525"));
+        tvGoToDashboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MeasurementGridActivity.this,NavigationActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
         tvAppTitle.setText("Measurement Grid");
         setUpRestAdapter();
         setFloorDetails();
@@ -142,6 +156,7 @@ public class MeasurementGridActivity extends AppCompatActivity implements View.O
 
         } else {
             SnakBarUtils.networkConnected(this);
+            LoadingDialog.cancelLoading();
         }
     }
     @Override

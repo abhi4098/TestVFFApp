@@ -31,6 +31,8 @@ public class PrefUtils {
     public static String CONTEXT_ID = "context_id";
     public static String PROJECT_ID = "project_id";
     public static String IMAGE = "image";
+    public static String ACTIVE_COUNT = "active_count";
+    public static String COMPLETED_COUNT = "completed_count";
 
   /*  public static String LOGGED_IN_USER_EMAIL = "user_email";
     public static String LOGGED_IN_USER_ADD = "user_add";
@@ -100,7 +102,34 @@ public class PrefUtils {
     public static String getAuthToken(Context context) {
         SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);
         return sharedPreferences.getString(PrefUtils.KEY_AUTH_TOKEN, "");
+
     }*/
+
+    public static void storeActiveCount(String activeCount, Context context) {
+        SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);
+        sharedPreferences.edit()
+                .putString(ACTIVE_COUNT, activeCount)
+                .apply();
+
+    }
+
+    public static String getActiveCount(Context context) {
+        SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);
+        return sharedPreferences.getString(ACTIVE_COUNT, "");
+    }
+
+    public static void storeCompletedCount(String completedCount, Context context) {
+        SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);
+        sharedPreferences.edit()
+                .putString(COMPLETED_COUNT, completedCount)
+                .apply();
+
+    }
+
+    public static String getCompletedCount(Context context) {
+        SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);
+        return sharedPreferences.getString(COMPLETED_COUNT, "");
+    }
 
     public static void storeProjectId(String project, Context context) {
         SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);

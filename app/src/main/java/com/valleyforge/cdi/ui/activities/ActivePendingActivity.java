@@ -1,6 +1,7 @@
 package com.valleyforge.cdi.ui.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -19,12 +20,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.Select;
 import com.valleyforge.cdi.R;
 import com.valleyforge.cdi.api.ApiAdapter;
 import com.valleyforge.cdi.api.RetrofitInterface;
 import com.valleyforge.cdi.generated.model.ForgotPasswordResponse;
 import com.valleyforge.cdi.generated.model.Plist;
 import com.valleyforge.cdi.generated.model.ProjectListResponse;
+import com.valleyforge.cdi.generated.tables.PListTable;
 import com.valleyforge.cdi.ui.adapters.ProjectListAdapter;
 import com.valleyforge.cdi.utils.LoadingDialog;
 import com.valleyforge.cdi.utils.NetworkUtils;
@@ -36,6 +40,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,6 +68,9 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
     @BindView(R.id.active_project_header)
     TextView tvActiveProjectHeader;
 
+    @BindView(R.id.status)
+    TextView tvGoToDashboard;
+
     @BindView(R.id.pending_project_header)
     TextView tvPendingProjectHeader;
 
@@ -78,6 +86,7 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
     String projectStatus = "In Progress";
 
     ArrayList<Plist> projectList = null;
+    ArrayList<PListTable> projectListTable;
     ProjectListAdapter projectListAdapter;
 
 
@@ -91,7 +100,18 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
         mContext = ActivePendingActivity.this;
         ivBackIcon.setOnClickListener(this);
         ivLogout.setVisibility(View.GONE);
-        tvAppTitle.setText("Active/Pending Projects");
+        tvGoToDashboard.setVisibility(View.VISIBLE);
+        tvGoToDashboard.setText("Dashboard");
+        tvGoToDashboard.setTextColor(Color.parseColor("#252525"));
+        tvGoToDashboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ActivePendingActivity.this,NavigationActivity.class);
+                        startActivity(intent);
+                        finish();
+            }
+        });
+        tvAppTitle.setText(R.string.active_pending_text_header);
 
         btnActiveProjects.setOnClickListener(this);
         btnPendingProjects.setOnClickListener(this);
@@ -139,29 +159,67 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
             });
 
         } else {
+            showProjectList();
             SnakBarUtils.networkConnected(this);
+            LoadingDialog.cancelLoading();
         }
+    }
+
+
+    public static List<PListTable> getAll() {
+        return new Select()
+                .from(PListTable.class)
+                .execute();
+    }
+
+
+    public void showProjectList()
+    {
+        List<PListTable> pListTables = getAll();
+        projectListTable = new ArrayList<>();
+        Log.e("abhi", "showProjectList: "+ pListTables.size() );
+        //Adding all the items of the inventories to arraylist
+        for (int i = 0; i < pListTables.size(); i++) {
+            PListTable pListTable = new PListTable();
+            pListTable.p_id = pListTables.get(i).p_id;
+            pListTable.pname = pListTables.get(i).pname;
+            pListTable.projectId = pListTables.get(i).projectId;
+            pListTable.projectPercentage = pListTables.get(i).projectPercentage;
+            projectListTable.add(pListTable);
+        }
+
+        sendToAdapter();
+    }
+
+
+    public void sendToAdapter()
+    {
+        projectListAdapter = new ProjectListAdapter(this, R.layout.layout_project_list_item, R.id.active_pending_cardView, projectListTable);
+        listview.setAdapter(projectListAdapter);
+        LoadingDialog.cancelLoading();
+        listview.setDividerHeight(1);
+        listview.setTextFilterEnabled(true);
+
     }
 
     private void setProjectList(Response<ProjectListResponse> response) {
 
-        projectList = new ArrayList<>();
+        new Delete().from(PListTable.class).execute();
+        projectListTable = new ArrayList<>();
         for (int i = response.body().getPlist().size() - 1; i >= 0; i--) {
-            Plist plist = new Plist();
+            PListTable pListTable = new PListTable();
+            pListTable.pname = response.body().getPlist().get(i).getPname();
+            pListTable.p_id = response.body().getPlist().get(i).getId();
+            pListTable.projectId = response.body().getPlist().get(i).getProjectId();
+            pListTable.projectPercentage = response.body().getPlist().get(i).getProjectPercentage();
+            pListTable.save();
+            projectListTable.add(pListTable);
 
-            plist.setPname(response.body().getPlist().get(i).getPname());
-            plist.setProjectId(response.body().getPlist().get(i).getProjectId());
-            plist.setProjectPercentage(response.body().getPlist().get(i).getProjectPercentage());
-            plist.setId(response.body().getPlist().get(i).getId());
-            projectList.add(plist);
+
+
         }
 
-        projectListAdapter = new ProjectListAdapter(this, R.layout.layout_project_list_item, R.id.active_pending_cardView, projectList);
-        listview.setAdapter(projectListAdapter);
-        LoadingDialog.cancelLoading();
-        //listview.setDivider(new ColorDrawable(getResources().getColor(R.color.colorAccent)));
-        listview.setDividerHeight(1);
-        listview.setTextFilterEnabled(true);
+       sendToAdapter();
 
     }
 

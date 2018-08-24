@@ -2,6 +2,7 @@ package com.valleyforge.cdi.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -87,7 +88,8 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
        }*/
 
 
-
+    @BindView(R.id.status)
+    TextView tvGoToDashboard;
 
     String projectId ;
 
@@ -98,9 +100,30 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
         setContentView(R.layout.activity_project_detail);
 
         ButterKnife.bind(this);
+
         mContext = ProjectDetailActivity.this;
+        /*tvAppTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProjectDetailActivity.this ,NavigationActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+        });*/
         ivBackIcon.setOnClickListener(this);
         ivLogout.setVisibility(View.GONE);
+        tvGoToDashboard.setVisibility(View.VISIBLE);
+        tvGoToDashboard.setText("Dashboard");
+        tvGoToDashboard.setTextColor(Color.parseColor("#252525"));
+        tvGoToDashboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProjectDetailActivity.this,NavigationActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
         tvAppTitle.setText("Project Detail");
         btnbeginProject.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,6 +191,7 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
 
         } else {
             SnakBarUtils.networkConnected(this);
+            LoadingDialog.cancelLoading();
         }
     }
 

@@ -22,10 +22,10 @@
             android:id="@+id/nav_profile"
             android:icon="@mipmap/profile_dummy"
             android:title="Profile" />
-        <item
+      <!--  <item
             android:id="@+id/nav_setting"
             android:icon="@mipmap/settings"
-            android:title="Settings" />
+            android:title="Settings" />-->
 
         <item
             android:id="@+id/nav_logout"

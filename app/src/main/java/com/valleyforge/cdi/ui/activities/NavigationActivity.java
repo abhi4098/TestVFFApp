@@ -14,6 +14,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -59,6 +60,8 @@ public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     TextView headerName,headerEmail,headerPhone;
+
+
     de.hdodenhof.circleimageview.CircleImageView personImage;
     private RetrofitInterface.UserProfileDetailsClient UserProfileDetailAdapter;
     @BindView(R.id.toolbar)
@@ -184,8 +187,17 @@ public class NavigationActivity extends AppCompatActivity
                     if (response.isSuccessful()) {
                         if(response.body().getType() == 1) {
                             for (int i=0; i<response.body().getData().size(); i++) {
-                                Log.e("abhi", "onResponse:.......................image url " + response.body().getData().get(i).getProfileImageUrl());
-                                setProfilePicURL(response.body().getData().get(i).getProfileImageUrl());
+
+                                if (response.body().getData().get(i).getProfileImageUrl() !=null) {
+                                    setProfilePicURL(response.body().getData().get(i).getProfileImageUrl());
+                                }
+                                else
+                                {      Log.e("abhi", "onResponse:.......................image url " + response.body().getData().get(i).getProfileImageUrl());
+
+                                    personImage.setBackground(ContextCompat.getDrawable(NavigationActivity.this, R.drawable.profile_background));
+
+                                }
+
                             }
 
                             Toast.makeText(getApplicationContext(),response.body().getMsg(),Toast.LENGTH_SHORT).show();
@@ -211,6 +223,7 @@ public class NavigationActivity extends AppCompatActivity
 
         } else {
             SnakBarUtils.networkConnected(this);
+            LoadingDialog.cancelLoading();
         }
     }
 
@@ -364,9 +377,9 @@ public class NavigationActivity extends AppCompatActivity
             Intent i = new Intent(NavigationActivity.this, ProfileActivity.class);
             startActivity(i);
 
-        } else if (id == R.id.nav_setting) {
+        } /*else if (id == R.id.nav_setting) {
 
-        } else if (id == R.id.nav_logout) {
+        }*/ else if (id == R.id.nav_logout) {
             logoutValleyforgeApp();
 
         } else if (id == R.id.nav_hq) {

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -95,6 +96,9 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 	@BindView(R.id.skip_device_connection)
     Button btnSkipConnection;
 
+	@BindView(R.id.status)
+	TextView tvGoToDashboard;
+
 	@OnClick(R.id.skip_device_connection)
             public void skipConnection(){
 
@@ -175,6 +179,17 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 			}
 		});
 		ivLogout.setVisibility(View.GONE);
+		tvGoToDashboard.setVisibility(View.VISIBLE);
+		tvGoToDashboard.setText("Dashboard");
+		tvGoToDashboard.setTextColor(Color.parseColor("#252525"));
+		tvGoToDashboard.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(SearchDevicesActivity.this,NavigationActivity.class);
+				startActivity(intent);
+				finish();
+			}
+		});
 		tvAppTitle.setText("Searching Devices . . .");
 		deviceList = (ListView) findViewById(R.id.devices);
 

@@ -36,11 +36,14 @@
     <Button
         android:id="@+id/skip_device_connection"
         android:layout_width="wrap_content"
-        android:layout_height="35sp"
+        android:layout_height="32sp"
         android:layout_alignParentEnd="true"
         android:layout_centerInParent="true"
         android:layout_margin="10sp"
-        android:padding="5sp"
+        android:paddingTop="5sp"
+        android:paddingBottom="5sp"
+        android:paddingStart="10sp"
+        android:paddingEnd="10sp"
         android:textColor="@color/white"
         android:background="@color/login_button_color"
         android:text="Skip Device Connection"/>

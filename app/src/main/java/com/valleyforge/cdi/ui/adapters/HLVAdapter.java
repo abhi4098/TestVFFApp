@@ -288,6 +288,7 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
 
         } else {
             SnakBarUtils.networkConnected(context);
+            LoadingDialog.cancelLoading();
         }
     }
 

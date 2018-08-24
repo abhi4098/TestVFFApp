@@ -110,6 +110,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         } else {
             SnakBarUtils.networkConnected(this);
+            LoadingDialog.cancelLoading();
         }
     }
 }

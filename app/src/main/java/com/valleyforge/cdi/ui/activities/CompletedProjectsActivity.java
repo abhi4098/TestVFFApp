@@ -1,6 +1,8 @@
 package com.valleyforge.cdi.ui.activities;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -52,6 +54,9 @@ public class CompletedProjectsActivity extends AppCompatActivity  implements Vie
 
     @BindView(R.id.listview)
     ListView listview;
+
+    @BindView(R.id.status)
+    TextView tvGoToDashboard;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +65,17 @@ public class CompletedProjectsActivity extends AppCompatActivity  implements Vie
         mContext = CompletedProjectsActivity.this;
         ivBackIcon.setOnClickListener(this);
         ivLogout.setVisibility(View.GONE);
+        tvGoToDashboard.setVisibility(View.VISIBLE);
+        tvGoToDashboard.setText("Dashboard");
+        tvGoToDashboard.setTextColor(Color.parseColor("#252525"));
+        tvGoToDashboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CompletedProjectsActivity.this,NavigationActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
         tvAppTitle.setText("Completed Projects");
         setUpRestAdapter();
         getProjectsList();
@@ -105,6 +121,7 @@ public class CompletedProjectsActivity extends AppCompatActivity  implements Vie
 
         } else {
             SnakBarUtils.networkConnected(this);
+            LoadingDialog.cancelLoading();
         }
     }
 

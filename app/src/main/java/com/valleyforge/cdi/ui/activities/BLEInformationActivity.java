@@ -632,7 +632,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         }
         else
         {
-            Toast.makeText(BLEInformationActivity.this,"Please add Measurements before uploading pictures", Toast.LENGTH_SHORT).show();
+            Toast.makeText(BLEInformationActivity.this,"Please Select Window", Toast.LENGTH_SHORT).show();
 
         }
 
@@ -897,6 +897,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
         } else {
             SnakBarUtils.networkConnected(this);
+            LoadingDialog.cancelLoading();
         }
 
     }
@@ -1064,6 +1065,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
         } else {
             SnakBarUtils.networkConnected(this);
+            LoadingDialog.cancelLoading();
         }
     }
 
@@ -2108,6 +2110,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
         } else {
             SnakBarUtils.networkConnected(this);
+            LoadingDialog.cancelLoading();
         }
     }
 

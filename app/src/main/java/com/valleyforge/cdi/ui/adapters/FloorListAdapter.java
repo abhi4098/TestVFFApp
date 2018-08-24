@@ -245,6 +245,7 @@ public class FloorListAdapter extends ArrayAdapter<Floorslist> {
 
         } else {
             SnakBarUtils.networkConnected(context);
+            LoadingDialog.cancelLoading();
         }
     }
 
@@ -343,6 +344,7 @@ public class FloorListAdapter extends ArrayAdapter<Floorslist> {
 
         } else {
             SnakBarUtils.networkConnected(context);
+            LoadingDialog.cancelLoading();
         }
     }
 
@@ -479,6 +481,7 @@ public class FloorListAdapter extends ArrayAdapter<Floorslist> {
 
         } else {
             SnakBarUtils.networkConnected(context);
+            LoadingDialog.cancelLoading();
         }
     }
     }

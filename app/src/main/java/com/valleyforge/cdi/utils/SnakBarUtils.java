@@ -13,7 +13,7 @@ public class SnakBarUtils {
 
     public static void networkConnected(Context context) {
         SnackbarManager.show(Snackbar.with(context)
-                .text("No Network Available")
+                .text("Offline Mode")
                 .textTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
                 .textColor(Color.WHITE)
                 .animation(true)

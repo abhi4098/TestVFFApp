@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -123,7 +124,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     String userName,userPhone,userAdd,userEmail;
     String imgDecodableString;
 
-
+    @BindView(R.id.status)
+    TextView tvGoToDashboard;
 
 
 
@@ -137,7 +139,17 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         tvAppTitle.setText("Profile");
         ivLogout.setVisibility(View.GONE);
 
-
+        tvGoToDashboard.setVisibility(View.VISIBLE);
+        tvGoToDashboard.setText("Dashboard");
+        tvGoToDashboard.setTextColor(Color.parseColor("#252525"));
+        tvGoToDashboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this,NavigationActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
         btnUploadPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -416,7 +428,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         if (response.body().getType() == 1) {
                              String profileUrl = response.body().getImageurl();
                             Log.e("abhi", "onResponse: ....................." +profileUrl );
-                            setProfilePicURL(profileUrl);
+                            if (profileUrl !=null) {
+                                setProfilePicURL(profileUrl);
+                            }
+                            else
+                            {
+                                personImage.setBackground(ContextCompat.getDrawable(ProfileActivity.this, R.drawable.profile_background));
+                            }
 
                         }
 
@@ -437,6 +455,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         } else {
             SnakBarUtils.networkConnected(this);
+            LoadingDialog.cancelLoading();
         }
     }
 
@@ -502,6 +521,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         } else {
             SnakBarUtils.networkConnected(this);
+            LoadingDialog.cancelLoading();
         }
     }
 
@@ -555,6 +575,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         } else {
             SnakBarUtils.networkConnected(this);
+            LoadingDialog.cancelLoading();
         }
     }
 

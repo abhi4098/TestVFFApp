@@ -140,6 +140,7 @@ public class HLVImagesAdapter extends RecyclerView.Adapter<HLVImagesAdapter.View
 
         } else {
             SnakBarUtils.networkConnected(context);
+            LoadingDialog.cancelLoading();
         }
     }
 
