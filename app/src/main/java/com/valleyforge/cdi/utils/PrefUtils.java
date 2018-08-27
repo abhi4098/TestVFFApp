@@ -33,6 +33,7 @@ public class PrefUtils {
     public static String IMAGE = "image";
     public static String ACTIVE_COUNT = "active_count";
     public static String COMPLETED_COUNT = "completed_count";
+    public static String LOGGED_IN_USER_ROLE= "user_role";
 
   /*  public static String LOGGED_IN_USER_EMAIL = "user_email";
     public static String LOGGED_IN_USER_ADD = "user_add";
@@ -386,6 +387,20 @@ public class PrefUtils {
         SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);
         return sharedPreferences.getString(LOGGED_IN_USER_EMAIL, "");
     }
+
+    public static void storeRole(String role, Context context) {
+        SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);
+        sharedPreferences.edit()
+                .putString(LOGGED_IN_USER_ROLE, role)
+                .apply();
+
+    }
+
+    public static String getRole(Context context) {
+        SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);
+        return sharedPreferences.getString(LOGGED_IN_USER_ROLE, "");
+    }
+
   /*  public static void storeRoleParent(String roleParent, Context context) {
         SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);
         sharedPreferences.edit()

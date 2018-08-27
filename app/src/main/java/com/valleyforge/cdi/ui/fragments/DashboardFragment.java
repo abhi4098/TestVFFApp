@@ -156,7 +156,7 @@ public class DashboardFragment extends Fragment {
 
     private void getDashboardData() {
         LoadingDialog.showLoadingDialog(getActivity(),"Loading...");
-        Call<DashboardDataResponse> call = UserDashboardAdapter.userDashboardData(PrefUtils.getUserId(getActivity()));
+        Call<DashboardDataResponse> call = UserDashboardAdapter.userDashboardData(PrefUtils.getUserId(getActivity()),PrefUtils.getRole(getActivity()));
         if (NetworkUtils.isNetworkConnected(getActivity())) {
             call.enqueue(new Callback<DashboardDataResponse>() {
 
@@ -165,10 +165,12 @@ public class DashboardFragment extends Fragment {
                     if (response.isSuccessful()) {
                         if(response.body().getMsg().equals("success")) {
                             Log.e("abhi", "onResponse:........... " +response.body().getPendingprojects() );
-                            tvactiveCount.setText(String.valueOf(response.body().getPendingprojects()));
-                            tvCompletedCount.setText(String.valueOf(response.body().getCompletedprojects()));
-                            PrefUtils.storeActiveCount(String.valueOf(response.body().getPendingprojects()),getActivity());
+
+                            int activePendingSum = response.body().getPendingprojects() +response.body().getInprogressprojects();
+                            PrefUtils.storeActiveCount(String.valueOf(activePendingSum),getActivity());
                             PrefUtils.storeCompletedCount(String.valueOf(response.body().getCompletedprojects()),getActivity());
+                            tvactiveCount.setText(String.valueOf(activePendingSum));
+                            tvCompletedCount.setText(String.valueOf(response.body().getCompletedprojects()));
 
                         }
                         else{

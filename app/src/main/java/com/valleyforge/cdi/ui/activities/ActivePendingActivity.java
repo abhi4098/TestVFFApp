@@ -83,9 +83,9 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
     @BindView(R.id.pending_projects_button)
     LinearLayout btnPendingProjects;
 
-    String projectStatus = "In Progress";
+    String projectStatus = "active";
 
-    ArrayList<Plist> projectList = null;
+    ArrayList<PListTable> showProjectList = null;
     ArrayList<PListTable> projectListTable;
     ProjectListAdapter projectListAdapter;
 
@@ -128,7 +128,7 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
 
     private void getProjectsList() {
         LoadingDialog.showLoadingDialog(this,"Loading...");
-        Call<ProjectListResponse> call = UserProjectListAdapter.userProjectListData(PrefUtils.getUserId(this),projectStatus);
+        Call<ProjectListResponse> call = UserProjectListAdapter.userProjectListData(PrefUtils.getUserId(this));
         if (NetworkUtils.isNetworkConnected(this)) {
             call.enqueue(new Callback<ProjectListResponse>() {
 
@@ -177,6 +177,7 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
     {
         List<PListTable> pListTables = getAll();
         projectListTable = new ArrayList<>();
+        showProjectList = new ArrayList<>();
         Log.e("abhi", "showProjectList: "+ pListTables.size() );
         //Adding all the items of the inventories to arraylist
         for (int i = 0; i < pListTables.size(); i++) {
@@ -186,6 +187,19 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
             pListTable.projectId = pListTables.get(i).projectId;
             pListTable.projectPercentage = pListTables.get(i).projectPercentage;
             projectListTable.add(pListTable);
+            int projectpercentage = Integer.parseInt(pListTables.get(i).projectPercentage);
+
+            if (projectStatus.equals("active")) {
+                if (projectpercentage > 0) {
+                    showProjectList.add(pListTable);
+                }
+            }
+            else
+            {
+                if (projectpercentage == 0) {
+                    showProjectList.add(pListTable);
+                }
+            }
         }
 
         sendToAdapter();
@@ -194,7 +208,8 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
 
     public void sendToAdapter()
     {
-        projectListAdapter = new ProjectListAdapter(this, R.layout.layout_project_list_item, R.id.active_pending_cardView, projectListTable);
+
+        projectListAdapter = new ProjectListAdapter(this, R.layout.layout_project_list_item, R.id.active_pending_cardView, showProjectList);
         listview.setAdapter(projectListAdapter);
         LoadingDialog.cancelLoading();
         listview.setDividerHeight(1);
@@ -206,6 +221,8 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
 
         new Delete().from(PListTable.class).execute();
         projectListTable = new ArrayList<>();
+        showProjectList = new ArrayList<>();
+
         for (int i = response.body().getPlist().size() - 1; i >= 0; i--) {
             PListTable pListTable = new PListTable();
             pListTable.pname = response.body().getPlist().get(i).getPname();
@@ -214,6 +231,21 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
             pListTable.projectPercentage = response.body().getPlist().get(i).getProjectPercentage();
             pListTable.save();
             projectListTable.add(pListTable);
+
+            int projectpercentage = Integer.parseInt(response.body().getPlist().get(i).getProjectPercentage());
+
+            if (projectStatus.equals("active")) {
+                if (projectpercentage > 0) {
+                    showProjectList.add(pListTable);
+                }
+            }
+            else
+            {
+                if (projectpercentage == 0) {
+                    showProjectList.add(pListTable);
+                }
+            }
+
 
 
 
@@ -236,7 +268,7 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
                 btnPendingProjects.setBackgroundColor(Color.parseColor("#ffffff"));
 
 
-                projectStatus = "In Progress";
+                projectStatus = "active";
                 getProjectsList();
                 break;
 
@@ -246,7 +278,7 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
                 tvActiveProjectHeader.setTextColor(Color.parseColor("#252525")); // custom color
                 btnActiveProjects.setBackgroundColor(Color.parseColor("#ffffff"));
 
-                projectStatus = "Pending";
+                projectStatus = "pending";
                 getProjectsList();
 
                 break;

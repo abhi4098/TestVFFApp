@@ -41,7 +41,9 @@ public class RetrofitInterface {
         @FormUrlEncoded
         @POST("dashboardApi")
         public Call<DashboardDataResponse> userDashboardData(
-                @Field("userid") String userid
+                @Field("userid") String userid,
+                @Field("roleid") String roleid
+
 
         );
     }
@@ -59,8 +61,8 @@ public class RetrofitInterface {
         @FormUrlEncoded
         @POST("assignedprojectsApi")
         public Call<ProjectListResponse> userProjectListData(
-                @Field("userid") String userid,
-                @Field("project_status") String project_status
+                @Field("userid") String userid
+
 
         );
     }

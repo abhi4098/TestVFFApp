@@ -31,7 +31,7 @@ import com.valleyforge.cdi.ui.activities.NavigationActivity;
 import com.valleyforge.cdi.ui.activities.ProfileActivity;
 import com.valleyforge.cdi.ui.activities.ProjectDetailActivity;
 import com.valleyforge.cdi.ui.activities.SearchDevicesActivity;
-import com.valleyforge.cdi.ui.fragments.ActivePendingFragment;
+
 
 import org.w3c.dom.Text;
 

@@ -404,6 +404,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 PrefUtils.storeUserPhone(response.body().getData().get(i).getPhone(), LoginActivity.this);
                                 PrefUtils.storeContextId(String.valueOf(response.body().getData().get(i).getContextId()), LoginActivity.this);
                                 PrefUtils.storeImageUrl(String.valueOf(response.body().getData().get(i).getProfileImageUrl()), LoginActivity.this);
+                                PrefUtils.storeRole(String.valueOf(response.body().getData().get(i).getRole()), LoginActivity.this);
+
 
                             }
                             Log.e("abhi", "onResponse:user name "+PrefUtils.getUserName(LoginActivity.this) );

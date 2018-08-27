@@ -89,7 +89,7 @@ public class CompletedProjectsActivity extends AppCompatActivity  implements Vie
 
     private void getProjectsList() {
         LoadingDialog.showLoadingDialog(this,"Loading...");
-        Call<ProjectListResponse> call = UserProjectListAdapter.userProjectListData(PrefUtils.getUserId(this),projectStatus);
+        Call<ProjectListResponse> call = UserProjectListAdapter.userProjectListData(PrefUtils.getUserId(this));
         if (NetworkUtils.isNetworkConnected(this)) {
             call.enqueue(new Callback<ProjectListResponse>() {
 
