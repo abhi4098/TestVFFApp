@@ -3,8 +3,11 @@ package com.valleyforge.cdi.ui.activities;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,6 +29,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -52,18 +56,25 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.Select;
+
 import com.valleyforge.cdi.R;
 import com.valleyforge.cdi.api.ApiAdapter;
 import com.valleyforge.cdi.api.ApiEndPoints;
 import com.valleyforge.cdi.api.RetrofitInterface;
 import com.valleyforge.cdi.generated.model.Allimage;
 import com.valleyforge.cdi.generated.model.ImageList;
+import com.valleyforge.cdi.generated.model.MeasurementDetail;
 import com.valleyforge.cdi.generated.model.MeasurementResponse;
 import com.valleyforge.cdi.generated.model.UploadPhotoResponse;
 import com.valleyforge.cdi.generated.model.WindowsListResponse;
 import com.valleyforge.cdi.generated.model.Windowslist;
+import com.valleyforge.cdi.generated.tables.MeasurementDetailTable;
+import com.valleyforge.cdi.generated.tables.PListTable;
 import com.valleyforge.cdi.ui.adapters.HLVAdapter;
 import com.valleyforge.cdi.ui.adapters.HLVImagesAdapter;
+import com.valleyforge.cdi.ui.services.MyJobService;
 import com.valleyforge.cdi.utils.IImageCompressTaskListener;
 import com.valleyforge.cdi.utils.ImageCompressTask;
 import com.valleyforge.cdi.utils.LoadingDialog;
@@ -107,6 +118,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 import static com.valleyforge.cdi.api.ApiEndPoints.BASE_URL;
+import static java.lang.Integer.parseInt;
 
 /**
  * UI to diplay bluetooth device information.
@@ -554,7 +566,6 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         windowCompletionStatus = windowStatus;
         windowApprovalCheck = windowApproval;
         windowId = id;
-        Log.e("abhi", "measurementScreen: ....." +ewallWidth + " " +widthLeftWindow);
         tvAppTitle.setText("Room Measurement");
         tvMeasurement.setTextColor(Color.parseColor("#ffffff")); // custom color
         llMeasurement.setBackgroundColor(Color.parseColor("#048700"));
@@ -579,27 +590,24 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             etPocketDepth.setText(pocketDepth);
             if (carpetInst.equals("Yes")) {
                 spCarpetInst.setSelection(0);
-                Log.e("abhi", "measurementScreen:  yes.................." );
+
             }
             else
             {
-                Log.e("abhi", "measurementScreen:  No.................." );
 
                 spCarpetInst.setSelection(1);
             }
 
             for (int j=0; j < allimages.size(); j++)
             {
-                //Allimage allimage = new Allimage();
+
                imagesID =  allimages.get(j).getId();
                String url = allimages.get(j).getUrl();
                 String[] separated = url.split("@__@");
 
-                Log.e("abhi", "measurementScreen:................from hlv adapter ---------------folder name " +separated[0] + " image Id...."+imagesID);
 
                 ImageList imageList = new ImageList();
                 imageList.setimageUrl(ApiEndPoints.IMAGE_URL + allimages.get(j).getUrl());
-                Log.e("abhi", "measurementScreen: ........................." + ApiEndPoints.IMAGE_URL + allimages.get(j).getUrl());
                 imageList.setImageId(imagesID);
                 //for (int k=0; k<combineImageList.get(i).get)
                 imageList.setimageType(separated[0]);
@@ -856,6 +864,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     }
 
     private void sendMeasurementData(final View view) {
+
         Log.e("abhi", "sendMeasurementData: ..................." + windowId);
         LoadingDialog.showLoadingDialog(this, "Loading...");
         Call<MeasurementResponse> call = MeasurementAdapter.measurementData(floorPlanId, roomId, windowName, wallWidth, widthLeftOfWindow, ibWidthOfWindow, ibLengthOfWindow, widthRightOfWindow, lengthCielFlr,
@@ -867,7 +876,6 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                 public void onResponse(Call<MeasurementResponse> call, retrofit2.Response<MeasurementResponse> response) {
                     if (response.isSuccessful()) {
                         if (response.body().getType() == 1) {
-                            Log.e("abhi", "onResponse:........... " + response.body().getMsg());
                             for (int i=0; i<response.body().getMeasurementDetails().size(); i++)
                             {
                                 windowId = String.valueOf(response.body().getMeasurementDetails().get(i).getId());
@@ -887,7 +895,6 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
                 @Override
                 public void onFailure(Call<MeasurementResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... ");
 
                     LoadingDialog.cancelLoading();
                 }
@@ -896,9 +903,80 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             });
 
         } else {
+            saveMeasurementDataInDb();
+            ComponentName componentName = new ComponentName(this, MyJobService.class);
+            JobInfo jobInfo = null;
+            JobScheduler jobScheduler = null;
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                jobInfo = new JobInfo.Builder(parseInt(windowId), componentName)
+                        .setRequiresCharging(false)
+                        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                        .build();
+                jobScheduler = (JobScheduler)getSystemService(JOB_SCHEDULER_SERVICE);
+                assert jobScheduler != null;
+                int resultCode = jobScheduler.schedule(jobInfo);
+                if (resultCode == JobScheduler.RESULT_SUCCESS) {
+                    Log.d("abhi", "Job scheduled!");
+                } else {
+                    Log.d("abhi", "Job not scheduled");
+                }
+            }
+
+
             SnakBarUtils.networkConnected(this);
             LoadingDialog.cancelLoading();
         }
+
+    }
+
+
+    public static List<MeasurementDetailTable> getAll() {
+        return new Select()
+                .from(MeasurementDetailTable.class)
+                .execute();
+    }
+
+    private void saveMeasurementDataInDb() {
+
+        List<MeasurementDetailTable> measurementDetailTables = getAll();
+
+        Log.e("abhi", "windowId:..................... "+ windowId );
+
+        //Adding all the items of the inventories to arraylist
+        for (int i = 0; i < measurementDetailTables.size(); i++) {
+            if (windowId.equals(measurementDetailTables.get(i).windowId))
+            {
+               // Long windowIdToBeDeleted = Long.valueOf(measurementDetailTables.get(i).windowId);
+                MeasurementDetailTable.delete(MeasurementDetailTable.class, measurementDetailTables.get(i).getId());
+                Log.e("abhi", "saveMeasurementDataInDb: window id deleted.........."+measurementDetailTables.get(i).getId() );
+            }
+
+            Log.e("abhi", "saveMeasurementDataInDb: .................. window id list" +measurementDetailTables.get(i).windowId );
+
+        }
+
+        MeasurementDetailTable measurementDetailTable = new MeasurementDetailTable();
+       // measurementDetailTable.m_id = windowId;
+        measurementDetailTable.floorPlanId = floorPlanId;
+        measurementDetailTable.roomId = roomId;
+        measurementDetailTable.windowName = windowName;
+        measurementDetailTable.wallWidth = wallWidth;
+
+        measurementDetailTable.widthLeftWindow = widthLeftOfWindow;
+        measurementDetailTable.ibWidthWindow = ibWidthOfWindow;
+        measurementDetailTable.ibLengthWindow = ibLengthOfWindow;
+        measurementDetailTable.widthRightWindow = widthRightOfWindow;
+        measurementDetailTable.lengthCeilFlr = lengthCielFlr;
+
+        measurementDetailTable.pocketDepth = pocketDepth;
+        measurementDetailTable.carpetInst = carpetInst;
+        measurementDetailTable.windowCompletionStatus = windowCompletionStatus;
+        measurementDetailTable.windowApprovalCheck = windowApprovalCheck;
+        measurementDetailTable.userId = PrefUtils.getUserId(BLEInformationActivity.this);
+        measurementDetailTable.windowId = windowId;
+        measurementDetailTable.save();
+
 
     }
 
@@ -907,6 +985,8 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ble_information);
+       // getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         ButterKnife.bind(this);
         ivBackIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -990,7 +1070,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     private void setWindowsList() {
         LoadingDialog.showLoadingDialog(this, "Loading...");
-        Call<WindowsListResponse> call = WindowListAdapter.windowsListData(Integer.parseInt(floorPlanId), roomId);
+        Call<WindowsListResponse> call = WindowListAdapter.windowsListData(parseInt(floorPlanId), roomId);
         if (NetworkUtils.isNetworkConnected(this)) {
             call.enqueue(new Callback<WindowsListResponse>() {
 

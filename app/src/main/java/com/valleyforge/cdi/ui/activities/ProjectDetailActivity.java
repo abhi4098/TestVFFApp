@@ -28,7 +28,10 @@ import com.valleyforge.cdi.utils.NetworkUtils;
 import com.valleyforge.cdi.utils.PrefUtils;
 import com.valleyforge.cdi.utils.SnakBarUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -224,18 +227,20 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
            PrefUtils.storeProjectId(response.body().getPdetail().get(i).getId(),this);
             Log.e("abhi", "setProjectDetail:............................... "  +response.body().getPdetail().get(i).getAppointmentDate());
 
+
+
             tvPropertyName.setText(response.body().getPdetail().get(i).getPropertiesName());
 
-           tvDateOfAppointment.setText(response.body().getPdetail().get(i).getAppointmentDate());
+           tvDateOfAppointment.setText(parseTodaysDate(response.body().getPdetail().get(i).getAppointmentDate()));
 
             tvProjectPm.setText(response.body().getPdetail().get(i).getProjectManagerName());
 
             tvOnSitePOC.setText(response.body().getPdetail().get(i).getPropertiesContactPersonName());
 
-            tvStartDate.setText(response.body().getPdetail().get(i).getProjectStartDate());
+            tvStartDate.setText(parseTodaysDate(response.body().getPdetail().get(i).getProjectStartDate()));
             tvOnSitePocContact.setText(response.body().getPdetail().get(i).getPropertiesContactPersonPhone());
 
-            tvEndDate.setText(response.body().getPdetail().get(i).getProjectEndDate());
+            tvEndDate.setText(parseTodaysDate(response.body().getPdetail().get(i).getProjectEndDate()));
 
             tvLocationAddress.setText(response.body().getPdetail().get(i).getPropertiesAddress());
 
@@ -254,6 +259,29 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
 
     }
 
+    public static String parseTodaysDate(String time) {
+
+
+
+        String inputPattern = "yyyy-MM-dd";
+        String outputPattern = "MM/dd/yyyy";
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+
+        Date date = null;
+        String str = null;
+
+        try {
+            date = inputFormat.parse(time);
+            str = outputFormat.format(date);
+
+            Log.i("mini", "Converted Date Today:" + str);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
 
 
     @Override

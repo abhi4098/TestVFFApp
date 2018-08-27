@@ -24,10 +24,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data android:name="AA_DB_NAME" android:value="VffDatabase.db" />
-        <meta-data android:name="AA_DB_VERSION" android:value="15" />
+        <meta-data android:name="AA_DB_VERSION" android:value="16" />
         <meta-data
             android:name="AA_MODELS"
-            android:value="com.valleyforge.cdi.generated.tables.PListTable"
+            android:value="com.valleyforge.cdi.generated.tables.PListTable,com.valleyforge.cdi.generated.tables.MeasurementDetailTable"
             />
         <activity
             android:name=".ui.activities.SplashActivity"
@@ -39,6 +39,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:name="com.valleyforge.cdi.ui.services.MyJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
         <activity
             android:name=".ui.activities.LoginActivity"
             android:screenOrientation="landscape" />

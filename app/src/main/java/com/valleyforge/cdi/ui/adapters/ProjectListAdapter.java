@@ -109,7 +109,9 @@ public class ProjectListAdapter extends ArrayAdapter<PListTable> {
             holder.btnContinueMeasurement.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String itemID  = String.valueOf(plist.p_id);
                     Intent i = new Intent(context, SearchDevicesActivity.class);
+                    i.putExtra("PROJECT_ID", itemID);
                     context.startActivity(i);
                 }
             });
@@ -162,7 +164,7 @@ public class ProjectListAdapter extends ArrayAdapter<PListTable> {
             holder.btnViewDetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String itemID  = String.valueOf(plist.getId());
+                    String itemID  = String.valueOf(plist.p_id);
                     Intent i = new Intent(getContext(), ProjectDetailActivity.class);
                     i.putExtra("PROJECT_ID", itemID);
                     context.startActivity(i);
