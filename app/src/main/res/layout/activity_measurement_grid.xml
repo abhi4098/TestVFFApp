@@ -19,12 +19,14 @@
     android:layout_gravity="center_horizontal"
      android:layout_marginTop="10sp"
     android:layout_height="35sp">
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:tint="@color/white"
         android:src="@mipmap/add_button"
-        android:background="@color/login_button_color"/>
+        android:background="@color/login_button_color"
+        />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,9 +39,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_marginTop="10sp"
-        android:layout_marginBottom="30sp"
+        android:layout_marginBottom="10sp"
         android:layout_marginStart="30sp"
-        android:layout_marginEnd="10sp"
+        android:layout_marginEnd="30sp"
         android:layout_height="match_parent"
         >
         <ListView
