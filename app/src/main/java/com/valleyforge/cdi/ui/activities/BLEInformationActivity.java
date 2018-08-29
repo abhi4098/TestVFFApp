@@ -985,7 +985,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ble_information);
-       // getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         ButterKnife.bind(this);
         ivBackIcon.setOnClickListener(new View.OnClickListener() {

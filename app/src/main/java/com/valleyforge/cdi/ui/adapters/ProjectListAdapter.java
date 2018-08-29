@@ -39,9 +39,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-/**
- * Created by Abhinandan on 26/12/17.
- */
+
 
 public class ProjectListAdapter extends ArrayAdapter<PListTable> {
 

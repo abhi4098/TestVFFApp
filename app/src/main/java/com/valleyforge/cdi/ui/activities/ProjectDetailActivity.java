@@ -219,7 +219,7 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
             pDetail.setPropertiesContactPersonPhone(response.body().getPdetail().get(i).getPropertiesContactPersonPhone());
             pDetail.setPropertiesDescription(response.body().getPdetail().get(i).getPropertiesDescription());
 
-            pDetail.setPropertiesEmail(response.body().getPdetail().get(i).getPropertiesEmail());
+            pDetail.setPropertiesEmail(response.body().getPdetail() .get(i).getPropertiesEmail());
             pDetail.setPropertiesName(response.body().getPdetail().get(i).getPropertiesName());
            /* pDetail.setA(response.body().getPdetail().get(i).getProjectManagerName());
             pDetail.setProjectAssignedPm(response.body().getPdetail().get(i).getProjectAssignedPm());*/

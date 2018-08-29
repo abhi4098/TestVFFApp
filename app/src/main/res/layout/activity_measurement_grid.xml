@@ -13,6 +13,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <Button
+        android:id="@+id/add_floor_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Floor"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -1,6 +1,7 @@
 package com.valleyforge.cdi.api;
 
 
+import com.valleyforge.cdi.generated.model.AddFloorResponse;
 import com.valleyforge.cdi.generated.model.DashboardDataResponse;
 import com.valleyforge.cdi.generated.model.FloorDetailsResponse;
 import com.valleyforge.cdi.generated.model.ForgotPasswordResponse;
@@ -124,6 +125,18 @@ public class RetrofitInterface {
         public Call<WindowsListResponse> windowsListData(
                 @Field("floor_plan_id") int floor_plan_id,
                 @Field("room_id") String room_id
+
+        );
+    }
+
+    public interface AddFloorClient {
+        @FormUrlEncoded
+        @POST("addfloorplanApi")
+        public Call<AddFloorResponse> addFloorData(
+                @Field("floor_name") String floor_name,
+                @Field("project_id") String project_id,
+                @Field("userid") String userid
+
 
         );
     }
