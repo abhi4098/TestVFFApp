@@ -16,6 +16,11 @@ public class MeasurementResponse {
     @SerializedName("msg")
     @Expose
     private String msg;
+
+    @SerializedName("submitted_for_review")
+    @Expose
+    private String submittedForReview;
+
     @SerializedName("measurement_details")
     @Expose
     private List<MeasurementDetail> measurementDetails = null;
@@ -42,6 +47,14 @@ public class MeasurementResponse {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public String getSubmittedForReview() {
+        return submittedForReview;
+    }
+
+    public void setSubmittedForReview(String submittedForReview) {
+        this.submittedForReview = submittedForReview;
     }
 
     public List<MeasurementDetail> getMeasurementDetails() {

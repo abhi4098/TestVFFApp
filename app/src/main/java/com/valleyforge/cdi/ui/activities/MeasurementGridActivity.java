@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,7 +62,7 @@ public class MeasurementGridActivity extends AppCompatActivity implements View.O
     TextView tvGoToDashboard;
 
     @BindView(R.id.add_floor_button)
-    Button btnAddFloor;
+    LinearLayout btnAddFloor;
     
     @BindView(R.id.listview)
     ListView listview;

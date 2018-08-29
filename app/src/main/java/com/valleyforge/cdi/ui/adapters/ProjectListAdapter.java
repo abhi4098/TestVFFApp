@@ -31,6 +31,7 @@ import com.valleyforge.cdi.ui.activities.NavigationActivity;
 import com.valleyforge.cdi.ui.activities.ProfileActivity;
 import com.valleyforge.cdi.ui.activities.ProjectDetailActivity;
 import com.valleyforge.cdi.ui.activities.SearchDevicesActivity;
+import com.valleyforge.cdi.utils.PrefUtils;
 
 
 import org.w3c.dom.Text;
@@ -100,7 +101,7 @@ public class ProjectListAdapter extends ArrayAdapter<PListTable> {
 
         if (plist !=null) {
             holder.projectName.setText(plist.pname);
-            holder.projectId.setText(plist.p_id);
+            holder.projectId.setText(plist.projectId );
             holder.tvPercentageText.setText(plist.projectPercentage);
             Log.e("abhi", "getView: ............"  +plist.projectPercentage );
             holder.pbPercentage.setProgress(Integer.parseInt(plist.projectPercentage));
@@ -108,8 +109,9 @@ public class ProjectListAdapter extends ArrayAdapter<PListTable> {
                 @Override
                 public void onClick(View v) {
                     String itemID  = String.valueOf(plist.p_id);
+                    PrefUtils.storeProjectId(itemID,context);
                     Intent i = new Intent(context, SearchDevicesActivity.class);
-                    i.putExtra("PROJECT_ID", itemID);
+                   // i.putExtra("PROJECT_ID", itemID);
                     context.startActivity(i);
                 }
             });
@@ -163,6 +165,7 @@ public class ProjectListAdapter extends ArrayAdapter<PListTable> {
                 @Override
                 public void onClick(View v) {
                     String itemID  = String.valueOf(plist.p_id);
+                    PrefUtils.storeProjectId(itemID,context);
                     Intent i = new Intent(getContext(), ProjectDetailActivity.class);
                     i.putExtra("PROJECT_ID", itemID);
                     context.startActivity(i);

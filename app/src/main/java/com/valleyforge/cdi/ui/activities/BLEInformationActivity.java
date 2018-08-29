@@ -111,6 +111,7 @@ import ch.leica.sdk.commands.ReceivedData;
 import ch.leica.sdk.commands.ReceivedDataPacket;
 import ch.leica.sdk.commands.response.Response;
 import ch.leica.sdk.commands.response.ResponseBLEMeasurements;
+import ch.leica.sdk.connection.BleConnectionManager;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -878,6 +879,37 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                         if (response.body().getType() == 1) {
                             for (int i=0; i<response.body().getMeasurementDetails().size(); i++)
                             {
+                                if (response.body().getSubmittedForReview().equals("1"))
+                                {
+
+                                    Log.e("abhi", "onResponse: .........................submitted for review " );
+                                    LayoutInflater inflater = getLayoutInflater();
+                                    View alertLayout = inflater.inflate(R.layout.layout_project_completion, null);
+                                    AlertDialog.Builder builder1 = new AlertDialog.Builder(BLEInformationActivity.this);
+                                    builder1.setView(alertLayout);
+                                    builder1.setCancelable(true);
+
+                                    builder1.setPositiveButton(
+                                            "Ok",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    Intent intent = new Intent(BLEInformationActivity.this,NavigationActivity.class);
+                                                    startActivity(intent);
+                                                    finish();
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+
+                                    AlertDialog alert = builder1.create();
+                                    alert.show();
+                                }
+                                else
+                                {
+
+                                    Log.e("abhi", "onResponse:.............. Project not completed "  );
+
+                                }
                                 windowId = String.valueOf(response.body().getMeasurementDetails().get(i).getId());
                             }
                             picturesScreen(view);
