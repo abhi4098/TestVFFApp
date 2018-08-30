@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -117,6 +118,7 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
         ivBackIcon.setOnClickListener(this);
         ivLogout.setVisibility(View.GONE);
         tvGoToDashboard.setVisibility(View.VISIBLE);
+        tvOtherDetails.setMovementMethod(new ScrollingMovementMethod());
         tvGoToDashboard.setText("Dashboard");
         tvGoToDashboard.setTextColor(Color.parseColor("#252525"));
         tvGoToDashboard.setOnClickListener(new View.OnClickListener() {
@@ -221,11 +223,12 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
 
             pDetail.setPropertiesEmail(response.body().getPdetail() .get(i).getPropertiesEmail());
             pDetail.setPropertiesName(response.body().getPdetail().get(i).getPropertiesName());
+           // pDetail.setFinalProjectStatus(response.body().getPdetail().get(i).getFinalProjectStatus());
            /* pDetail.setA(response.body().getPdetail().get(i).getProjectManagerName());
             pDetail.setProjectAssignedPm(response.body().getPdetail().get(i).getProjectAssignedPm());*/
 
            PrefUtils.storeProjectId(response.body().getPdetail().get(i).getId(),this);
-            Log.e("abhi", "setProjectDetail:............................... "  +response.body().getPdetail().get(i).getAppointmentDate());
+            Log.e("abhi", "setProjectDetail:............................... "  +response.body().getPdetail().get(i).getFinalProjectStatus());
 
 
 
@@ -246,10 +249,10 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
 
             tvOtherDetails.setText(response.body().getPdetail().get(i).getPropertiesDescription());
 
-            if (!response.body().getPdetail().get(i).getProjectStatus().equals("Completed"))
+            if (!response.body().getPdetail().get(i).getFinalProjectStatus().equals("Completed") && !response.body().getPdetail().get(i).getProjectStatus().equals("Submitted for Review"))
             {
                 btnbeginProject.setVisibility(View.VISIBLE);
-            }
+           }
 
 
             projectDetail.add(pDetail);

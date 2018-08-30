@@ -102,6 +102,10 @@ public class Pdetail {
     @Expose
     private String appointmentDate;
 
+    @SerializedName("final_project_status")
+    @Expose
+    private String finalProjectStatus;
+
     public String getAppointmentDate() {
         return appointmentDate;
     }
@@ -341,6 +345,13 @@ public class Pdetail {
 
     public void setProjectManagerName(String projectManagerName) {
         this.projectManagerName = projectManagerName;
+    }
+    public String getFinalProjectStatus() {
+        return finalProjectStatus;
+    }
+
+    public void setFinalProjectStatus(String finalProjectStatus) {
+        this.finalProjectStatus = finalProjectStatus;
     }
 
 }

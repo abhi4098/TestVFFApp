@@ -129,14 +129,16 @@ public class CompletedProjectsActivity extends AppCompatActivity  implements Vie
 
         projectList = new ArrayList<>();
         for (int i = response.body().getPlist().size() - 1; i >= 0; i--) {
-            Plist plist = new Plist();
-
-            plist.setPname(response.body().getPlist().get(i).getPname());
-            plist.setProjectId(response.body().getPlist().get(i).getProjectId());
-            plist.setProjectPercentage(response.body().getPlist().get(i).getProjectPercentage());
-            plist.setId(response.body().getPlist().get(i).getId());
-            plist.setPmName(response.body().getPlist().get(i).getPmName());
-            projectList.add(plist);
+            if (response.body().getPlist().get(i).getFinalProjectStatus().equals("Completed")) {
+                Plist plist = new Plist();
+                plist.setPname(response.body().getPlist().get(i).getPname());
+                plist.setProjectId(response.body().getPlist().get(i).getProjectId());
+                plist.setProjectPercentage(response.body().getPlist().get(i).getProjectPercentage());
+                plist.setId(response.body().getPlist().get(i).getId());
+                plist.setPmName(response.body().getPlist().get(i).getPmName());
+                plist.setFinalProjectStatus(response.body().getPlist().get(i).getFinalProjectStatus());
+                projectList.add(plist);
+            }
         }
 
         projectListAdapter = new CompletedProjectListAdapter(this, R.layout.layout_completed_project_list_item, R.id.active_pending_cardView, projectList);

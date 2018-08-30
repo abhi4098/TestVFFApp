@@ -50,6 +50,12 @@ public class Plist {
     @Expose
     private String pmName;
 
+    @SerializedName("final_project_status")
+    @Expose
+    private String finalProjectStatus;
+
+
+
     public String getPmName() {
         return pmName;
     }
@@ -160,6 +166,14 @@ public class Plist {
 
     public void setProjectPercentage(String projectPercentage) {
         this.projectPercentage = projectPercentage;
+    }
+
+    public String getFinalProjectStatus() {
+        return finalProjectStatus;
+    }
+
+    public void setFinalProjectStatus(String finalProjectStatus) {
+        this.finalProjectStatus = finalProjectStatus;
     }
 
 }

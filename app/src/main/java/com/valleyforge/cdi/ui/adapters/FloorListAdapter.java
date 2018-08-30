@@ -319,8 +319,9 @@ public class FloorListAdapter extends ArrayAdapter<Floorslist> {
                     if (response.isSuccessful()) {
                         if(response.body().getType().equals("1")) {
                             Log.e("abhi", "onResponse: success///////////////////////" );
-
-
+                            Intent intent = new Intent(context,MeasurementGridActivity.class);
+                            context.startActivity(intent);
+                            context.finish();
                             Toast.makeText(context,"Add Room request send Successfully",Toast.LENGTH_SHORT).show();
 
                         }

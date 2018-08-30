@@ -186,6 +186,8 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
             pListTable.pname = pListTables.get(i).pname;
             pListTable.projectId = pListTables.get(i).projectId;
             pListTable.projectPercentage = pListTables.get(i).projectPercentage;
+            pListTable.projectStatus = pListTables.get(i).projectStatus;
+
             projectListTable.add(pListTable);
             int projectpercentage = Integer.parseInt(pListTables.get(i).projectPercentage);
 
@@ -229,6 +231,8 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
             pListTable.p_id = response.body().getPlist().get(i).getId();
             pListTable.projectId = response.body().getPlist().get(i).getProjectId();
             pListTable.projectPercentage = response.body().getPlist().get(i).getProjectPercentage();
+            pListTable.projectStatus = response.body().getPlist().get(i).getProjectStatus();
+
             pListTable.save();
             projectListTable.add(pListTable);
 

@@ -5,10 +5,6 @@
         android:icon="@mipmap/popup_icon"
         android:title="Communication Logs"/>
 
-    <item
-        android:id="@+id/two"
-        android:icon="@mipmap/popup_icon"
-        android:title="Project Details"/>
 
     <item
         android:id="@+id/three"

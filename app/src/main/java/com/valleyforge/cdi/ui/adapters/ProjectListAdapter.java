@@ -102,9 +102,10 @@ public class ProjectListAdapter extends ArrayAdapter<PListTable> {
         if (plist !=null) {
             holder.projectName.setText(plist.pname);
             holder.projectId.setText(plist.projectId );
-            holder.tvPercentageText.setText(plist.projectPercentage);
+            holder.tvPercentageText.setText(plist.projectStatus);
             Log.e("abhi", "getView: ............"  +plist.projectPercentage );
             holder.pbPercentage.setProgress(Integer.parseInt(plist.projectPercentage));
+            if (plist.projectStatus.equals("Submitted for Review"))
             holder.btnContinueMeasurement.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
