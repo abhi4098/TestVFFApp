@@ -30,6 +30,7 @@ import com.valleyforge.cdi.ui.activities.CompletedProjectsActivity;
 import com.valleyforge.cdi.ui.activities.NavigationActivity;
 import com.valleyforge.cdi.ui.activities.ProfileActivity;
 import com.valleyforge.cdi.ui.activities.ProjectDetailActivity;
+import com.valleyforge.cdi.ui.activities.ProjectSummaryActivity;
 import com.valleyforge.cdi.ui.activities.SearchDevicesActivity;
 import com.valleyforge.cdi.utils.PrefUtils;
 
@@ -106,16 +107,34 @@ public class ProjectListAdapter extends ArrayAdapter<PListTable> {
             Log.e("abhi", "getView: ............"  +plist.projectPercentage );
             holder.pbPercentage.setProgress(Integer.parseInt(plist.projectPercentage));
             if (plist.projectStatus.equals("Submitted for Review"))
-            holder.btnContinueMeasurement.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String itemID  = String.valueOf(plist.p_id);
-                    PrefUtils.storeProjectId(itemID,context);
-                    Intent i = new Intent(context, SearchDevicesActivity.class);
-                   // i.putExtra("PROJECT_ID", itemID);
-                    context.startActivity(i);
-                }
-            });
+            {
+                holder.btnContinueMeasurement.setText("Project Summary");
+                holder.btnContinueMeasurement.setVisibility(View.GONE);
+               /* holder.btnContinueMeasurement.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String itemID  = String.valueOf(plist.p_id);
+                        PrefUtils.storeProjectId(itemID,context);
+                        Intent i = new Intent(context, ProjectSummaryActivity.class);
+                        // i.putExtra("PROJECT_ID", itemID);
+                        context.startActivity(i);
+                    }
+                });*/
+            }
+            else
+            {
+                holder.btnContinueMeasurement.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String itemID  = String.valueOf(plist.p_id);
+                        PrefUtils.storeProjectId(itemID,context);
+                        Intent i = new Intent(context, SearchDevicesActivity.class);
+                        // i.putExtra("PROJECT_ID", itemID);
+                        context.startActivity(i);
+                    }
+                });
+            }
+
             holder.ivPopUpMenu.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override
