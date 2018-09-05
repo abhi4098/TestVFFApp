@@ -192,7 +192,7 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
             int projectpercentage = Integer.parseInt(pListTables.get(i).projectPercentage);
 
             if (projectStatus.equals("active")) {
-                if (projectpercentage > 0) {
+                if (projectpercentage > 0 && !pListTables.get(i).projectStatus.equals("Completed") ) {
                     showProjectList.add(pListTable);
                 }
             }
@@ -239,7 +239,7 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
             int projectpercentage = Integer.parseInt(response.body().getPlist().get(i).getProjectPercentage());
 
             if (projectStatus.equals("active")) {
-                if (projectpercentage > 0) {
+                if (projectpercentage > 0 && !response.body().getPlist().get(i).getProjectStatus().equals("Completed")) {
                     showProjectList.add(pListTable);
                 }
             }

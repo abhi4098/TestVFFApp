@@ -166,7 +166,8 @@ public class DashboardFragment extends Fragment {
                         if(response.body().getMsg().equals("success")) {
                             Log.e("abhi", "onResponse:........... " +response.body().getPendingprojects() );
 
-                            int activePendingSum = response.body().getPendingprojects() +response.body().getInprogressprojects()+response.body().getSubmittedforreviewprojects();
+                            int activePendingSum = response.body().getPendingprojects() +response.body().getInprogressprojects()+response.body().getSubmittedforreviewprojects()
+                             + response.body().getSubmitforeditingcount()  ;
                             PrefUtils.storeActiveCount(String.valueOf(activePendingSum),getActivity());
                             PrefUtils.storeCompletedCount(String.valueOf(response.body().getCompletedprojects()),getActivity());
                             //PrefUtils.storeCompletedCount(String.valueOf(response.body().getCompletedprojects()),getActivity());

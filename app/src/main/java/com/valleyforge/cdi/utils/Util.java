@@ -14,9 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Created by root on 9/14/17.
- */
+
 
 public class Util {
 
@@ -47,7 +45,7 @@ public class Util {
             root.mkdirs();
 
         //decode and resize the original bitmap from @param path.
-        Bitmap bitmap = decodeImageFromFiles(path, /* your desired width*/300, /*your desired height*/ 300);
+        Bitmap bitmap = decodeImageFromFiles(path, /* your desired width*/500, /*your desired height*/ 500);
 
         //create placeholder for the compressed image file
         File compressed = new File(root, SDF.format(new Date()) + ".jpg" /*Your desired format*/);

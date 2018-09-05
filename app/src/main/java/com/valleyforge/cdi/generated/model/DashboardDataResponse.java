@@ -29,6 +29,11 @@ public class DashboardDataResponse {
     @Expose
     private Integer submittedforreviewprojects;
 
+    @SerializedName("submitforeditingcount")
+    @Expose
+    private Integer submitforeditingcount;
+
+
     public Integer getType() {
         return type;
     }
@@ -83,6 +88,15 @@ public class DashboardDataResponse {
 
     public void setSubmittedforreviewprojects(Integer submittedforreviewprojects) {
         this.submittedforreviewprojects = submittedforreviewprojects;
+    }
+
+
+    public Integer getSubmitforeditingcount() {
+        return submitforeditingcount;
+    }
+
+    public void setSubmitforeditingcount(Integer submitforeditingcount) {
+        this.submitforeditingcount = submitforeditingcount;
     }
 
 }

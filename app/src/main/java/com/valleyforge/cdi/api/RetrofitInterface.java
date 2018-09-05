@@ -12,6 +12,7 @@ import com.valleyforge.cdi.generated.model.ProjectDetailResponse;
 import com.valleyforge.cdi.generated.model.ProjectListResponse;
 import com.valleyforge.cdi.generated.model.RoomsListResponse;
 import com.valleyforge.cdi.generated.model.SkipResponse;
+import com.valleyforge.cdi.generated.model.SubmitWindowDetailResponse;
 import com.valleyforge.cdi.generated.model.UploadPhotoResponse;
 import com.valleyforge.cdi.generated.model.WindowsListResponse;
 
@@ -182,6 +183,22 @@ public class RetrofitInterface {
 
         );
     }
+
+    public interface SubmitWindowsData {
+        @FormUrlEncoded
+        @POST("savemeasurementsfinalApi")
+        public Call<SubmitWindowDetailResponse> windowDetail(
+                @Field("floor_plan_id") String floor_plan_id,
+                @Field("floor_room_id") String floor_room_id,
+                @Field("window_id") String window_id,
+                @Field("userid") String userid
+
+
+
+
+        );
+    }
+
 
 
 

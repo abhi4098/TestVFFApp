@@ -67,6 +67,7 @@ import com.valleyforge.cdi.generated.model.Allimage;
 import com.valleyforge.cdi.generated.model.ImageList;
 import com.valleyforge.cdi.generated.model.MeasurementDetail;
 import com.valleyforge.cdi.generated.model.MeasurementResponse;
+import com.valleyforge.cdi.generated.model.SubmitWindowDetailResponse;
 import com.valleyforge.cdi.generated.model.UploadPhotoResponse;
 import com.valleyforge.cdi.generated.model.WindowsListResponse;
 import com.valleyforge.cdi.generated.model.Windowslist;
@@ -185,6 +186,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     private AlertDialog alertDialogDisconnect;
 
     private boolean hasDistanceMeasurement = false;
+    private boolean isMeasurementDataSubmitted = false;
 
     String wallWidth, widthLeftOfWindow, ibWidthOfWindow, ibLengthOfWindow, widthRightOfWindow, lengthCielFlr, pocketDepth, carpetInst, additionalData;
 
@@ -356,8 +358,6 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     }
 
 
-    /*@BindView(R.id.person_image)
-    ImageView personImage;*/
     @BindView(R.id.back_icon)
     ImageView ivBackIcon;
     @BindView(R.id.toolbar)
@@ -380,24 +380,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     @BindView(R.id.carpet_inst_ll)
     LinearLayout llCarpetInst;
 
-    /*@BindView(R.id.additional_data)
-    EditText etAdditionalData;*/
 
-   /* @BindView(R.id.ceiling_to_floor_button)
-    LinearLayout llCeilingToFloor;
-
-    @BindView(R.id.wall_to_wall_btn)
-    LinearLayout llWallToWall;
-
-    @BindView(R.id.wall_to_wall_pic_added_layout)
-    LinearLayout llWallToWallPicAddedLayout;
-
-    @BindView(R.id.windows_added_layout)
-    LinearLayout llWindowsAddedLayout;
-
-
-    @BindView(R.id.windows_btn)
-    LinearLayout llWindows;*/
 
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
@@ -408,10 +391,15 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     @BindView(R.id.add_new_window_cardview)
     CardView cvAddWindow;
 
+    @BindView(R.id.submit_button)
+    Button btnSubmitWindowDetail;
+
 
     String floorPlanId, roomId, floorName, roomName,imagesID,selectedCarpetInstValue;
-
-    String selectedImageType = "ceiltofloor";
+    boolean isWindow = false;
+    boolean isCeilToCeil =false;
+    boolean isWallToWall =false;
+    String selectedImageType = "ceiltofloor" ;
 
     static ArrayList<ImageList> combineImageList = new ArrayList<>();
     ArrayList<ImageList> combineImageListToBeShown = null;
@@ -420,13 +408,140 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     private RetrofitInterface.WindowsListClient WindowListAdapter;
     private RetrofitInterface.MeasurementDataClient MeasurementAdapter;
     private RetrofitInterface.uploadPhotosClient UploadPhotoAdapter;
+    private RetrofitInterface.SubmitWindowsData SubmitWindowDataAdapter;
 
     ArrayList<Windowslist> alWindows;
     //RecyclerView mRecyclerView;
     RecyclerView.LayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
 
+    @OnClick(R.id.submit_button)
+    public void submitWindowData(View view) {
+        btnSubmitWindowDetail.setVisibility(View.VISIBLE);
+        for (int i = combineImageList.size() - 1; i >= 0; i--) {
+            if (combineImageList.get(i).getimageType().equals("ceiltofloor")) {
+                isCeilToCeil = true;
+            }
+            if (combineImageList.get(i).getimageType().equals("walltowall")) {
+                isWallToWall = true;
+            }
+            if (combineImageList.get(i).getimageType().equals("windows")) {
+                isWindow = true;
+            }
+        }
 
+        if (isWindow && isWallToWall && isCeilToCeil) {
+            sendWindowData(view);
+        }
+        else
+        {
+            Toast.makeText(BLEInformationActivity.this, "Please Add All Images", Toast.LENGTH_SHORT).show();
+
+        }
+
+
+    }
+
+    private void sendWindowData(final View view) {
+
+        Log.e("abhi", "sendMeasurementData: ..................." + windowId);
+        LoadingDialog.showLoadingDialog(this, "Loading...");
+        Call<SubmitWindowDetailResponse> call = SubmitWindowDataAdapter.windowDetail(floorPlanId, roomId,windowId,PrefUtils.getUserId(this));
+        if (NetworkUtils.isNetworkConnected(this)) {
+            call.enqueue(new Callback<SubmitWindowDetailResponse>() {
+
+                @Override
+                public void onResponse(Call<SubmitWindowDetailResponse> call, retrofit2.Response<SubmitWindowDetailResponse> response) {
+                    if (response.isSuccessful()) {
+                        if (response.body().getType() == 1) {
+                            isMeasurementDataSubmitted = true;
+                            isCeilToCeil = false;
+                            isWallToWall = false;
+                            isWindow = false;
+                            for (int i=0; i<response.body().getMeasurementDetails().size(); i++)
+                            {
+                                if (response.body().getSubmittedForReview().equals(1))
+                                {
+
+                                    Log.e("abhi", "onResponse: .........................submitted for review " );
+                                    LayoutInflater inflater = getLayoutInflater();
+                                    View alertLayout = inflater.inflate(R.layout.layout_project_completion, null);
+                                    AlertDialog.Builder builder1 = new AlertDialog.Builder(BLEInformationActivity.this);
+                                    builder1.setView(alertLayout);
+                                    builder1.setCancelable(true);
+
+                                    builder1.setPositiveButton(
+                                            "Ok",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    Intent intent = new Intent(BLEInformationActivity.this,NavigationActivity.class);
+                                                    startActivity(intent);
+                                                    finish();
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+
+                                    AlertDialog alert = builder1.create();
+                                    alert.show();
+                                }
+                                else
+                                {
+
+                                    Log.e("abhi", "onResponse:.............. Project not completed "  );
+
+                                }
+                                windowId = String.valueOf(response.body().getMeasurementDetails().get(i).getId());
+                            }
+                            detailsScreen(view);
+
+
+                            Toast.makeText(BLEInformationActivity.this, response.body().getMsg(), Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            Toast.makeText(BLEInformationActivity.this, response.body().getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                        LoadingDialog.cancelLoading();
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SubmitWindowDetailResponse> call, Throwable t) {
+
+                    LoadingDialog.cancelLoading();
+                }
+
+
+            });
+
+        } else {
+            saveMeasurementDataInDb();
+            ComponentName componentName = new ComponentName(this, MyJobService.class);
+            JobInfo jobInfo = null;
+            JobScheduler jobScheduler = null;
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                jobInfo = new JobInfo.Builder(parseInt(windowId), componentName)
+                        .setRequiresCharging(false)
+                        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                        .build();
+                jobScheduler = (JobScheduler)getSystemService(JOB_SCHEDULER_SERVICE);
+                assert jobScheduler != null;
+                int resultCode = jobScheduler.schedule(jobInfo);
+                if (resultCode == JobScheduler.RESULT_SUCCESS) {
+                    Log.d("abhi", "Job scheduled!");
+                } else {
+                    Log.d("abhi", "Job not scheduled");
+                }
+            }
+
+
+            SnakBarUtils.networkConnected(this);
+            LoadingDialog.cancelLoading();
+        }
+
+    }
 
     @OnClick(R.id.add_new_window_cardview)
     public void addNewWindow(View view) {
@@ -498,6 +613,11 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @OnClick(R.id.details)
     public void detailsScreen(View view) {
+        btnSubmitWindowDetail.setVisibility(View.GONE);
+        isMeasurementDataSubmitted = false;
+        isCeilToCeil = false;
+        isWallToWall = false;
+        isWindow = false;
         windowId = null;
         windowName = null;
         if(combineImageList != null) {
@@ -541,6 +661,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @OnClick(R.id.measurements)
     public void measureScreen(View view) {
+        btnSubmitWindowDetail.setVisibility(View.GONE);
         if (windowName != null) {
             tvAppTitle.setText("Room Measurement");
             tvMeasurement.setTextColor(Color.parseColor("#ffffff")); // custom color
@@ -563,6 +684,11 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     }
 
     public void measurementScreen(View view, String window, String pathFrom, String ewallWidth, String widthLeftWindow, String widthRightWindow, String ibLengthWindow, String ibWidthWindow, String lengthCeilFlr, String carpetInst, String pocketDepth, String windowApproval, String windowStatus, List<Allimage> allimages, String id) {
+        btnSubmitWindowDetail.setVisibility(View.GONE);
+        if (windowStatus.equals("Yes"))
+        {
+            isMeasurementDataSubmitted = true;
+        }
         windowName = window;
         windowCompletionStatus = windowStatus;
         windowApprovalCheck = windowApproval;
@@ -624,8 +750,9 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @OnClick(R.id.pictures)
     public void picturesScreen(View view) {
-        if (windowId != null) {
+        if (windowId != null && isMeasurementDataSubmitted) {
             tvAppTitle.setText("Room Pictures");
+            btnSubmitWindowDetail.setVisibility(View.VISIBLE);
             tvPictures.setTextColor(Color.parseColor("#ffffff")); // custom color
             llPictures.setBackgroundColor(Color.parseColor("#048700"));
             tvDetails.setTextColor(Color.parseColor("#252525")); // custom color
@@ -639,6 +766,11 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             llOnMeasurementClick.setVisibility(View.GONE);
             llOnPicturesClick.setVisibility(View.VISIBLE);
         }
+        else if(!isMeasurementDataSubmitted)
+        {
+            Toast.makeText(BLEInformationActivity.this,"Please Fill Measurement Details", Toast.LENGTH_SHORT).show();
+        }
+
         else
         {
             Toast.makeText(BLEInformationActivity.this,"Please Select Window", Toast.LENGTH_SHORT).show();
@@ -877,6 +1009,9 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                 public void onResponse(Call<MeasurementResponse> call, retrofit2.Response<MeasurementResponse> response) {
                     if (response.isSuccessful()) {
                         if (response.body().getType() == 1) {
+                            btnSubmitWindowDetail.setVisibility(View.VISIBLE);
+                            isMeasurementDataSubmitted = true;
+                         /*
                             for (int i=0; i<response.body().getMeasurementDetails().size(); i++)
                             {
                                 if (response.body().getSubmittedForReview().equals("1"))
@@ -909,9 +1044,10 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
                                     Log.e("abhi", "onResponse:.............. Project not completed "  );
 
+
                                 }
                                 windowId = String.valueOf(response.body().getMeasurementDetails().get(i).getId());
-                            }
+                            }*/
                             picturesScreen(view);
 
 
@@ -1097,6 +1233,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         WindowListAdapter = ApiAdapter.createRestAdapter(RetrofitInterface.WindowsListClient.class, BASE_URL, this);
         MeasurementAdapter = ApiAdapter.createRestAdapter(RetrofitInterface.MeasurementDataClient.class, BASE_URL, this);
         UploadPhotoAdapter = ApiAdapter.createRestAdapter(RetrofitInterface.uploadPhotosClient.class, BASE_URL, this);
+        SubmitWindowDataAdapter = ApiAdapter.createRestAdapter(RetrofitInterface.SubmitWindowsData.class, BASE_URL, this);
 
     }
 
@@ -2226,19 +2363,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         }
     }
 
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
-      // ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-      // inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }
 
-    private String getRealPathFromURI(Uri tempUri) {
-        Cursor cursor = getContentResolver().query(tempUri, null, null, null, null);
-        cursor.moveToFirst();
-        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        return cursor.getString(idx);
-    }
 
     private boolean getPermissions() {
         if (ContextCompat.checkSelfPermission(this,

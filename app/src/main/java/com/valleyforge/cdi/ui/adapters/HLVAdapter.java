@@ -162,15 +162,7 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
             }
         });
 
-        /*alert.setPositiveButton("Done", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //String user = etUsername.getText().toString();
-               // String pass = etEmail.getText().toString();
-               // Toast.makeText(getBaseContext(), "Username: " + user + " Email: " + pass, Toast.LENGTH_SHORT).show();
-            }
-        });*/
         final AlertDialog dialog = alert.create();
         dialog.show();
         dialog.getWindow().setLayout(450, 320);
