@@ -104,22 +104,13 @@ public class ProjectListAdapter extends ArrayAdapter<PListTable> {
             holder.projectName.setText(plist.pname);
             holder.projectId.setText(plist.projectId );
             holder.tvPercentageText.setText(plist.projectStatus);
-            Log.e("abhi", "getView: ............"  +plist.projectPercentage );
+
             holder.pbPercentage.setProgress(Integer.parseInt(plist.projectPercentage));
             if (plist.projectStatus.equals("Submitted for Review"))
             {
                 holder.btnContinueMeasurement.setText("Project Summary");
                 holder.btnContinueMeasurement.setVisibility(View.GONE);
-               /* holder.btnContinueMeasurement.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String itemID  = String.valueOf(plist.p_id);
-                        PrefUtils.storeProjectId(itemID,context);
-                        Intent i = new Intent(context, ProjectSummaryActivity.class);
-                        // i.putExtra("PROJECT_ID", itemID);
-                        context.startActivity(i);
-                    }
-                });*/
+
             }
             else
             {
@@ -140,8 +131,7 @@ public class ProjectListAdapter extends ArrayAdapter<PListTable> {
                 @Override
                 public void onClick(View v) {
                     String itemID = String.valueOf(plist.p_id);
-                    Log.e("abhi", "onClick: pop up menu..........." +itemID );
-                    //Creating the instance of PopupMenu
+
                     Context wrapper = new ContextThemeWrapper(getContext(), R.style.popupMenuStyle);
                     PopupMenu popup = new PopupMenu(wrapper, holder.ivPopUpMenu, Gravity.RIGHT);
                     try {

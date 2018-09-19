@@ -48,7 +48,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 useremail = actvForgotPassword.getText().toString();
-                Log.e("abhi", "onCreate: .........." +useremail );
+
                 if(useremail.equals(""))
                 {
                     Toast.makeText(getApplicationContext(),"Enter Email",Toast.LENGTH_SHORT).show();
@@ -100,7 +100,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ForgotPasswordResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... "  );
 
                     LoadingDialog.cancelLoading();
                 }

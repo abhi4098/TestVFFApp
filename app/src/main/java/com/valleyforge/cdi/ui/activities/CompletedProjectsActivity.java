@@ -111,7 +111,7 @@ public class CompletedProjectsActivity extends AppCompatActivity  implements Vie
 
                 @Override
                 public void onFailure(Call<ProjectListResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... "  );
+
 
                     LoadingDialog.cancelLoading();
                 }

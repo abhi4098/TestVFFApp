@@ -79,7 +79,6 @@ public class MeasurementGridActivity extends AppCompatActivity implements View.O
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("abhi", "onResume: ................................." );
     }
 
     @Override
@@ -182,7 +181,6 @@ public class MeasurementGridActivity extends AppCompatActivity implements View.O
                 public void onResponse(Call<AddFloorResponse> call, Response<AddFloorResponse> response) {
                     if (response.isSuccessful()) {
                         if(response.body().getType().equals(1)) {
-                            Log.e("abhi", "onResponse:  add floor response................." );
                             setFloorDetails();
                             Toast.makeText(getApplicationContext(),response.body().getMsg(),Toast.LENGTH_SHORT).show();
 
@@ -197,7 +195,7 @@ public class MeasurementGridActivity extends AppCompatActivity implements View.O
 
                 @Override
                 public void onFailure(Call<AddFloorResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... "  );
+
 
                     LoadingDialog.cancelLoading();
                 }
@@ -221,7 +219,6 @@ public class MeasurementGridActivity extends AppCompatActivity implements View.O
                 public void onResponse(Call<FloorDetailsResponse> call, Response<FloorDetailsResponse> response) {
                     if (response.isSuccessful()) {
                         if(response.body().getType().equals("1")) {
-                            Log.e("abhi", "onResponse: ....................."+response.body().getFloorslist().size() );
                             alFloorList = new ArrayList<>();
                            for (int i=response.body().getFloorslist().size()-1; i>=0; i--) {
 
@@ -256,7 +253,6 @@ public class MeasurementGridActivity extends AppCompatActivity implements View.O
 
                 @Override
                 public void onFailure(Call<FloorDetailsResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... "  );
 
                     LoadingDialog.cancelLoading();
                 }

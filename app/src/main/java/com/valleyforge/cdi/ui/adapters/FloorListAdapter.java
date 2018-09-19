@@ -98,7 +98,7 @@ public class FloorListAdapter extends ArrayAdapter<Floorslist> {
         }
 
     public View getView(final int position, View convertView, ViewGroup parent) {
-        Log.e("abhi", "getView: ........................................" );
+
         View rowView = convertView;
 
         if(rowView==null){
@@ -108,7 +108,6 @@ public class FloorListAdapter extends ArrayAdapter<Floorslist> {
             viewHolder.floorName= (TextView) rowView.findViewById(R.id.floor_name);
             viewHolder.cvAddRoom = (CardView) rowView.findViewById(R.id.add_room_cardview);
            viewHolder.btnSelectRoom = (Button) rowView.findViewById(R.id.select_button);
-            //viewHolder.btnSelectRoom = (Button) rowView.findViewById(R.id.select_button);
             viewHolder.tvRoomsCount= (TextView) rowView.findViewById(R.id.rooms_count);
             viewHolder.tvRoomsCompletedCount= (TextView) rowView.findViewById(R.id.rooms_completed_count);
             viewHolder.btnSkipFloor= (Button) rowView.findViewById(R.id.skip_floor_btn);
@@ -211,7 +210,7 @@ public class FloorListAdapter extends ArrayAdapter<Floorslist> {
     }
 
     private void skipFloor(View v, ViewHolder holder, int id, String floorSkipComment) {
-        Log.e("abhi", "setRoomList: ........................" +id );
+
         LoadingDialog.showLoadingDialog(context,"Loading...");
         Call<SkipResponse> call = SkipFloorAdapter.skipFloorData(id,floorSkipComment);
         if (NetworkUtils.isNetworkConnected(context)) {
@@ -235,7 +234,7 @@ public class FloorListAdapter extends ArrayAdapter<Floorslist> {
 
                 @Override
                 public void onFailure(Call<SkipResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... "  );
+
 
                     LoadingDialog.cancelLoading();
                 }
@@ -318,7 +317,7 @@ public class FloorListAdapter extends ArrayAdapter<Floorslist> {
                 public void onResponse(Call<RoomsListResponse> call, Response<RoomsListResponse> response) {
                     if (response.isSuccessful()) {
                         if(response.body().getType().equals("1")) {
-                            Log.e("abhi", "onResponse: success///////////////////////" );
+
                             Intent intent = new Intent(context,MeasurementGridActivity.class);
                             context.startActivity(intent);
                             context.finish();
@@ -335,7 +334,6 @@ public class FloorListAdapter extends ArrayAdapter<Floorslist> {
 
                 @Override
                 public void onFailure(Call<RoomsListResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... " +t.getMessage()  );
 
                     LoadingDialog.cancelLoading();
                 }
@@ -371,23 +369,7 @@ public class FloorListAdapter extends ArrayAdapter<Floorslist> {
         setRoomList(id,floor);
 
 
-       /* final EditText etUsername = alertLayout.findViewById(R.id.et_username);
-        final EditText etEmail = alertLayout.findViewById(R.id.et_email);
-        final CheckBox cbToggle = alertLayout.findViewById(R.id.cb_show_pass);*/
 
-       /* cbToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    // to encode password in dots
-                    etEmail.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                } else {
-                    // to display the password in normal text
-                    etEmail.setTransformationMethod(null);
-                }
-            }
-        });*/
 
         AlertDialog.Builder alert = new AlertDialog.Builder(context);
         // this is set the view from XML inside AlertDialog
@@ -402,29 +384,14 @@ public class FloorListAdapter extends ArrayAdapter<Floorslist> {
             }
         });
 
-      /*  alert.setPositiveButton("Done", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //String user = etUsername.getText().toString();
-               // String pass = etEmail.getText().toString();
-               // Toast.makeText(getBaseContext(), "Username: " + user + " Email: " + pass, Toast.LENGTH_SHORT).show();
-            }
-        });*/
         final AlertDialog dialog = alert.create();
         dialog.show();
         dialog.getWindow().setLayout(1000, 500);
-       /* addRoomBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.cvAddRoom.setCardBackgroundColor(Color.parseColor("#048700"));
-                dialog.cancel();
-            }
-        });*/
+
     }
 
     private void setRoomList(int id, final String floor) {
-        Log.e("abhi", "setRoomList: ........................" +id );
         LoadingDialog.showLoadingDialog(context,"Loading...");
         Call<RoomsListResponse> call = UserRoomAdapter.userRoomListData(id);
         if (NetworkUtils.isNetworkConnected(context)) {
@@ -434,7 +401,6 @@ public class FloorListAdapter extends ArrayAdapter<Floorslist> {
                 public void onResponse(Call<RoomsListResponse> call, Response<RoomsListResponse> response) {
                     if (response.isSuccessful()) {
                         if(response.body().getType().equals("1")) {
-                            Log.e("abhi", "onResponse: ....................."+response.body().getRoomslist().size() );
                             alrooms = new ArrayList<>();
                             for (int i=0; i<response.body().getRoomslist().size(); i++) {
 
@@ -472,7 +438,6 @@ public class FloorListAdapter extends ArrayAdapter<Floorslist> {
 
                 @Override
                 public void onFailure(Call<RoomsListResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... " +t.getMessage()  );
 
                     LoadingDialog.cancelLoading();
                 }

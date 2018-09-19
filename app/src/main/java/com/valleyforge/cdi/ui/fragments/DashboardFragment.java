@@ -185,7 +185,7 @@ public class DashboardFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<DashboardDataResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... "  );
+
 
                     LoadingDialog.cancelLoading();
                 }
@@ -194,7 +194,7 @@ public class DashboardFragment extends Fragment {
             });
 
         } else {
-            Log.e("abhi", "getDashboardData: offline mode....................");
+
             tvactiveCount.setText(PrefUtils.getActiveCount(getActivity()));
             tvCompletedCount.setText(PrefUtils.getCompletedCount(getActivity()));
             SnakBarUtils.networkConnected(getActivity());

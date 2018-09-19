@@ -1,8 +1,5 @@
 package com.valleyforge.cdi.api;
 
-/**
- * Created by Abhinandan Sharma on 24/8/16.
- */
 
 public class ApiEndPoints {
 

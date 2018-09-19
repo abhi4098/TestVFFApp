@@ -3,9 +3,7 @@ package com.valleyforge.cdi.utils;
 import android.app.ProgressDialog;
 import android.content.Context;
 
-/**
- * Created by Abhinandan on 04/01/16.
- */
+
 public class LoadingDialog {
 
     static ProgressDialog progressDialog;

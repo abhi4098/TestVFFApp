@@ -70,7 +70,7 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        Log.e("abhi", "onCreateViewHolder:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>. "  );
+
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.horizontal_list_item, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(v);
@@ -79,10 +79,10 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
-        Log.e("abhi", "onBindViewHolder:......................lis separator "  +listSeparator);
+
 
         if (listSeparator.equals("roomList")) {
-            Log.e("abhi", "onBindViewHolder:............................................. " + alRooms.get(i).getRoomName());
+
             viewHolder.tvRoomName.setText(alRooms.get(i).getRoomName());
             viewHolder.tvWindowsCount.setText(alRooms.get(i).getNoOfWindows());
             if (alRooms.get(i).getRoomStatus().equals("Yes")) {
@@ -145,7 +145,7 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
 
 
 
-        Log.e("abhi", "skipPopUp: .........floorplanid" + floorPlanId + "roomId" + id  );
+
 
         AlertDialog.Builder alert = new AlertDialog.Builder(context);
         // this is set the view from XML inside AlertDialog
@@ -169,7 +169,7 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
         measureBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("abhi", "onClick: ........................measure"  +floorPlanId + " " +id );
+
 
                 Intent i = new Intent(context, BLEInformationActivity.class);
                 i.putExtra("FLOOR_ID", String.valueOf(floorPlanId));
@@ -245,7 +245,7 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
     }
     private void skipRoom(View v, ViewHolder viewHolder, String id, String roomSkipComment, String floorPlanId) {
 
-        Log.e("abhi", "setRoomList: ........................" +id );
+
         LoadingDialog.showLoadingDialog(context,"Loading...");
         Call<SkipResponse> call = SkipRoomAdapter.skipRoomData(floorPlanId,roomSkipComment,id);
         if (NetworkUtils.isNetworkConnected(context)) {
@@ -270,7 +270,7 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
 
                 @Override
                 public void onFailure(Call<SkipResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... "  );
+
 
                     LoadingDialog.cancelLoading();
                 }
@@ -290,11 +290,11 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
     public int getItemCount() {
         if (listSeparator.equals("roomList"))
         {
-            Log.e("abhi", "getItemCount: ....................no of rooms" +alRooms.size() );
+
             return alRooms.size();
         }
         else{
-           // Log.e("abhi", "getItemCount: ....................no of windows" +alWindows.size() );
+
 
             return alWindows.size();
         }

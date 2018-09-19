@@ -163,7 +163,7 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
 
     private void getProjectDetail() {
         LoadingDialog.showLoadingDialog(this,"Loading...");
-        Log.e("abhi", "getProjectDetail:................. " +projectId);
+
         Call<ProjectDetailResponse> call = UserProjectDetailAdapter.userProjectDetailData(projectId);
         if (NetworkUtils.isNetworkConnected(this)) {
             call.enqueue(new Callback<ProjectDetailResponse>() {
@@ -186,7 +186,7 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
 
                 @Override
                 public void onFailure(Call<ProjectDetailResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... "  );
+
 
                     LoadingDialog.cancelLoading();
                 }
@@ -223,12 +223,9 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
 
             pDetail.setPropertiesEmail(response.body().getPdetail() .get(i).getPropertiesEmail());
             pDetail.setPropertiesName(response.body().getPdetail().get(i).getPropertiesName());
-           // pDetail.setFinalProjectStatus(response.body().getPdetail().get(i).getFinalProjectStatus());
-           /* pDetail.setA(response.body().getPdetail().get(i).getProjectManagerName());
-            pDetail.setProjectAssignedPm(response.body().getPdetail().get(i).getProjectAssignedPm());*/
+
 
            PrefUtils.storeProjectId(response.body().getPdetail().get(i).getId(),this);
-            Log.e("abhi", "setProjectDetail:............................... "  +response.body().getPdetail().get(i).getFinalProjectStatus());
 
 
 

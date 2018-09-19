@@ -60,7 +60,7 @@ public class HLVImagesAdapter extends RecyclerView.Adapter<HLVImagesAdapter.View
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        Log.e("abhi", "onCreateViewHolder:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>. "  );
+
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.horizontal_images_layout, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(v);
@@ -69,9 +69,7 @@ public class HLVImagesAdapter extends RecyclerView.Adapter<HLVImagesAdapter.View
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
-        Log.e("abhi", "onBindViewHolder:......................lis separator " +alImageList.get(i).getimageType() + "selectedImageType  " +selectedImageType );
 
-           // viewHolder.tvRoomName.setText(alImageList.get(i).getimageType());
             Glide.with(context)
                     .load(alImageList.get(i).getimageUrl()) // image url
                     .placeholder(R.drawable.add_image) // any placeholder to load at start
@@ -82,7 +80,7 @@ public class HLVImagesAdapter extends RecyclerView.Adapter<HLVImagesAdapter.View
                 public void onClick(View v) {
                     alImageList.get(i).getimageType();
                     alImageList.get(i).getImageId();
-                    Log.e("abhi", "onClick: ................"+ alImageList.get(i).getImageId() );
+
                     setUpRestAdapter();
                     deletePhoto(alImageList.get(i).getimageType(),alImageList.get(i).getImageId());
                     ((BLEInformationActivity)context).updateCombinedImageListFromAdapter(alImageList.get(i).getImageId());
@@ -99,7 +97,6 @@ public class HLVImagesAdapter extends RecyclerView.Adapter<HLVImagesAdapter.View
 
     private void deletePhoto(String imageType, String imageId) {
         LoadingDialog.showLoadingDialog(context,"Loading...");
-        Log.e("abhi", "deletePhoto: .....................................imagetype " +imageType + " imageId" +imageId + " windowid" +windowId);
         Call<LoginResponse> call = DeletePhotoAdapter.deleteImageData(imageId,windowId,imageType);
         if (NetworkUtils.isNetworkConnected(context)) {
             call.enqueue(new Callback<LoginResponse>() {
@@ -109,14 +106,7 @@ public class HLVImagesAdapter extends RecyclerView.Adapter<HLVImagesAdapter.View
                     if (response.isSuccessful()) {
                         if(response.body().getType() == 1) {
 
-                           /* for (int i=0; i<response.body().getData().size(); i++) {
-                                Log.e("abhi.........      ", "onResponse: "+response.body().getData().get(i).getName() );
-                                etUsername.setText(response.body().getData().get(i).getName());
-                                etuserEmail.setText(response.body().getData().get(i).getEmail());
-                                etUserAdd.setText(response.body().getData().get(i).getAddress());
-                                etuserPhone.setText(response.body().getData().get(i).getPhone());
-                            }
-*/
+
                             Toast.makeText(context,response.body().getMsg(),Toast.LENGTH_SHORT).show();
 
                         }
@@ -130,7 +120,6 @@ public class HLVImagesAdapter extends RecyclerView.Adapter<HLVImagesAdapter.View
 
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... "  );
 
                     LoadingDialog.cancelLoading();
                 }

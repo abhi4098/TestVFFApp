@@ -150,7 +150,7 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
 
                 @Override
                 public void onFailure(Call<ProjectListResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... "  );
+
 
                     LoadingDialog.cancelLoading();
                 }
@@ -178,7 +178,6 @@ public class ActivePendingActivity extends AppCompatActivity implements View.OnC
         List<PListTable> pListTables = getAll();
         projectListTable = new ArrayList<>();
         showProjectList = new ArrayList<>();
-        Log.e("abhi", "showProjectList: "+ pListTables.size() );
         //Adding all the items of the inventories to arraylist
         for (int i = 0; i < pListTables.size(); i++) {
             PListTable pListTable = new PListTable();

@@ -179,7 +179,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 userAdd = etUserAdd.getText().toString();
                 userPhone = etuserPhone.getText().toString();
 
-                Log.e("abhi", "onClick:............... " + userName + " " + userPhone + " " +userAdd + " " +userEmail  );
                 submitUpdatedDetails();
 
             }
@@ -343,7 +342,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         canvas.drawCircle(r, r, r, paint);
                         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
                         canvas.drawBitmap(bitmap, rect, rect, paint);
-                        Log.e("abhi", "setResource: -----------output"+output );
+
                         personImage.setImageBitmap(output);
                         imageProgressBar.setVisibility(View.GONE);
 
@@ -389,9 +388,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                sendImagesToServerFromCamera(imgDecodableString);
             }
 
-            Log.e("abhi", "onActivityResult: image decodable "+imgDecodableString );
+
             imageProgressBar.setVisibility(View.VISIBLE);
-            Log.e("abhi", "onActivityResult:.......... " +imgDecodableString );
+
 
 
 
@@ -427,7 +426,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     if (response.isSuccessful()) {
                         if (response.body().getType() == 1) {
                              String profileUrl = response.body().getImageurl();
-                            Log.e("abhi", "onResponse: ....................." +profileUrl );
+
                             if (profileUrl !=null) {
                                 setProfilePicURL(profileUrl);
                             }
@@ -446,7 +445,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
                 @Override
                 public void onFailure(Call<UploadPhotoResponse> call, Throwable t) {
-                    Log.e("abhi", "onFailure: ............" + t.getCause());
+
                     LoadingDialog.cancelLoading();
                 }
 
@@ -511,7 +510,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... "  );
+
 
                     LoadingDialog.cancelLoading();
                 }
@@ -543,12 +542,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     if (response.isSuccessful()) {
                         if(response.body().getType() == 1) {
                             for (int i=0; i<response.body().getData().size(); i++) {
-                                Log.e("abhi.........      ", "onResponse: "+response.body().getData().get(i).getName() );
+
                                 etUsername.setText(response.body().getData().get(i).getName());
                                 etuserEmail.setText(response.body().getData().get(i).getEmail());
                                 etUserAdd.setText(response.body().getData().get(i).getAddress());
                                 etuserPhone.setText(response.body().getData().get(i).getPhone());
-                                Log.e("abhi", "onResponse:.......................image url " + response.body().getData().get(i).getProfileImageUrl());
                                 setProfilePicURL(response.body().getData().get(i).getProfileImageUrl());
                             }
 
@@ -565,7 +563,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... "  );
+
 
                     LoadingDialog.cancelLoading();
                 }

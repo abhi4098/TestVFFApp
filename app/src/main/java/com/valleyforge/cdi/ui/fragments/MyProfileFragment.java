@@ -89,23 +89,22 @@ public class MyProfileFragment extends Fragment  {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_my_profile, container, false);
         ButterKnife.bind(this,rootView);
-        // etUsername.setEnabled(false);
+
         etUsername.setFocusable(false);
         etUsername.setText(PrefUtils.getUserName(getActivity()));
 
-        // etuserEmail.setEnabled(false);
+
         etuserEmail.setFocusable(false);
         etuserEmail.setText(PrefUtils.getEmail(getActivity()));
 
-        // etUserAdd.setEnabled(false);
+
         etUserAdd.setFocusable(false);
         etUserAdd.setText(PrefUtils.getUserAdd(getActivity()));
 
-        // etuserPhone.setEnabled(false);
+
         etuserPhone.setFocusable(false);
         etuserPhone.setText(PrefUtils.getUserPhone(getActivity()));
-        //etUsername.setText(PrefUtils.getUserName(this));
-        //etUsername.setText(PrefUtils.getUserName(this));
+
         return rootView;
     }
 

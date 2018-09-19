@@ -186,7 +186,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Store values at the time of the login attempt.
         email = mEmailView.getText().toString();
         password = mPasswordView.getText().toString();
-        Log.e("abhi", "attemptLogin: " + email + " " + password );
+
 
         boolean cancel = false;
         View focusView = null;
@@ -408,9 +408,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
                             }
-                            Log.e("abhi", "onResponse:user name "+PrefUtils.getUserName(LoginActivity.this) );
-                            Log.e("abhi", "onResponse:user id "+PrefUtils.getUserId(LoginActivity.this) );
-                            Log.e("abhi", "onResponse:user status "+PrefUtils.getUserType(LoginActivity.this) );
+
                             Intent i = new Intent(LoginActivity.this, NavigationActivity.class);
                             startActivity(i);
                             finish();
@@ -425,7 +423,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... "  );
+
 
                     LoadingDialog.cancelLoading();
                 }

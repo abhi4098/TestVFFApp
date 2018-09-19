@@ -79,7 +79,7 @@ public class MyJobService extends JobService {
     public void showProjectList()
     {
         List<MeasurementDetailTable> measurementDetailTable = getAll();
-        Log.e("abhi", "showProjectList:...measurementDetailTables "+ measurementDetailTable.size() );
+
         //Adding all the items of the inventories to arraylist
         for (int i = 0; i < measurementDetailTable.size(); i++) {
            if (measurementDetailTable.get(i).windowId.equals(jobId))
@@ -130,7 +130,7 @@ public class MyJobService extends JobService {
                 public void onResponse(Call<MeasurementResponse> call, retrofit2.Response<MeasurementResponse> response) {
                     if (response.isSuccessful()) {
                         if (response.body().getType() == 1) {
-                            Log.e("abhi", "onResponse:........... " + response.body().getMsg());
+
                             for (int i=0; i<response.body().getMeasurementDetails().size(); i++)
                             {
                                 windowId = String.valueOf(response.body().getMeasurementDetails().get(i).getId());
@@ -149,7 +149,7 @@ public class MyJobService extends JobService {
 
                 @Override
                 public void onFailure(Call<MeasurementResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... ");
+
 
                     LoadingDialog.cancelLoading();
                 }
@@ -167,7 +167,7 @@ public class MyJobService extends JobService {
     // Called if the job was cancelled before being finished
     @Override
     public boolean onStopJob(JobParameters jobParameters) {
-        Log.d("abhi", "Job cancelled before being completed.");
+
         jobCancelled = true;
         boolean needsReschedule = isWorking;
         jobFinished(jobParameters, needsReschedule);

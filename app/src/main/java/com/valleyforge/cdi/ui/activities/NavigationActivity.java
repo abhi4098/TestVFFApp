@@ -167,7 +167,7 @@ public class NavigationActivity extends AppCompatActivity
                         canvas.drawCircle(r, r, r, paint);
                         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
                         canvas.drawBitmap(bitmap, rect, rect, paint);
-                        Log.e("abhi", "setResource: -----------output"+output );
+
                         personImage.setImageBitmap(output);
                        // imageProgressBar.setVisibility(View.GONE);
 
@@ -192,8 +192,7 @@ public class NavigationActivity extends AppCompatActivity
                                     setProfilePicURL(response.body().getData().get(i).getProfileImageUrl());
                                 }
                                 else
-                                {      Log.e("abhi", "onResponse:.......................image url " + response.body().getData().get(i).getProfileImageUrl());
-
+                                {
                                     personImage.setBackground(ContextCompat.getDrawable(NavigationActivity.this, R.drawable.profile_background));
 
                                 }
@@ -213,7 +212,7 @@ public class NavigationActivity extends AppCompatActivity
 
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... "  );
+
 
                     LoadingDialog.cancelLoading();
                 }
@@ -258,12 +257,12 @@ public class NavigationActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("abhi", "onResume: ...... " );
+
     }
 
     @Override
     public void onBackPressed() {
-        Log.e("abhi", "onBackPressed: ..........." );
+
         setHeaderData();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -271,15 +270,15 @@ public class NavigationActivity extends AppCompatActivity
         }  else if (getFragmentManager().getBackStackEntryCount() == 0)
         {
 
-            //MenuItem itemid = navigationView.getMenu().findItem(R.id.nav_active);
+
             if (getFragmentManager().findFragmentById(R.id.fragment_container) == null) {
-                //onNavigationItemSelected(itemid);
-                Log.e("abhi123", " inside null" );
+
+
 
                 openExitAppDialog();
 
             }
-            Log.e("abhi123", " outside null" );
+
             tvAppTitle.setText("Dashboard");
 
             // super.onBackPressed();
@@ -288,7 +287,7 @@ public class NavigationActivity extends AppCompatActivity
         }
         else
         {
-            Log.e("abhi", "onBackPressed:else "+getFragmentManager().getBackStackEntryCount() );
+
             getFragmentManager().popBackStack();
 
         }

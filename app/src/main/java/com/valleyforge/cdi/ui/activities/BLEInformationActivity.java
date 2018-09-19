@@ -292,7 +292,6 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @OnClick(R.id.wall_to_wall_textview)
     public void wallToWallButtonSelected() {
-        Log.e("abhi", "wallToWallButtonSelected:................... ");
         selectedImageType = "walltowall";
         imageTypeToBeSendViaAPi = "Wall to Wall";
         tvCeilToFloor.setBackgroundColor(Color.parseColor("#fbebdc"));
@@ -322,7 +321,6 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @OnClick(R.id.windows_textview)
     public void windowsButtonSelected() {
-        Log.e("abhi", "windowsButtonSelected:................... ");
         selectedImageType = "windows";
         imageTypeToBeSendViaAPi = "Windows";
         tvCeilToFloor.setBackgroundColor(Color.parseColor("#fbebdc"));
@@ -352,7 +350,6 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @OnClick(R.id.add_more_images)
     public void addImages() {
-        Log.e("abhi", "addImages:................... ");
         Checkpermission();
 
     }
@@ -444,7 +441,6 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     private void sendWindowData(final View view) {
 
-        Log.e("abhi", "sendMeasurementData: ..................." + windowId);
         LoadingDialog.showLoadingDialog(this, "Loading...");
         Call<SubmitWindowDetailResponse> call = SubmitWindowDataAdapter.windowDetail(floorPlanId, roomId,windowId,PrefUtils.getUserId(this));
         if (NetworkUtils.isNetworkConnected(this)) {
@@ -463,7 +459,6 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                                 if (response.body().getSubmittedForReview().equals(1))
                                 {
 
-                                    Log.e("abhi", "onResponse: .........................submitted for review " );
                                     LayoutInflater inflater = getLayoutInflater();
                                     View alertLayout = inflater.inflate(R.layout.layout_project_completion, null);
                                     AlertDialog.Builder builder1 = new AlertDialog.Builder(BLEInformationActivity.this);
@@ -488,7 +483,6 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                                 else
                                 {
 
-                                    Log.e("abhi", "onResponse:.............. Project not completed "  );
 
                                 }
                                 windowId = String.valueOf(response.body().getMeasurementDetails().get(i).getId());
@@ -950,15 +944,8 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         carpetInst = selectedCarpetInstValue;
         additionalData = "comment";
 
-        Log.e("abhi", "wallWidth:  ............" + wallWidth);
-        Log.e("abhi", "widthLeftOfWindow:  ............" + widthLeftOfWindow);
-        Log.e("abhi", "ibWidthOfWindow:  ............" + ibWidthOfWindow);
-        Log.e("abhi", "ibLengthOfWindow:  ............" + ibLengthOfWindow);
-        Log.e("abhi", "widthRightOfWindow:  ............" + widthRightOfWindow);
-        Log.e("abhi", "lengthCielFlr:  ............" + lengthCielFlr);
-        Log.e("abhi", "pocketDepth:  ............" + pocketDepth);
-        Log.e("abhi", "carpetInst:  ............" + carpetInst);
-        Log.e("abhi", "additionalData:  ............" + additionalData);
+
+
 
 
         if ((wallWidth != null && !wallWidth.equals("")) &&(widthLeftOfWindow != null && !widthLeftOfWindow.equals(""))
@@ -998,7 +985,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     private void sendMeasurementData(final View view) {
 
-        Log.e("abhi", "sendMeasurementData: ..................." + windowId);
+
         LoadingDialog.showLoadingDialog(this, "Loading...");
         Call<MeasurementResponse> call = MeasurementAdapter.measurementData(floorPlanId, roomId, windowName, wallWidth, widthLeftOfWindow, ibWidthOfWindow, ibLengthOfWindow, widthRightOfWindow, lengthCielFlr,
                 pocketDepth, carpetInst,windowCompletionStatus,windowApprovalCheck,windowId,PrefUtils.getUserId(this));
@@ -1011,43 +998,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                         if (response.body().getType() == 1) {
                             btnSubmitWindowDetail.setVisibility(View.VISIBLE);
                             isMeasurementDataSubmitted = true;
-                         /*
-                            for (int i=0; i<response.body().getMeasurementDetails().size(); i++)
-                            {
-                                if (response.body().getSubmittedForReview().equals("1"))
-                                {
 
-                                    Log.e("abhi", "onResponse: .........................submitted for review " );
-                                    LayoutInflater inflater = getLayoutInflater();
-                                    View alertLayout = inflater.inflate(R.layout.layout_project_completion, null);
-                                    AlertDialog.Builder builder1 = new AlertDialog.Builder(BLEInformationActivity.this);
-                                    builder1.setView(alertLayout);
-                                    builder1.setCancelable(true);
-
-                                    builder1.setPositiveButton(
-                                            "Ok",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    Intent intent = new Intent(BLEInformationActivity.this,NavigationActivity.class);
-                                                    startActivity(intent);
-                                                    finish();
-                                                    dialog.cancel();
-                                                }
-                                            });
-
-
-                                    AlertDialog alert = builder1.create();
-                                    alert.show();
-                                }
-                                else
-                                {
-
-                                    Log.e("abhi", "onResponse:.............. Project not completed "  );
-
-
-                                }
-                                windowId = String.valueOf(response.body().getMeasurementDetails().get(i).getId());
-                            }*/
                             picturesScreen(view);
 
 
@@ -1109,7 +1060,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
         List<MeasurementDetailTable> measurementDetailTables = getAll();
 
-        Log.e("abhi", "windowId:..................... "+ windowId );
+
 
         //Adding all the items of the inventories to arraylist
         for (int i = 0; i < measurementDetailTables.size(); i++) {
@@ -1117,10 +1068,10 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             {
                // Long windowIdToBeDeleted = Long.valueOf(measurementDetailTables.get(i).windowId);
                 MeasurementDetailTable.delete(MeasurementDetailTable.class, measurementDetailTables.get(i).getId());
-                Log.e("abhi", "saveMeasurementDataInDb: window id deleted.........."+measurementDetailTables.get(i).getId() );
+
             }
 
-            Log.e("abhi", "saveMeasurementDataInDb: .................. window id list" +measurementDetailTables.get(i).windowId );
+
 
         }
 
@@ -1194,7 +1145,6 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
         // attaching data adapter to spinner
         spCarpetInst.setAdapter(dataAdapter);
-        Log.e("abhi", "onCreate: ................................floor plan id " + floorPlanId + " room id " + roomId);
         setUpRestAdapter();
         setWindowsList();
 
@@ -1247,7 +1197,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                 public void onResponse(Call<WindowsListResponse> call, retrofit2.Response<WindowsListResponse> response) {
                     if (response.isSuccessful()) {
                         if (response.body().getType() == 1) {
-                            Log.e("abhi", "onResponse:........... " + response.body().getMsg());
+
                             alWindows = new ArrayList<>();
                             for (int i = 0; i < response.body().getWindowslist().size(); i++) {
 
@@ -1269,15 +1219,11 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                                 windowslist.setPocketDepth(response.body().getWindowslist().get(i).getPocketDepth());
                                 windowslist.setCarpetInst(response.body().getWindowslist().get(i).getCarpetInst());
                                 windowslist.setLengthCeilFlr(response.body().getWindowslist().get(i).getLengthCeilFlr());
-                               /* for (int j=0; j<response.body().getWindowslist().get(i).getAllimages().size(); j++)
-                                {
 
-                                }*/
                                 windowslist.setAllimages(response.body().getWindowslist().get(i).getAllimages());
 
 
 
-                                Log.e("abhi", "onResponse:................. " + response.body().getWindowslist().get(i).getAllimages());
 
 
                                 alWindows.add(windowslist);
@@ -1304,7 +1250,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
                 @Override
                 public void onFailure(Call<WindowsListResponse> call, Throwable t) {
-                    Log.e("abhi", "onResponse: error....................... ");
+
 
                     LoadingDialog.cancelLoading();
                 }
@@ -2297,8 +2243,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                     if (response.isSuccessful()) {
                         if (response.body().getType() == 1) {
 
-                            Log.e("abhi", "onResponse: .............................................." + response.body().getMsg());
-                            Log.e("abhi", "onResponse: image link............" + response.body().getImageurl());
+
                             ImageList imageList = new ImageList();
                             imageList.setimageUrl(response.body().getImageurl());
                             imageList.setImageId(response.body().getImageId());
@@ -2350,7 +2295,6 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
                 @Override
                 public void onFailure(Call<UploadPhotoResponse> call, Throwable t) {
-                    Log.e("abhi", "onFailure: ............" + t.getCause());
                     LoadingDialog.cancelLoading();
                 }
 
