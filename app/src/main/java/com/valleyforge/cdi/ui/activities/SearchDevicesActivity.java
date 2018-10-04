@@ -97,13 +97,12 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 	@BindView(R.id.logout)
 	ImageView ivLogout;
 
-	@BindView(R.id.skip_device_connection)
-    Button btnSkipConnection;
+
 
 	@BindView(R.id.status)
 	TextView tvGoToDashboard;
 
-	@OnClick(R.id.skip_device_connection)
+	/*@OnClick(R.id.skip_device_connection)
             public void skipConnection(){
 		if (deviceManager != null){
 			//Disconnect from all the connected devices
@@ -118,7 +117,7 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
         Intent informationIntent = new Intent(SearchDevicesActivity.this, MeasurementGridActivity.class);
         startActivity(informationIntent);
 
-    }
+    }*/
 	/**
 	 * Current selected device
 	 */
@@ -280,7 +279,7 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 		this.availableDevices = deviceManager.getConnectedDevices();
 		measurementGridStatus = PrefUtils.getMeasurementGrid(this);
 
-		if(deviceManager.getConnectedDevices().size() == 1 && measurementGridStatus.equals("finished"))
+		/*if(deviceManager.getConnectedDevices().size() == 1 && measurementGridStatus.equals("finished"))
 		{
 			PrefUtils.storeMeasurementGrid("0",this);
 
@@ -309,7 +308,7 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 			PrefUtils.storeMeasurementGrid("0",this);
 			Intent informationIntent = new Intent(SearchDevicesActivity.this, MeasurementGridActivity.class);
 			startActivity(informationIntent);
-		}
+		}*/
 
 
 
@@ -355,7 +354,7 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 		super.onDestroy();
 
 		final String METHODTAG = ".onDestroy";
-		// stop finding devices when activity finishes
+		/*// stop finding devices when activity finishes
 		// stop the timer for finding devices
 		if (findDevicesTimer != null) {
 			findDevicesTimer.cancel();
@@ -387,7 +386,7 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 			}
 
 		}
-
+*/
 	}
 
 	/**
@@ -864,10 +863,12 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 
 				// set the current device object for the next acitivity
 				BLEInformationActivity.setCurrentDevice(device, getApplicationContext());
+				Toast.makeText(this, "Connection successful", Toast.LENGTH_LONG).show();
 
+				finish();
 				//Launch the BLEInformationActivity
-				Intent informationIntent = new Intent(SearchDevicesActivity.this, MeasurementGridActivity.class);
-				startActivity(informationIntent);
+				/*Intent informationIntent = new Intent(SearchDevicesActivity.this, MeasurementGridActivity.class);
+				startActivity(informationIntent);*/
 			}
 		}
 

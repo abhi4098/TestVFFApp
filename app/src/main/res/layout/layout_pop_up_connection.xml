@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:id="@+id/popup_header"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/colorAccent"
+        android:layout_margin="15sp"
+        android:text="Do you want to connect device ?"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorAccent">
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30sp"
+        android:layout_marginBottom="20sp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/measure_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="35sp"
+            android:textColor="@color/white"
+            android:background="@color/login_button_color"
+            android:layout_marginEnd="20sp"
+            android:textAllCaps="false"
+            android:text="Connect"/>
+
+        <Button
+            android:id="@+id/skip_button"
+            android:layout_width="wrap_content"
+            android:layout_height="35sp"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:paddingStart="15sp"
+            android:paddingEnd="15sp"
+            android:background="@color/colorAccent"
+            android:text="Skip Connection"/>
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

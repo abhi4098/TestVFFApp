@@ -181,8 +181,7 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
                 i.putExtra("FLOOR_NAME", floorName);
 
                 context.startActivity(i);
-                PrefUtils.storeMeasurementGrid("finished",context);
-                context.finish();
+
                 dialog.cancel();
             }
         });

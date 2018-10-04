@@ -1,17 +1,21 @@
 package com.valleyforge.cdi.ui.fragments;
 
+import android.bluetooth.BluetoothClass;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +29,10 @@ import com.valleyforge.cdi.ui.activities.ActivePendingActivity;
 import com.valleyforge.cdi.ui.activities.BLEInformationActivity;
 import com.valleyforge.cdi.ui.activities.CompletedProjectsActivity;
 import com.valleyforge.cdi.ui.activities.LoginActivity;
+import com.valleyforge.cdi.ui.activities.MeasurementGridActivity;
 import com.valleyforge.cdi.ui.activities.NavigationActivity;
+import com.valleyforge.cdi.ui.activities.ProjectDetailActivity;
+import com.valleyforge.cdi.ui.activities.SearchDevicesActivity;
 import com.valleyforge.cdi.utils.LoadingDialog;
 import com.valleyforge.cdi.utils.NetworkUtils;
 import com.valleyforge.cdi.utils.PrefUtils;
@@ -37,6 +44,17 @@ import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import ch.leica.sdk.Devices.Device;
+import ch.leica.sdk.Devices.DeviceManager;
+import ch.leica.sdk.ErrorHandling.ErrorDefinitions;
+import ch.leica.sdk.ErrorHandling.ErrorObject;
+import ch.leica.sdk.ErrorHandling.IllegalArgumentCheckedException;
+import ch.leica.sdk.ErrorHandling.PermissionException;
+import ch.leica.sdk.LeicaSdk;
+import ch.leica.sdk.Listeners.ErrorListener;
+import ch.leica.sdk.Logging.Logs;
+import ch.leica.sdk.Types;
 
 import static com.valleyforge.cdi.api.ApiEndPoints.BASE_URL;
 
@@ -59,6 +77,8 @@ public class DashboardFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     Fragment fragment = null;
+    DeviceManager deviceManager;
+    Device device;
 
 
     @BindView(R.id.active_pending_count)
@@ -75,6 +95,8 @@ public class DashboardFragment extends Fragment {
 
     @BindView(R.id.completed_count)
     TextView tvCompletedCount;
+
+
 
 
 
@@ -127,6 +149,16 @@ public class DashboardFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
         ButterKnife.bind(this,rootView);
+        deviceManager = DeviceManager.getInstance(getActivity());
+
+        if(deviceManager.getConnectedDevices().size() !=0) {
+            device = deviceManager.getConnectedDevices().get(0);
+            Log.e("abhi", "onCreateView: dashboard......................................." + device);
+        }
+        else
+        {
+            connectionPopUp();
+        }
         cvActivePending.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,6 +179,52 @@ public class DashboardFragment extends Fragment {
         getDashboardData();
         return rootView;
 
+    }
+
+    private void connectionPopUp() {
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View alertLayout = inflater.inflate(R.layout.layout_pop_up_connection, null);
+        final Button measureBtn = alertLayout.findViewById(R.id.measure_btn);
+        final Button skipBtn = alertLayout.findViewById(R.id.skip_button);
+        final TextView tvPopUpHeader = alertLayout.findViewById(R.id.popup_header);
+
+
+
+
+
+
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        // this is set the view from XML inside AlertDialog
+        alert.setView(alertLayout);
+        // disallow cancel of AlertDialog on click of back button and outside touch
+        alert.setCancelable(false);
+
+
+
+        final AlertDialog dialog = alert.create();
+        dialog.show();
+        dialog.getWindow().setLayout(450, 280);
+        measureBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent i = new Intent(getActivity(), SearchDevicesActivity.class);
+                startActivity(i);
+                dialog.cancel();
+            }
+        });
+
+        skipBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*Intent i = new Intent(context, BLEInformationActivity.class);
+                context.startActivity(i);*/
+
+                dialog.cancel();
+
+            }
+        });
     }
 
     private void setUpRestAdapter() {

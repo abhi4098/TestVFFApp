@@ -27,6 +27,7 @@ import com.valleyforge.cdi.generated.tables.PListTable;
 import com.valleyforge.cdi.ui.activities.ActivePendingActivity;
 import com.valleyforge.cdi.ui.activities.BLEInformationActivity;
 import com.valleyforge.cdi.ui.activities.CompletedProjectsActivity;
+import com.valleyforge.cdi.ui.activities.MeasurementGridActivity;
 import com.valleyforge.cdi.ui.activities.NavigationActivity;
 import com.valleyforge.cdi.ui.activities.ProfileActivity;
 import com.valleyforge.cdi.ui.activities.ProjectDetailActivity;
@@ -119,7 +120,7 @@ public class ProjectListAdapter extends ArrayAdapter<PListTable> {
                     public void onClick(View v) {
                         String itemID  = String.valueOf(plist.p_id);
                         PrefUtils.storeProjectId(itemID,context);
-                        Intent i = new Intent(context, SearchDevicesActivity.class);
+                        Intent i = new Intent(context, MeasurementGridActivity.class);
                         // i.putExtra("PROJECT_ID", itemID);
                         context.startActivity(i);
                     }
