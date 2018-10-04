@@ -352,7 +352,7 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
+		deviceManager.unregisterReceivers();
 		final String METHODTAG = ".onDestroy";
 		/*// stop finding devices when activity finishes
 		// stop the timer for finding devices
@@ -863,7 +863,7 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 
 				// set the current device object for the next acitivity
 				BLEInformationActivity.setCurrentDevice(device, getApplicationContext());
-				Toast.makeText(this, "Connection successful", Toast.LENGTH_LONG).show();
+				//Toast.makeText(this, "Connection Successful", Toast.LENGTH_SHORT).show();
 
 				finish();
 				//Launch the BLEInformationActivity
