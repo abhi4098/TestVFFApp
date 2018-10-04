@@ -35,6 +35,8 @@ public class PrefUtils {
     public static String COMPLETED_COUNT = "completed_count";
     public static String LOGGED_IN_USER_ROLE= "user_role";
 
+    public static String MEASUREMENT_GRID= "measurement_grid";
+
   /*  public static String LOGGED_IN_USER_EMAIL = "user_email";
     public static String LOGGED_IN_USER_ADD = "user_add";
     public static String LOGGED_IN_USER_ROLE_ID = "user_role_id";
@@ -105,6 +107,21 @@ public class PrefUtils {
         return sharedPreferences.getString(PrefUtils.KEY_AUTH_TOKEN, "");
 
     }*/
+
+
+    public static void storeMeasurementGrid(String status, Context context) {
+        SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);
+        sharedPreferences.edit()
+                .putString(PrefUtils.MEASUREMENT_GRID, status)
+                .apply();
+        LogUtils.LOGD(TAG, "storeMeasurementGrid");
+    }
+
+    public static String getMeasurementGrid(Context context) {
+        SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);
+        return sharedPreferences.getString(PrefUtils.MEASUREMENT_GRID, "0");
+    }
+
 
     public static void storeActiveCount(String activeCount, Context context) {
         SharedPreferences sharedPreferences = PrefUtils.getSharedPreferences(context);

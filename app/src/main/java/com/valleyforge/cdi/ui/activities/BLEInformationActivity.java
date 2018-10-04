@@ -524,9 +524,11 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                 assert jobScheduler != null;
                 int resultCode = jobScheduler.schedule(jobInfo);
                 if (resultCode == JobScheduler.RESULT_SUCCESS) {
-                    Log.d("abhi", "Job scheduled!");
+
+
                 } else {
-                    Log.d("abhi", "Job not scheduled");
+
+
                 }
             }
 
@@ -1036,9 +1038,9 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                 assert jobScheduler != null;
                 int resultCode = jobScheduler.schedule(jobInfo);
                 if (resultCode == JobScheduler.RESULT_SUCCESS) {
-                    Log.d("abhi", "Job scheduled!");
+
                 } else {
-                    Log.d("abhi", "Job not scheduled");
+
                 }
             }
 
@@ -1107,6 +1109,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         ButterKnife.bind(this);
+
         ivBackIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1267,7 +1270,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     @Override
     protected void onResume() {
         super.onResume();
-
+        BLEInformationActivity.currentDevice = currentDevice;
         // Register activity for bluetooth adapter changes
         if (!receiverRegistered) {
             receiverRegistered = true;
@@ -1352,7 +1355,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             currentDevice.setReceiveDataListener(null);
             currentDevice.setConnectionListener(null);
             currentDevice.setErrorListener(null);
-            currentDevice = null;
+            //currentDevice = null;
         }
         //unregister activity for reconnection
         if (reconnectionHelper != null) {
@@ -1365,8 +1368,8 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
         if (currentDevice != null) {
             //Disconnect the device
-            currentDevice.disconnect();
-            Log.d(CLASSTAG, METHODTAG + "Disconnected Device: " + currentDevice.modelName);
+           // currentDevice.disconnect();
+            Log.e(CLASSTAG, METHODTAG + "Disconnected Device: " + currentDevice.modelName);
 
         }
 
@@ -1395,7 +1398,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             return;
         }
         if (!currentDevice.getConnectionType().equals(Types.ConnectionType.ble)) {
-            Log.d(CLASSTAG, METHODTAG + ": device is not ble ???");
+            Log.e(CLASSTAG, METHODTAG + ": device is not ble ???");
             return;
         }
         if (turnOnBluetoothDialogIsShown) {
@@ -1415,7 +1418,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                 boolean bluetoothIsAvailable = DeviceManager.getInstance(getApplicationContext()).checkBluetoothAvailibilty();
 
                 if (!bluetoothIsAvailable) {
-                    Log.d(CLASSTAG, METHODTAG + ": bluetooth is not available");
+                    Log.e(CLASSTAG, METHODTAG + ": bluetooth is not available");
 
                     // show alert to turn on bluetooth
                     showBluetoothTurnOn();
@@ -1470,7 +1473,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     public void onConnectionStateChanged(Device device, final Device.ConnectionState state) {
 
         final String METHODTAG = ".onConnectionStateChanged";
-        Log.d(CLASSTAG, METHODTAG + ": " + device.getDeviceID() + ", state: " + state);
+        Log.e(CLASSTAG, METHODTAG + ": " + device.getDeviceID() + ", state: " + state);
 
         try {
             // set the current state as text

@@ -2,8 +2,10 @@ package com.valleyforge.cdi.ui.activities;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.LocationManager;
@@ -27,6 +29,7 @@ import android.widget.Toast;
 
 import com.valleyforge.cdi.R;
 import com.valleyforge.cdi.ui.adapters.ConnectionTypeAdapter;
+import com.valleyforge.cdi.utils.PrefUtils;
 
 import org.json.JSONException;
 
@@ -80,6 +83,7 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 	AlertDialog activateWifiDialog = null;
 	AlertDialog connectingDialog = null;
 	AlertDialog activateBluetoothDialog = null;
+	String measurementGridStatus;
 
 	// for finding and connecting to a device
 	DeviceManager deviceManager;
@@ -101,6 +105,15 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 
 	@OnClick(R.id.skip_device_connection)
             public void skipConnection(){
+		if (deviceManager != null){
+			//Disconnect from all the connected devices
+			for (Device connectedDevice: deviceManager.getConnectedDevices() ){
+				connectedDevice.disconnect();
+
+
+			}
+
+		}
 
         Intent informationIntent = new Intent(SearchDevicesActivity.this, MeasurementGridActivity.class);
         startActivity(informationIntent);
@@ -171,6 +184,7 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search_devices);
+
 		ButterKnife.bind(this);
 		ivBackIcon.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -181,7 +195,10 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 		ivLogout.setVisibility(View.GONE);
 		tvGoToDashboard.setVisibility(View.VISIBLE);
 		tvGoToDashboard.setText("Dashboard");
+
+
 		tvGoToDashboard.setTextColor(Color.parseColor("#252525"));
+		PrefUtils.storeMeasurementGrid("0",this);
 		tvGoToDashboard.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -254,12 +271,48 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 
 	@Override
 	protected void onResume() {
+
 		super.onResume();
 
 		activityStopped = false;
 
 		// show only connected devices
 		this.availableDevices = deviceManager.getConnectedDevices();
+		measurementGridStatus = PrefUtils.getMeasurementGrid(this);
+
+		if(deviceManager.getConnectedDevices().size() == 1 && measurementGridStatus.equals("finished"))
+		{
+			PrefUtils.storeMeasurementGrid("0",this);
+
+			stopFindAvailableDevicesTimer();
+			stopFindingAvailableDevices();
+			// get device
+			Device device = availableDevices.get(0);
+
+			if(device == null) {
+
+				return;
+			}
+
+			currentDevice = device;
+
+			// already connected
+			if(device.getConnectionState() == Device.ConnectionState.connected){
+
+				goToInfoScreen(device);
+				return;
+			}
+
+		}
+		else if(deviceManager.getConnectedDevices().size() == 0 && measurementGridStatus.equals("finished"))
+		{
+			PrefUtils.storeMeasurementGrid("0",this);
+			Intent informationIntent = new Intent(SearchDevicesActivity.this, MeasurementGridActivity.class);
+			startActivity(informationIntent);
+		}
+
+
+
 
 		//Update the Devices List UI
 		updateList();
@@ -275,6 +328,7 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 
 		// immediately start finding devices when activity resumes
 		findAvailableDevices();
+
 	}
 
 	@Override
@@ -410,6 +464,8 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 	 */
 	@Override
 	public void onAvailableDeviceFound(final Device device) {
+
+
 
 		final String METHODTAG = ".onAvailableDeviceFound";
 		Log.i(CLASSTAG, METHODTAG+": deviceId: " + device.getDeviceID() + ", deviceName: " + device.getDeviceName());
@@ -798,13 +854,14 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 			if(device.getDeviceType().equals(Types.DeviceType.Yeti)){
 
 				// set the current device object for the next acitivity
-				YetiInformationActivity.setCurrentDevice(device, getApplicationContext());
+				//YetiInformationActivity.setCurrentDevice(device, getApplicationContext());
 
 				//Launch the YetiInformationActivity
 				Intent informationIntent = new Intent(SearchDevicesActivity.this, YetiInformationActivity.class);
 				startActivity(informationIntent);
 			}
 			else {
+
 				// set the current device object for the next acitivity
 				BLEInformationActivity.setCurrentDevice(device, getApplicationContext());
 
@@ -814,7 +871,7 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 			}
 		}
 
-		else if (device.getConnectionType() == Types.ConnectionType.wifiHotspot || device.getConnectionType() == Types.ConnectionType.wifiAP){
+		/*else if (device.getConnectionType() == Types.ConnectionType.wifiHotspot || device.getConnectionType() == Types.ConnectionType.wifiAP){
 
 			// set the current device object for the next acitivity
 			WifiInformationActivity.setCurrentDevice(device, getApplicationContext());
@@ -822,7 +879,7 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 			//Launch the WifiInformationActivity
 			Intent informationIntent = new Intent(SearchDevicesActivity.this, WifiInformationActivity.class);
 			startActivity(informationIntent);
-		}
+		}*/
 
 		else {
 			Log.e(CLASSTAG, METHODTAG +": unknown connection type. this should never happen.");

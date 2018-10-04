@@ -3,6 +3,7 @@ package com.valleyforge.cdi.ui.adapters;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -28,6 +29,7 @@ import com.valleyforge.cdi.ui.activities.BLEInformationActivity;
 import com.valleyforge.cdi.ui.activities.MeasurementGridActivity;
 import com.valleyforge.cdi.utils.LoadingDialog;
 import com.valleyforge.cdi.utils.NetworkUtils;
+import com.valleyforge.cdi.utils.PrefUtils;
 import com.valleyforge.cdi.utils.SnakBarUtils;
 
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ import static com.valleyforge.cdi.api.ApiEndPoints.BASE_URL;
 
 public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
     MeasurementGridActivity context;
+    SharedPreferences sp;
     BLEInformationActivity context1;
     LayoutInflater inflater;
     int GroupPosition,ListPosition;
@@ -178,6 +181,8 @@ public class HLVAdapter extends RecyclerView.Adapter<HLVAdapter.ViewHolder>  {
                 i.putExtra("FLOOR_NAME", floorName);
 
                 context.startActivity(i);
+                PrefUtils.storeMeasurementGrid("finished",context);
+                context.finish();
                 dialog.cancel();
             }
         });
