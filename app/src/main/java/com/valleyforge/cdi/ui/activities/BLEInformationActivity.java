@@ -336,7 +336,10 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                 combineImageListToBeShown.add(imageList);
             }
         }
-
+        if (combineImageListToBeShown.size()>0)
+        {
+            mRecyclerViewImages.setBackgroundColor(Color.parseColor("#fff7f1"));
+        }
         mRecyclerViewImages.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(BLEInformationActivity.this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerViewImages.setLayoutManager(mLayoutManager);
@@ -416,18 +419,12 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     public void submitWindowData(View view) {
         btnSubmitWindowDetail.setVisibility(View.VISIBLE);
         for (int i = combineImageList.size() - 1; i >= 0; i--) {
-            if (combineImageList.get(i).getimageType().equals("ceiltofloor")) {
-                isCeilToCeil = true;
-            }
-            if (combineImageList.get(i).getimageType().equals("walltowall")) {
-                isWallToWall = true;
-            }
             if (combineImageList.get(i).getimageType().equals("windows")) {
                 isWindow = true;
             }
         }
 
-        if (isWindow && isWallToWall && isCeilToCeil) {
+        if (isWindow) {
             sendWindowData(view);
         }
         else
@@ -609,6 +606,15 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @OnClick(R.id.details)
     public void detailsScreen(View view) {
+        if(combineImageList != null) {
+           combineImageList.clear();
+        }
+
+        if(combineImageListToBeShown !=null) {
+          combineImageListToBeShown.clear();
+     }
+
+        isWindow = false;
         PrefUtils.storedetailsScreenStatus("detailButtonClicked",this);
         finish();
 
@@ -763,7 +769,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
             tvMeasurement.setTextColor(Color.parseColor("#252525")); // custom color
             llMeasurement.setBackgroundColor(Color.parseColor("#ffffff"));
             tvCeilToFloor.setBackgroundColor(Color.parseColor("#ffffff"));
-            ceilToFloorButtonSelected();
+            windowsButtonSelected();
 
             llOnDetailsClick.setVisibility(View.GONE);
             llOnMeasurementClick.setVisibility(View.GONE);
@@ -1120,6 +1126,15 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         ivBackIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(combineImageList != null) {
+                    combineImageList.clear();
+                }
+
+                if(combineImageListToBeShown !=null) {
+                    combineImageListToBeShown.clear();
+                }
+
+                isWindow = false;
                 onBackPressed();
             }
         });
@@ -2309,7 +2324,10 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                                 combineImageListToBeShown.add(imageList);
                             }
                         }
-
+                        if (combineImageListToBeShown.size()>0)
+                        {
+                            mRecyclerViewImages.setBackgroundColor(Color.parseColor("#fff7f1"));
+                        }
                         mRecyclerViewImages.setHasFixedSize(true);
                         mLayoutManager = new LinearLayoutManager(BLEInformationActivity.this, LinearLayoutManager.HORIZONTAL, false);
                         mRecyclerViewImages.setLayoutManager(mLayoutManager);
