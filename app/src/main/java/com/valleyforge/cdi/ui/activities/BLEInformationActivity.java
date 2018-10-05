@@ -442,7 +442,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
     private void sendWindowData(final View view) {
 
         LoadingDialog.showLoadingDialog(this, "Loading...");
-        Call<SubmitWindowDetailResponse> call = SubmitWindowDataAdapter.windowDetail(floorPlanId, roomId,windowId,PrefUtils.getUserId(this));
+        Call<SubmitWindowDetailResponse> call = SubmitWindowDataAdapter.windowDetail(PrefUtils.getTempFloorId(this), PrefUtils.getTempRoomId(this),windowId,PrefUtils.getUserId(this));
         if (NetworkUtils.isNetworkConnected(this)) {
             call.enqueue(new Callback<SubmitWindowDetailResponse>() {
 
@@ -609,54 +609,60 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @OnClick(R.id.details)
     public void detailsScreen(View view) {
-        btnSubmitWindowDetail.setVisibility(View.GONE);
-        isMeasurementDataSubmitted = false;
-        isCeilToCeil = false;
-        isWallToWall = false;
-        isWindow = false;
-        windowId = null;
-        windowName = null;
-        if(combineImageList != null) {
-            combineImageList.clear();
-        }
+        PrefUtils.storedetailsScreenStatus("detailButtonClicked",this);
+        finish();
 
-        if(combineImageListToBeShown !=null) {
-            combineImageListToBeShown.clear();
-        }
-        etWallWidth.setText("");
-        etWidthLeftOfWindow.setText("");
-        etIbWidthOfWindow.setText("");
-        etIbLengthOfWindow.setText("");
-        etWidthRightOfWindow.setText("");
-        etLengthCielFlr.setText("");
-        etPocketDepth.setText(pocketDepth);
-       /* if (carpetInst.equals("Yes")) {
-            spCarpetInst.setSelection(0);
-        }
-        else
-        {
-            spCarpetInst.setSelection(1);
-        }*/
-        tvAppTitle.setText("Room Details");
-        tvDetails.setTextColor(Color.parseColor("#ffffff")); // custom color
-        llDetails.setBackgroundColor(Color.parseColor("#048700"));
-        tvMeasurement.setTextColor(Color.parseColor("#252525")); // custom color
-        llMeasurement.setBackgroundColor(Color.parseColor("#ffffff"));
-        tvPictures.setTextColor(Color.parseColor("#252525")); // custom color
-        llPictures.setBackgroundColor(Color.parseColor("#ffffff"));
+        //finish();
 
-        llOnDetailsClick.setVisibility(View.VISIBLE);
-        llOnMeasurementClick.setVisibility(View.GONE);
-        llOnPicturesClick.setVisibility(View.GONE);
-        setUpRestAdapter();
-        setWindowsList();
-
+//        btnSubmitWindowDetail.setVisibility(View.GONE);
+//        isMeasurementDataSubmitted = false;
+//        isCeilToCeil = false;
+//        isWallToWall = false;
+//        isWindow = false;
+//        windowId = null;
+//        windowName = null;
+//        if(combineImageList != null) {
+//            combineImageList.clear();
+//        }
+//
+//        if(combineImageListToBeShown !=null) {
+//            combineImageListToBeShown.clear();
+//        }
+//        etWallWidth.setText("");
+//        etWidthLeftOfWindow.setText("");
+//        etIbWidthOfWindow.setText("");
+//        etIbLengthOfWindow.setText("");
+//        etWidthRightOfWindow.setText("");
+//        etLengthCielFlr.setText("");
+//        etPocketDepth.setText(pocketDepth);
+//       /* if (carpetInst.equals("Yes")) {
+//            spCarpetInst.setSelection(0);
+//        }
+//        else
+//        {
+//            spCarpetInst.setSelection(1);
+//        }*/
+//        tvAppTitle.setText("Room Details");
+//        tvDetails.setTextColor(Color.parseColor("#ffffff")); // custom color
+//        llDetails.setBackgroundColor(Color.parseColor("#048700"));
+//        tvMeasurement.setTextColor(Color.parseColor("#252525")); // custom color
+//        llMeasurement.setBackgroundColor(Color.parseColor("#ffffff"));
+//        tvPictures.setTextColor(Color.parseColor("#252525")); // custom color
+//        llPictures.setBackgroundColor(Color.parseColor("#ffffff"));
+//
+//        llOnDetailsClick.setVisibility(View.VISIBLE);
+//        llOnMeasurementClick.setVisibility(View.GONE);
+//        llOnPicturesClick.setVisibility(View.GONE);
+//        setUpRestAdapter();
+//        setWindowsList();
+//
 
     }
 
 
     @OnClick(R.id.measurements)
     public void measureScreen(View view) {
+
         btnSubmitWindowDetail.setVisibility(View.GONE);
         if (windowName != null) {
             tvAppTitle.setText("Room Measurement");
@@ -681,6 +687,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     public void measurementScreen(View view, String window, String pathFrom, String ewallWidth, String widthLeftWindow, String widthRightWindow, String ibLengthWindow, String ibWidthWindow, String lengthCeilFlr, String carpetInst, String pocketDepth, String windowApproval, String windowStatus, List<Allimage> allimages, String id) {
         btnSubmitWindowDetail.setVisibility(View.GONE);
+
         if (windowStatus.equals("Yes"))
         {
             isMeasurementDataSubmitted = true;
@@ -989,7 +996,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
 
         LoadingDialog.showLoadingDialog(this, "Loading...");
-        Call<MeasurementResponse> call = MeasurementAdapter.measurementData(floorPlanId, roomId, windowName, wallWidth, widthLeftOfWindow, ibWidthOfWindow, ibLengthOfWindow, widthRightOfWindow, lengthCielFlr,
+        Call<MeasurementResponse> call = MeasurementAdapter.measurementData(PrefUtils.getTempFloorId(this), PrefUtils.getTempRoomId(this), windowName, wallWidth, widthLeftOfWindow, ibWidthOfWindow, ibLengthOfWindow, widthRightOfWindow, lengthCielFlr,
                 pocketDepth, carpetInst,windowCompletionStatus,windowApprovalCheck,windowId,PrefUtils.getUserId(this));
         if (NetworkUtils.isNetworkConnected(this)) {
             call.enqueue(new Callback<MeasurementResponse>() {
@@ -1079,8 +1086,8 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
         MeasurementDetailTable measurementDetailTable = new MeasurementDetailTable();
        // measurementDetailTable.m_id = windowId;
-        measurementDetailTable.floorPlanId = floorPlanId;
-        measurementDetailTable.roomId = roomId;
+        measurementDetailTable.floorPlanId = PrefUtils.getTempFloorId(this);
+        measurementDetailTable.roomId = PrefUtils.getTempRoomId(this);
         measurementDetailTable.windowName = windowName;
         measurementDetailTable.wallWidth = wallWidth;
 
@@ -1119,12 +1126,20 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         ivLogout.setVisibility(View.GONE);
         status.setVisibility(View.VISIBLE);
         tvAppTitle.setText("Room Details");
+
         floorPlanId = getIntent().getStringExtra("FLOOR_ID");
         roomId = getIntent().getStringExtra("ROOM_ID");
         floorName = getIntent().getStringExtra("FLOOR_NAME");
         roomName = getIntent().getStringExtra("ROOM_NAME");
-        tvFloorCount.setText(floorName);
-        tvRoomCount.setText(roomName);
+        if(floorPlanId != null && roomId != null && floorName != null && roomName != null)
+        {
+            PrefUtils.storeTempRoomId(roomId,this);
+            PrefUtils.storeTempRoomName(roomName,this);
+            PrefUtils.storeTempFloorId(floorPlanId,this);
+            PrefUtils.storeTempFloorName(floorName,this);
+        }
+        tvFloorCount.setText(PrefUtils.getTempFloorName(this));
+        tvRoomCount.setText(PrefUtils.getTempRoomName(this));
         spCarpetInst.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -1192,7 +1207,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     private void setWindowsList() {
         LoadingDialog.showLoadingDialog(this, "Loading...");
-        Call<WindowsListResponse> call = WindowListAdapter.windowsListData(parseInt(floorPlanId), roomId);
+        Call<WindowsListResponse> call = WindowListAdapter.windowsListData(parseInt(PrefUtils.getTempFloorId(this)), PrefUtils.getTempRoomId(this));
         if (NetworkUtils.isNetworkConnected(this)) {
             call.enqueue(new Callback<WindowsListResponse>() {
 
@@ -1269,6 +1284,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @Override
     protected void onResume() {
+        Log.e("abhi", "onResume: .................................."  );
         super.onResume();
         BLEInformationActivity.currentDevice = currentDevice;
         // Register activity for bluetooth adapter changes
@@ -1341,7 +1357,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+
         mExecutorService.shutdown();
 
         mExecutorService = null;
@@ -1371,6 +1387,12 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
            // currentDevice.disconnect();
             Log.e(CLASSTAG, METHODTAG + "Disconnected Device: " + currentDevice.modelName);
 
+        }
+        super.onDestroy();
+        if(PrefUtils.getDetailsScreenStatus(this).equals("detailButtonClicked")) {
+            PrefUtils.storedetailsScreenStatus("0",this);
+            Intent intent = new Intent(this, BLEInformationActivity.class);
+            startActivity(intent);
         }
 
     }
@@ -1431,7 +1453,10 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                     reconnectionIsRunning = true;
 
                     Log.d(CLASSTAG, METHODTAG + ": start reconnecting!!");
-                    reconnectionHelper.startReconnecting();
+                    if (reconnectionHelper != null)
+                    {
+
+                        reconnectionHelper.startReconnecting();
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -1441,6 +1466,7 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
                             showAlert("Try to automatically reconnect now. (This may take a minute.)");
                         }
                     });
+                }
                 }
             }
         }).start();

@@ -863,9 +863,10 @@ public class SearchDevicesActivity extends AppCompatActivity implements DeviceMa
 
 				// set the current device object for the next acitivity
 				BLEInformationActivity.setCurrentDevice(device, getApplicationContext());
-				//Toast.makeText(this, "Connection Successful", Toast.LENGTH_SHORT).show();
+
 
 				finish();
+
 				//Launch the BLEInformationActivity
 				/*Intent informationIntent = new Intent(SearchDevicesActivity.this, MeasurementGridActivity.class);
 				startActivity(informationIntent);*/
