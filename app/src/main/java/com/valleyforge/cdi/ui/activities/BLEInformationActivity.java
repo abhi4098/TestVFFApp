@@ -618,50 +618,6 @@ public class BLEInformationActivity extends AppCompatActivity implements Receive
         PrefUtils.storedetailsScreenStatus("detailButtonClicked",this);
         finish();
 
-        //finish();
-
-//        btnSubmitWindowDetail.setVisibility(View.GONE);
-//        isMeasurementDataSubmitted = false;
-//        isCeilToCeil = false;
-//        isWallToWall = false;
-//        isWindow = false;
-//        windowId = null;
-//        windowName = null;
-//        if(combineImageList != null) {
-//            combineImageList.clear();
-//        }
-//
-//        if(combineImageListToBeShown !=null) {
-//            combineImageListToBeShown.clear();
-//        }
-//        etWallWidth.setText("");
-//        etWidthLeftOfWindow.setText("");
-//        etIbWidthOfWindow.setText("");
-//        etIbLengthOfWindow.setText("");
-//        etWidthRightOfWindow.setText("");
-//        etLengthCielFlr.setText("");
-//        etPocketDepth.setText(pocketDepth);
-//       /* if (carpetInst.equals("Yes")) {
-//            spCarpetInst.setSelection(0);
-//        }
-//        else
-//        {
-//            spCarpetInst.setSelection(1);
-//        }*/
-//        tvAppTitle.setText("Room Details");
-//        tvDetails.setTextColor(Color.parseColor("#ffffff")); // custom color
-//        llDetails.setBackgroundColor(Color.parseColor("#048700"));
-//        tvMeasurement.setTextColor(Color.parseColor("#252525")); // custom color
-//        llMeasurement.setBackgroundColor(Color.parseColor("#ffffff"));
-//        tvPictures.setTextColor(Color.parseColor("#252525")); // custom color
-//        llPictures.setBackgroundColor(Color.parseColor("#ffffff"));
-//
-//        llOnDetailsClick.setVisibility(View.VISIBLE);
-//        llOnMeasurementClick.setVisibility(View.GONE);
-//        llOnPicturesClick.setVisibility(View.GONE);
-//        setUpRestAdapter();
-//        setWindowsList();
-//
 
     }
 
